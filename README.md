@@ -37,8 +37,8 @@ Clausify helps freelancers and small business owners understand legal contracts 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/yourprojectname.git
-cd yourprojectname
+git clone https://github.com/kymanirjarrett/clausify.git
+cd clausify
 ```
 
 ### 2. Install Dependencies
@@ -49,38 +49,72 @@ npm install
 
 ### 3. Set Up Environment Variables
 
-Copy `.env.example` to `.env.local`:
+**Option A - Interactive Setup (Recommended):**
+```bash
+npm run setup-env
+```
+This interactive script will guide you through entering all required API keys.
+
+**Option B - Manual Setup:**
+```bash
+# Copy template
+cp .env.example .env.local  # Mac/Linux
+# OR
+copy .env.example .env.local  # Windows
+
+# Then edit .env.local with your actual values
+```
+
+**Option C - Quick Copy (if you already have values):**
+```bash
+npm run copy-env
+# Then paste your values into .env.local
+```
+
+### 4. Verify Environment Configuration
 
 ```bash
-cp .env.example .env.local
+npm run verify-env
 ```
 
-Fill in your API keys:
+This command checks that all required environment variables are properly set.
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-GROQ_API_KEY=your_groq_api_key
-GEMINI_API_KEY=your_gemini_api_key (optional)
-```
+### 5. Set Up Supabase Database
 
-### 4. Set Up Supabase Database
+1. Go to your Supabase project dashboard
+2. Navigate to **SQL Editor**
+3. Click **New Query**
+4. Copy the contents of `lib/db/schema.sql`
+5. Paste and run the query
 
-Run the schema migration in Supabase SQL Editor:
+### 6. Configure Supabase Storage
 
-```bash
-# Copy contents of lib/db/schema.sql
-# Paste into Supabase > SQL Editor > New Query
-# Run the query
-```
+1. Go to **Storage** in Supabase dashboard
+2. Create a new bucket named `contracts`
+3. Set it to **Private**
+4. Configure storage policies (see documentation in schema.sql)
 
-### 5. Run Development Server
+### 7. Run Development Server
 
 ```bash
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the app.
+
+## 🔄 Multi-Machine Development
+
+Working across multiple computers? We've got you covered:
+
+```bash
+# On new machine after cloning
+npm install
+npm run setup-env    # Interactive setup
+npm run verify-env   # Verify configuration
+npm run dev          # Start developing
+```
+
+See the [Multi-Machine Setup Guide](docs/multi-machine-setup.md) for detailed instructions on managing environment variables across development machines.
 
 ## 🔑 Getting API Keys
 
@@ -281,8 +315,8 @@ MIT License - See LICENSE file for details
 ## 📧 Contact
 
 For questions or feedback about this project:
-- GitHub Issues: [github.com/kymanirjarrett/clausify/issues](https://github.com/kymanirjarrett/clausify/issues)
-- Email: jarretkr@mail.uc.edu
+- GitHub Issues: [github.com/kymanirjarrett/clausify/issues](https://github.com/yourusername/clausify/issues)
+- Email: [jarretkr@mail.uc.edu](mailto:jarretkr@mail.uc.edu)
 
 ## 🙏 Acknowledgments
 
