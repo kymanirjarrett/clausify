@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "setup-env": "node scripts/setup-env.js",
+    "verify-env": "node scripts/verify-env.js",
+    "copy-env": "node scripts/copy-env-template.js"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.10",
@@ -21,7 +24,6 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "dotenv": "^17.2.3",
     "lucide-react": "^0.546.0",
     "next": "15.5.6",
     "pdf-parse": "^2.4.3",
@@ -36,6 +38,7 @@
     "@types/pdf-parse": "^1.1.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "15.5.6",
     "tailwindcss": "^4",
