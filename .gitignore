@@ -45,9 +45,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# skills
-claude
+# Claude Code (local only: instructions, skills, settings)
 CLAUDE.md
+CLAUDE.local.md
+.claude/
 
 # node (anywhere, incl. legacy/)
 node_modules/

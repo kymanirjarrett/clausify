@@ -4,6 +4,14 @@
 
 Clausify helps freelancers and small business owners understand legal contracts by using AI to identify risky clauses, suggest negotiation points, and compare terms against industry standards.
 
+## 🎓 Course submissions
+
+Enterprise Application Development, University of Cincinnati. Each submission is marked with a git tag, so the graded state stays viewable after later commits.
+
+| Lab | Tag | Key paths |
+|---|---|---|
+| Flyway migrations + Lombok entities | [`lab-flyway-mysql`](https://github.com/kymanirjarrett/clausify/tree/lab-flyway-mysql) | [`backend/src/main/resources/db/migration/`](backend/src/main/resources/db/migration/), [`backend/src/main/java/com/clausify/user/`](backend/src/main/java/com/clausify/user/) |
+
 ## 🚀 Features
 
 - **Instant AI Analysis** - Upload contracts and get analysis in under 60 seconds
