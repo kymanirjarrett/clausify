@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: clausify-backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/clausify?createDatabaseIfNotExist=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    locations: classpath:db/migration

@@ -44,3 +44,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# skills
+claude
+CLAUDE.md
+
+# node (anywhere, incl. legacy/)
+node_modules/
+.next/
+
+# java / maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# ide
+.idea/
+*.iml
+.vscode/
