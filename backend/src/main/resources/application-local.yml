@@ -1,0 +1,7 @@
+# Local development against the Docker MySQL from docker-compose.yml (host port 3307).
+# Every value can still be overridden with an environment variable.
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3307/clausify?createDatabaseIfNotExist=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}

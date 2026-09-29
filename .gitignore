@@ -37,6 +37,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -50,9 +51,11 @@ CLAUDE.md
 CLAUDE.local.md
 .claude/
 
-# node (anywhere, incl. legacy/)
+# node / angular (anywhere, incl. legacy/ and frontend/)
 node_modules/
 .next/
+.angular/
+dist/
 
 # java / maven
 target/
