@@ -1,0 +1,24 @@
+# Deployed API. Every value comes from the environment; nothing secret lives here.
+# DB_URL is the full JDBC URL from the Aiven console, including its SSL parameters.
+server:
+  port: ${PORT:8080}
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  ai:
+    openai:
+      # Groq's API is OpenAI-compatible, so Spring AI's OpenAI starter talks to it.
+      api-key: ${GROQ_API_KEY}
+      base-url: https://api.groq.com/openai/v1
+      chat:
+        options:
+          model: ${GROQ_MODEL:openai/gpt-oss-120b}
+
+clausify:
+  jwt:
+    secret: ${JWT_SECRET}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}
