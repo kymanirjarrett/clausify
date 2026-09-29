@@ -46,8 +46,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Claude Code (local only: instructions, skills, settings)
-CLAUDE.md
+# Claude Code: personal files stay local (the shared CLAUDE.md is committed)
 CLAUDE.local.md
 .claude/
 
