@@ -27,10 +27,10 @@ Version 1.0, September 28, 2026
 
 | Member | GitHub | Scrum role | Primary ownership |
 |---|---|---|---|
-| Ashton Cashier | [@Ashton525](https://github.com/Ashton525) | Scrum Master, Developer | TODO |
-| Kymani Jarrett | [@kymanirjarrett](https://github.com/kymanirjarrett) | Product Owner, Developer | TODO |
-| Venkat Yuva Raaj Narra | `@TODO` | Developer | TODO |
-| Rival Young | [@RivalJ](https://github.com/RivalJ) | Developer | TODO |
+| Ashton Cashier | [@Ashton525](https://github.com/Ashton525) | Scrum Master, Developer | Contracts and documents |
+| Kymani Jarrett | [@kymanirjarrett](https://github.com/kymanirjarrett) | Product Owner, Developer | Accounts and security |
+| Venkat Yuva Raaj Narra | [@Venkat-YuvaRaaj](https://github.com/Venkat-YuvaRaaj) | Developer | Clause library and comparison |
+| Rival Young | [@RivalJ](https://github.com/RivalJ) | Developer | AI analysis |
 
 All four members work full stack. Scrum roles and ownership areas are described in [Section 8](#8-scrum-roles-and-responsibilities).
 
@@ -921,7 +921,6 @@ Similarity search embeds each finding's original text and every standard clause 
 
 ## 8. Scrum Roles and Responsibilities
 
-<!-- TODO: team to confirm ownership areas before submission -->
 
 | Role | Member | Responsibilities |
 |---|---|---|
@@ -931,14 +930,14 @@ Similarity search embeds each finding's original text and every standard clause 
 
 ### Ownership areas
 
-Each developer owns one feature area end to end: its backend package, its tests, and its Angular screens in Sprint 2. Owners review changes to their area.
+Each developer owns one feature area end to end: its backend package, its tests, and its Angular screens in Sprint 2. Owners review changes to their area. Assignments may be rebalanced at Sprint Planning.
 
 | Area | Backend package | Screens | Owner |
 |---|---|---|---|
-| Accounts and security | `user/`, `config/SecurityConfig` | Landing, Login, Sign Up, Account | TODO |
-| Contracts and documents | `contract/` (upload, list, delete, retry, report) | Dashboard | TODO |
-| AI analysis | `analysis/` (Groq integration, prompts, scoring) | Analysis Results | TODO |
-| Clause library and comparison | `clause/`, `ComparisonService` | Clause Comparison, Version Comparison | TODO |
+| Accounts and security | `user/`, `config/SecurityConfig` | Landing, Login, Sign Up, Account | Kymani Jarrett |
+| Contracts and documents | `contract/` (upload, list, delete, retry, report) | Dashboard | Ashton Cashier |
+| AI analysis | `analysis/` (Groq integration, prompts, scoring) | Analysis Results | Rival Young |
+| Clause library and comparison | `clause/`, `ComparisonService` | Clause Comparison, Version Comparison | Venkat Yuva Raaj Narra |
 
 Cross-cutting duties are shared and rotate each sprint: CI and deployment, documentation and ADRs, and the final presentation.
 
