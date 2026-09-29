@@ -28,7 +28,7 @@ Clausify is an AI contract-analysis web app for freelancers: upload a contract P
 | PDF | Apache PDFBox (text extraction, report generation) |
 | LLM | Groq `openai/gpt-oss-120b` via Spring AI's OpenAI starter, base URL `https://api.groq.com/openai/v1` (per the Spring AI 2.0 Groq docs), model from `GROQ_MODEL` |
 | Embeddings | Spring AI ONNX Transformers, `all-MiniLM-L6-v2`, 384 dims, in the JVM |
-| Vector search | Cosine similarity in Java (MySQL Community's `DISTANCE()` is HeatWave-only). Embeddings stored as `VECTOR(384)` or JSON. |
+| Vector search | Cosine similarity in Java (MySQL Community's `DISTANCE()` is HeatWave-only). Embeddings stored as JSON (`VECTOR` needs MySQL 9.0+; see ADR 0003). |
 | Auth | Spring Security, BCrypt, stateless JWT |
 | Hosting | Angular on Vercel; API on Render free tier (Docker; sleeps when idle, disk not persistent) |
 
