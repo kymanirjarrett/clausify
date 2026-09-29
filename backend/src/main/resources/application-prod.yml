@@ -12,7 +12,7 @@ spring:
     openai:
       # Groq's API is OpenAI-compatible, so Spring AI's OpenAI starter talks to it.
       api-key: ${GROQ_API_KEY}
-      base-url: https://api.groq.com/openai
+      base-url: https://api.groq.com/openai/v1
       chat:
         options:
           model: ${GROQ_MODEL:openai/gpt-oss-120b}

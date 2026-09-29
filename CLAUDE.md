@@ -26,7 +26,7 @@ Clausify is an AI contract-analysis web app for freelancers: upload a contract P
 | Persistence | Spring Data JPA (Hibernate 7), Lombok. IDs are `BIGINT AUTO_INCREMENT`. |
 | File storage | None. PDFs are never persisted; only extracted text is stored. |
 | PDF | Apache PDFBox (text extraction, report generation) |
-| LLM | Groq `openai/gpt-oss-120b` via Spring AI's OpenAI starter, base URL `https://api.groq.com/openai` (Spring AI appends `/v1`), model from `GROQ_MODEL` |
+| LLM | Groq `openai/gpt-oss-120b` via Spring AI's OpenAI starter, base URL `https://api.groq.com/openai/v1` (per the Spring AI 2.0 Groq docs), model from `GROQ_MODEL` |
 | Embeddings | Spring AI ONNX Transformers, `all-MiniLM-L6-v2`, 384 dims, in the JVM |
 | Vector search | Cosine similarity in Java (MySQL Community's `DISTANCE()` is HeatWave-only). Embeddings stored as `VECTOR(384)` or JSON. |
 | Auth | Spring Security, BCrypt, stateless JWT |
