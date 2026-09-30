@@ -953,7 +953,7 @@ Cross-cutting duties are shared and rotate each sprint: CI and deployment, docum
 ## 9. GitHub Project Links
 
 - **Repository:** https://github.com/kymanirjarrett/clausify
-- **Project board:** TODO (add the GitHub Project URL)
+- **Project board:** https://github.com/users/kymanirjarrett/projects/6
 - **Milestones:** https://github.com/kymanirjarrett/clausify/milestones
 
 | Milestone | Dates | Goal |
