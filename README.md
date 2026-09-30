@@ -2,6 +2,8 @@
 
 > AI-Powered Contract Analysis Platform for Freelancers
 
+**Design document:** [DESIGN.md](DESIGN.md)
+
 Clausify helps freelancers and small business owners understand legal contracts by using AI to identify risky clauses, suggest negotiation points, and compare terms against industry standards.
 
 ## 🎓 Course submissions
