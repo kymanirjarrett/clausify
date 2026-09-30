@@ -13,6 +13,7 @@ Enterprise Application Development, University of Cincinnati. Each submission is
 | Lab | Tag | Key paths |
 |---|---|---|
 | Flyway migrations + Lombok entities | [`lab-flyway-mysql`](https://github.com/kymanirjarrett/clausify/tree/lab-flyway-mysql) | [`backend/src/main/resources/db/migration/`](backend/src/main/resources/db/migration/), [`backend/src/main/java/com/clausify/user/`](backend/src/main/java/com/clausify/user/) |
+| Design document + GitHub project board | [`design-doc`](https://github.com/kymanirjarrett/clausify/tree/design-doc) | [`DESIGN.md`](DESIGN.md), [`docs/design/`](docs/design/), [project board](https://github.com/users/kymanirjarrett/projects/6), [milestones](https://github.com/kymanirjarrett/clausify/milestones) |
 
 ## 👥 Team
 
