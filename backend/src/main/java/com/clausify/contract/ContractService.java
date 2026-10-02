@@ -1,10 +1,14 @@
 package com.clausify.contract;
 
 import com.clausify.common.NotFoundException;
+import com.clausify.common.PageResponse;
 import com.clausify.common.UnsupportedFileTypeException;
 import com.clausify.user.User;
 import com.clausify.user.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +24,9 @@ import java.util.Arrays;
 public class ContractService {
 
     static final String ONLY_PDF = "Only PDF files are supported.";
+    static final String NOT_FOUND = "Contract not found.";
+    /** Newest first; id breaks ties between uploads in the same instant so pages never overlap. */
+    private static final Sort NEWEST_FIRST = Sort.by(Sort.Order.desc("uploadedAt"), Sort.Order.desc("id"));
     /** Every PDF starts with these bytes; the declared content type alone can be faked. */
     private static final byte[] PDF_SIGNATURE = "%PDF-".getBytes(StandardCharsets.US_ASCII);
     private static final int MAX_FILENAME_LENGTH = 255;
@@ -53,6 +60,26 @@ public class ContractService {
                 bytes.length, document.pageCount(), document.text(), clock.instant()));
         events.publishEvent(new ContractUploadedEvent(contract.getId()));
         return ContractSummaryResponse.from(contract);
+    }
+
+    /** FR-4: the caller's contracts, newest first. Clients choose page and size, never the sort. */
+    @Transactional(readOnly = true)
+    public PageResponse<ContractSummaryResponse> list(Long userId, Pageable pageable) {
+        Pageable newestFirst = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), NEWEST_FIRST);
+        return PageResponse.of(contractRepository.findAllByUserId(userId, newestFirst), ContractSummaryResponse::from);
+    }
+
+    @Transactional(readOnly = true)
+    public ContractDetailResponse get(Long id, Long userId) {
+        return ContractDetailResponse.from(findOwned(id, userId));
+    }
+
+    /**
+     * The only way to load a contract for a user request. Another user's contract throws the same 404 as
+     * a missing one, so ids cannot be probed (CLAUDE.md "Ownership").
+     */
+    Contract findOwned(Long id, Long userId) {
+        return contractRepository.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException(NOT_FOUND));
     }
 
     private static byte[] readPdf(MultipartFile file) {
