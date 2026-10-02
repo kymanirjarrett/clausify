@@ -15,7 +15,7 @@ import java.time.Instant;
 @Service
 public class JwtService {
 
-    static final String ISSUER = "clausify";
+    public static final String ISSUER = "clausify";
     static final String EMAIL_CLAIM = "email";
 
     private final JwtEncoder encoder;
