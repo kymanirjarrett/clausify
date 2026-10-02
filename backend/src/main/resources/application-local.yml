@@ -5,3 +5,8 @@ spring:
     url: ${DB_URL:jdbc:mysql://localhost:3307/clausify?createDatabaseIfNotExist=true}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
+
+clausify:
+  cors:
+    # Angular dev server.
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
