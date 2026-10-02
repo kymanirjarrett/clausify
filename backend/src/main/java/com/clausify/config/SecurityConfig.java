@@ -18,8 +18,8 @@ import java.time.Duration;
 import java.util.List;
 
 /**
- * Stateless API security: no sessions or cookies, every protected request carries a JWT
- * (validation is configured with the JWT beans). See ADR 0007.
+ * Stateless API security: no sessions or cookies, every protected request carries a JWT that the
+ * OAuth2 resource server validates with the JwtDecoder from JwtConfig. See ADR 0007.
  */
 @Configuration
 @EnableWebSecurity
@@ -44,6 +44,10 @@ public class SecurityConfig {
                         // Spring's error page must stay reachable, or real errors would surface as 401.
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated())
+                // Reads "Authorization: Bearer <token>", validates it, and sets the Jwt as the principal.
+                .oauth2ResourceServer(resourceServer -> resourceServer
+                        .jwt(jwt -> { })
+                        .authenticationEntryPoint(entryPoint))
                 .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(entryPoint))
                 .build();
     }
