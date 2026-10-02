@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -51,6 +52,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UnreadablePdfException.class)
     ProblemDetail handleUnreadablePdf(UnreadablePdfException ex) {
         return problem(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
+    }
+
+    /** 401 from a failed login. The service picks the message so it is identical for unknown email and wrong password. */
+    @ExceptionHandler(BadCredentialsException.class)
+    ProblemDetail handleBadCredentials(BadCredentialsException ex) {
+        return problem(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     /** 401: reached through ProblemDetailAuthenticationEntryPoint (missing, expired, or invalid token). */
