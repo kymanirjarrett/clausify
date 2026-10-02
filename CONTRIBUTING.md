@@ -45,10 +45,10 @@ Useful Docker commands: `docker compose ps` (status), `docker compose logs mysql
 ## Tests
 
 ```bash
-cd backend && ./mvnw verify   # compile, run all tests (needs the Docker MySQL running)
+cd backend && ./mvnw verify   # compile, run all tests, write the coverage report (needs Docker running)
 ```
 
-Write tests alongside each feature: JUnit 5 for services, MockMvc for controllers, Testcontainers MySQL for repository and integration tests. Name tests after behaviour, e.g. `returnsNotFoundForAnotherUsersContract`.
+Write tests alongside each feature: JUnit 5 for services, MockMvc for controllers, Testcontainers MySQL for repository and integration tests (`@Import(TestcontainersConfiguration.class)`; see `UserRepositoryTest`). Testcontainers starts a throwaway MySQL 8.4 per run, so tests never touch your local data. The coverage report is at `backend/target/site/jacoco/index.html`, and CI attaches it to every run as the `jacoco-report` artifact. Name tests after behaviour, e.g. `returnsNotFoundForAnotherUsersContract`.
 
 ## Tagging a lab submission
 

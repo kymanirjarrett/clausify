@@ -15,24 +15,8 @@ jobs:
     defaults:
       run:
         working-directory: backend
-    services:
-      # Same MySQL version as docker-compose.yml, so tests run against what we develop on.
-      mysql:
-        image: mysql:8.4
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: clausify
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
-          --health-interval=5s
-          --health-timeout=5s
-          --health-retries=20
-    env:
-      DB_URL: jdbc:mysql://localhost:3306/clausify
-      DB_USERNAME: root
-      DB_PASSWORD: root
+    # Integration tests start their own MySQL with Testcontainers (the runner has Docker),
+    # so no database service is needed here.
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-java@v6
@@ -42,6 +26,13 @@ jobs:
           cache: maven
       - name: Build and test
         run: ./mvnw -B verify
+      - name: Upload coverage report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: jacoco-report
+          path: backend/target/site/jacoco/
+          if-no-files-found: ignore
 
   # frontend:
   #   name: frontend
