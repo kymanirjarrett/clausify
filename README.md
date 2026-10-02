@@ -90,7 +90,7 @@ The app starts with the `local` Spring profile, which points at the Docker datab
 
 ```bash
 cd backend
-./mvnw verify                         # compile and run all tests (Docker MySQL must be running)
+./mvnw verify                         # compile, run all tests, coverage report (Docker must be running)
 ```
 
 ### Configuration

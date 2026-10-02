@@ -66,7 +66,7 @@ docs/adr/                                                      architecture deci
 ```bash
 docker compose up -d                  # MySQL 8.4 on host port 3307 (MYSQL_PORT to change)
 cd backend && ./mvnw spring-boot:run  # "local" profile by default; Flyway migrates on startup
-cd backend && ./mvnw verify           # build and run tests
+cd backend && ./mvnw verify           # build, test (Testcontainers MySQL), JaCoCo report
 docker exec -it clausify-mysql mysql -uroot -proot clausify   # SQL shell
 ```
 
