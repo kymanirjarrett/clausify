@@ -7,6 +7,9 @@ spring:
     password: ${DB_PASSWORD:root}
 
 clausify:
+  jwt:
+    # Local development only; never used in production (prod requires JWT_SECRET).
+    secret: ${JWT_SECRET:local-dev-only-jwt-secret-not-for-production-0123456789}
   cors:
     # Angular dev server.
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
