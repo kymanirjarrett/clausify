@@ -31,6 +31,7 @@
 		<jacoco.version>0.8.15</jacoco.version>
 		<!-- springdoc 3.1.x targets Spring Boot 4.1 (2.x is the Boot 3 line). -->
 		<springdoc.version>3.1.1</springdoc.version>
+		<pdfbox.version>3.0.8</pdfbox.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -52,6 +53,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>${pdfbox.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
