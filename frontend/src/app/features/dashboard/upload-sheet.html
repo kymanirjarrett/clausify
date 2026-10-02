@@ -1,0 +1,78 @@
+<section class="drop sheet" [class.drop-active]="dragging()" [class.drop-busy]="busy()"
+         (dragenter)="onDragEnter($event)" (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave()" (drop)="onDrop($event)" aria-labelledby="upload-title">
+  <input #fileInput type="file" accept="application/pdf,.pdf" class="sr-only" tabindex="-1"
+         aria-hidden="true" (change)="onPicked($event)" />
+
+  @switch (state().kind) {
+    @case ('uploading') {
+      <ng-container *ngTemplateOutlet="progress" />
+    }
+    @case ('reading') {
+      <ng-container *ngTemplateOutlet="progress" />
+    }
+    @default {
+      <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
+        <span class="drop-icon" aria-hidden="true"><cl-icon name="upload" [size]="26" /></span>
+        <div class="min-w-0 flex-1">
+          <h2 id="upload-title" class="text-lg font-semibold tracking-[-0.01em]">
+            {{ dragging() ? 'Release to upload' : 'Drop a contract PDF here' }}
+          </h2>
+          <p class="mt-1 text-[0.9375rem] text-ink-2">Text-based PDF, up to 10 MB. The file is read in memory and not stored.</p>
+        </div>
+        <button type="button" class="btn btn-primary shrink-0" (click)="browse()">
+          <cl-icon name="file" [size]="18" /> Choose PDF
+        </button>
+      </div>
+    }
+  }
+
+  <p class="sr-only" aria-live="polite">
+    @switch (state().kind) {
+      @case ('uploading') { Uploading. }
+      @case ('reading') { Upload complete. Reading text. }
+    }
+  </p>
+
+  @if (state(); as s) {
+    @if (s.kind === 'error') {
+      <div role="alert" class="mt-6 flex items-start gap-3 border-t border-rule pt-5">
+        <cl-icon name="alert" [size]="20" class="mt-0.5 text-fail" />
+        <div class="min-w-0 flex-1">
+          <p class="font-medium text-fail">{{ s.message }}</p>
+          @if (s.file) {
+            <p class="measure mt-1 truncate text-ink-3">{{ s.file.name }} · {{ formatBytes(s.file.size) }}</p>
+          }
+        </div>
+        <button type="button" class="btn btn-quiet px-2" (click)="dismiss()" aria-label="Dismiss">
+          <cl-icon name="close" [size]="18" />
+        </button>
+      </div>
+    }
+  }
+</section>
+
+<ng-template #progress>
+  @if (state(); as s) {
+    @if (s.kind === 'uploading' || s.kind === 'reading') {
+      <div class="flex flex-col gap-5">
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <h2 id="upload-title" class="truncate text-lg font-semibold">{{ s.file.name }}</h2>
+            <p class="measure mt-1 text-ink-3">{{ formatBytes(s.file.size) }}</p>
+          </div>
+          @if (s.kind === 'uploading') {
+            <button type="button" class="btn btn-quiet shrink-0 text-sm" (click)="cancel()">Cancel</button>
+          }
+        </div>
+        <div class="gauge" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100"
+             [attr.aria-valuenow]="s.kind === 'uploading' ? s.percent : 100">
+          <span class="gauge-fill" [style.transform]="'scaleX(' + (s.kind === 'uploading' ? s.percent / 100 : 1) + ')'"></span>
+        </div>
+        <p class="measure text-ink-2">
+          @if (s.kind === 'uploading') { Uploading · {{ s.percent }}% } @else { Reading the text… }
+        </p>
+      </div>
+    }
+  }
+</ng-template>

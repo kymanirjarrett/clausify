@@ -4,13 +4,14 @@ How the team gets a change from idea to `main`. Project context and architecture
 
 ## Setup
 
-Prerequisites: JDK 21 or newer, Docker Desktop, Git. (Node and npm once the Angular app exists.)
+Prerequisites: JDK 21 or newer, Docker Desktop, Node.js LTS, Git.
 
 ```bash
 git clone https://github.com/kymanirjarrett/clausify.git
 cd clausify
 docker compose up -d                  # MySQL 8.4 on localhost:3307
 cd backend && ./mvnw spring-boot:run  # API on http://localhost:8080, "local" profile
+cd frontend && npm install && npm start   # web app on http://localhost:4200 (second terminal)
 ```
 
 No environment variables are needed locally. If port 3307 is taken, run `MYSQL_PORT=3308 docker compose up -d` and set `DB_URL=jdbc:mysql://localhost:3308/clausify`.
@@ -29,7 +30,7 @@ Useful Docker commands: `docker compose ps` (status), `docker compose logs mysql
    - Scope is optional; use the feature area when it fits: `auth`, `user`, `contract`, `analysis`, `clause`, `config`
    - Lowercase after the colon, imperative mood ("add", not "added"), no trailing period, 72 characters max
 4. **Open a PR into `main`** with a Conventional Commit title and the template filled in, including `Closes #<issue>`.
-5. **Checks must pass:** `backend` (build and tests against MySQL) and `pr-title` (title format).
+5. **Checks must pass:** `backend` (build and tests against MySQL), `frontend` (unit tests and production build), and `pr-title` (title format).
 6. **Review:** one teammate approves. Reviewers check layering, tests, security (ownership checks, no secrets), and that migrations are new files. Resolve every conversation before merging.
 7. **Merge** with the "Create a merge commit" button; the merge commit is titled with the PR title. Delete the branch afterwards.
 

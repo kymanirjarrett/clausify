@@ -1,0 +1,172 @@
+<header class="absolute inset-x-0 top-0 z-20">
+  <nav class="mx-auto flex max-w-[84rem] items-center justify-between px-5 py-5 sm:px-8" aria-label="Main">
+    <a routerLink="/" class="rounded-sm" aria-label="Clausify home"><cl-wordmark /></a>
+    <div class="flex items-center gap-2">
+      @if (auth.isSignedIn()) {
+        <a routerLink="/app" class="btn btn-primary min-h-10 text-sm">My contracts <cl-icon name="arrowRight" [size]="18" /></a>
+      } @else {
+        <a routerLink="/login" class="btn btn-quiet text-sm">Log in</a>
+        <a routerLink="/signup" class="btn btn-primary min-h-10 text-sm">Create an account</a>
+      }
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <!-- First viewport: the drawing sheet. -->
+  <section class="relative isolate flex min-h-[100svh] items-center overflow-hidden" aria-labelledby="hero-title">
+    <cl-hero-field [anchor]="anchorEl()" />
+
+    <div class="relative z-10 mx-auto grid w-full max-w-[84rem] items-center gap-14 px-5 pb-20 pt-28 sm:px-8
+                lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16 lg:pb-24">
+      <div class="reveal min-w-0 max-w-[34rem]">
+        <h1 id="hero-title" class="text-[clamp(2.4rem,5.2vw,4.25rem)] font-semibold leading-[1.02] tracking-[-0.035em]">
+          Know what a contract commits you to before you sign.
+        </h1>
+        <p class="mt-6 max-w-[31rem] text-lg leading-relaxed text-ink-2">
+          Clausify measures every clause of your contract against fair terms, calls out those outside tolerance,
+          and supplies corrected wording you can return to the client.
+        </p>
+        <div class="mt-9 flex flex-wrap items-center gap-3">
+          <a routerLink="/signup" class="btn btn-primary">Create an account <cl-icon name="arrowRight" [size]="18" /></a>
+          <a routerLink="/login" class="btn btn-secondary">Log in</a>
+        </div>
+        <p class="mt-5 text-sm leading-relaxed text-ink-2">Preview release: accounts and uploads work today; automated analysis is in development.</p>
+        <p class="mt-8 flex max-w-[30rem] items-start gap-2.5 text-sm leading-relaxed text-ink-2">
+          <cl-icon name="lock" [size]="18" class="mt-0.5 text-blue-ink" />
+          <span>Your PDF is read in memory and discarded. Only the extracted text is kept, and it is visible only to you.</span>
+        </p>
+      </div>
+
+      <!-- Sample clause plate (synthetic). -->
+      <figure #plate class="plate sheet relative mx-auto w-full min-w-0 max-w-[40rem] px-6 pb-8 pt-6 sm:px-9 sm:pb-10 sm:pt-7"
+              (mouseenter)="linked.set(true)" (mouseleave)="linked.set(false)">
+        <figcaption class="measure flex items-center justify-between text-ink-3">
+          <span>Sample analysis · synthetic contract</span>
+          <span class="hidden sm:inline">Sheet 1 of 1</span>
+        </figcaption>
+
+        <!-- The governing dimension line. -->
+        <div class="dimension mt-7" aria-hidden="true">
+          <span class="dimension-line"></span>
+          <span class="measure dimension-label bg-sheet px-2 text-ink-2">§ 7.2 Liability · risk 85 / 100</span>
+        </div>
+
+        <blockquote class="mt-5 font-[450] leading-[1.75] text-[1.0625rem] text-ink">
+          7.2&ensp;Contractor shall be liable to Client
+          <mark class="flag" [class.flag-linked]="linked()">without limitation as to amount or type<span #marker class="flag-marker" aria-hidden="true"></span></mark>,
+          including for indirect, incidental, consequential, and punitive damages.
+        </blockquote>
+
+        <div #callout class="callout relative mt-14 sm:ml-[18%]" [class.callout-linked]="linked()">
+          <p class="flex flex-wrap items-center gap-2">
+            <span class="stamp bg-amber-wash text-amber-ink">Out of tolerance</span>
+            <span class="font-semibold">Uncapped liability</span>
+          </p>
+          <p class="mt-2 text-[0.9375rem] leading-relaxed text-ink-2">
+            Your exposure has no ceiling, including losses neither party could foresee.
+          </p>
+          <p class="measure mt-4 text-ink-3">Suggested revision</p>
+          <p class="mt-1.5 border-t border-rule pt-2.5 text-[0.9375rem] leading-relaxed">
+            Contractor's total liability shall not exceed the fees paid in the three (3) months preceding the claim,
+            and neither party shall be liable for indirect or consequential damages.
+          </p>
+        </div>
+
+        <dl class="title-block measure mt-10 grid grid-cols-2 sm:grid-cols-4 xl:hidden" aria-label="About this sheet">
+          <ng-container *ngTemplateOutlet="titleBlock" />
+        </dl>
+
+        @if (leader(); as l) {
+          <svg class="pointer-events-none absolute inset-0 size-full overflow-visible" aria-hidden="true">
+            <path class="leader" [attr.d]="l.d" [style.--len]="l.length" fill="none" />
+          </svg>
+        }
+      </figure>
+    </div>
+
+    <ng-template #titleBlock>
+      <div><dt>Drawing</dt><dd>Contract review</dd></div>
+      <div><dt>Method</dt><dd>Clause by clause</dd></div>
+      <div><dt>Files retained</dt><dd>None</dd></div>
+      <div><dt>Status</dt><dd>Preview</dd></div>
+    </ng-template>
+    <dl class="title-block measure absolute bottom-6 right-8 z-10 hidden xl:grid" aria-label="About this sheet">
+      <ng-container *ngTemplateOutlet="titleBlock" />
+    </dl>
+  </section>
+
+  <!-- How it works: one dimension chain. -->
+  <section class="border-t border-rule bg-sheet" aria-labelledby="flow-title">
+    <div class="mx-auto max-w-[84rem] px-5 py-20 sm:px-8 lg:py-28">
+      <h2 id="flow-title" class="max-w-[36rem] text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-tight tracking-[-0.025em]">
+        From the client's draft to terms you can accept.
+      </h2>
+      <ol class="chain mt-14 grid gap-10 md:grid-cols-3 md:gap-0">
+        <li>
+          <h3 class=" text-lg font-semibold">Drop the PDF on your dashboard</h3>
+          <p class="mt-2 max-w-[22rem] leading-relaxed text-ink-2">Text-based PDFs up to 10 MB. The text is extracted immediately and the file is discarded.</p>
+        </li>
+        <li>
+          <h3 class=" text-lg font-semibold">Each clause is checked against fair terms</h3>
+          <p class="mt-2 max-w-[22rem] leading-relaxed text-ink-2">Findings are scored from 0 to 100 across eight categories, with an overall risk level for the contract.</p>
+        </li>
+        <li>
+          <h3 class=" text-lg font-semibold">Return corrected wording</h3>
+          <p class="mt-2 max-w-[22rem] leading-relaxed text-ink-2">Every clause outside tolerance comes with replacement language to propose in your reply.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Tolerance schedule: the eight categories. -->
+  <section aria-labelledby="schedule-title">
+    <div class="mx-auto grid max-w-[84rem] gap-12 px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:py-28">
+      <div>
+        <h2 id="schedule-title" class="text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-tight tracking-[-0.025em]">
+          The tolerance schedule
+        </h2>
+        <p class="mt-4 max-w-[28rem] leading-relaxed text-ink-2">
+          Eight categories account for most of the terms that cost freelancers money or future work.
+          Each finding names its category, so you can see where a contract concentrates its risk.
+        </p>
+      </div>
+      <table class="schedule w-full text-left">
+        <caption class="sr-only">Clause categories Clausify checks</caption>
+        <thead>
+          <tr class="measure text-ink-3"><th scope="col" class="w-[38%] pb-3 font-normal">Category</th><th scope="col" class="pb-3 font-normal">What is checked</th></tr>
+        </thead>
+        <tbody>
+          @for (category of categories; track category.name) {
+            <tr class="border-t border-rule">
+              <th scope="row" class="py-4 pr-6 align-top font-semibold">{{ category.name }}</th>
+              <td class="py-4 align-top leading-relaxed text-ink-2">{{ category.checks }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Close. -->
+  <section class="bg-ink text-vellum" aria-labelledby="close-title">
+    <div class="mx-auto flex max-w-[84rem] flex-col items-start gap-8 px-5 py-20 sm:px-8 md:flex-row md:items-end md:justify-between lg:py-24">
+      <div>
+        <h2 id="close-title" class="max-w-[30rem] text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-tight tracking-[-0.025em]">
+          Review your next contract before it is signed.
+        </h2>
+        <p class="mt-4 max-w-[30rem] leading-relaxed text-vellum/75">Free to use. Your files are never stored.</p>
+      </div>
+      <a routerLink="/signup" class="btn bg-vellum text-ink hover:bg-white">Create an account <cl-icon name="arrowRight" [size]="18" /></a>
+    </div>
+  </section>
+</main>
+
+<footer class="border-t border-rule">
+  <div class="mx-auto flex max-w-[84rem] flex-col gap-4 px-5 py-8 text-sm text-ink-2 sm:px-8 md:flex-row md:items-center md:justify-between">
+    <p class="max-w-[42rem] leading-relaxed">
+      Clausify provides information, not legal advice. For decisions with significant consequences, consult a licensed attorney.
+    </p>
+    <p class="measure text-ink-3">IT4045C · University of Cincinnati · Fall 2026</p>
+  </div>
+</footer>

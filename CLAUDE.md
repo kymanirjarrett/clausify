@@ -19,7 +19,7 @@ Clausify is an AI contract-analysis web app for freelancers: upload a contract P
 
 | Area | Decision |
 |---|---|
-| Frontend | Angular + Tailwind CSS, npm (not started) |
+| Frontend | Angular 22 (standalone, zoneless, signals) + Tailwind CSS v4, npm, in `frontend/` |
 | Backend | Spring Boot 4.1.x, Java 21 target, Maven |
 | Database | MySQL. Local: Docker 8.4 (`docker-compose.yml`). Deployed: Aiven for MySQL free tier (powers off when idle; wake it before demos). |
 | Migrations | Flyway (`spring-boot-starter-flyway` + `flyway-mysql`; `flyway-core` alone is not auto-configured in Boot 4) |
@@ -50,7 +50,7 @@ backend/src/main/java/com/clausify/
 backend/src/main/resources/
   application.yml, application-local.yml, application-prod.yml
   db/migration/V<n>__description.sql                           one change per file
-frontend/                                                      Angular (later)
+frontend/                                                      Angular app (core/, shared/, features/)
 legacy/nextjs-prototype/                                       delete once Angular exists
 docs/adr/                                                      architecture decisions
 ```
@@ -59,7 +59,8 @@ docs/adr/                                                      architecture deci
 - **Ownership:** MySQL has no row-level security, so every query for user-owned data is scoped to the current user in the repository or service (`findByIdAndOwnerId`). Another user's record returns `404`, not `403`.
 - **Constructor injection** only, no field `@Autowired`.
 - **Lombok on entities:** relationship fields get `@ToString.Exclude` and `@EqualsAndHashCode.Exclude`; passwords are always `@ToString.Exclude`.
-- **Tests** alongside each feature: JUnit 5, MockMvc, Testcontainers MySQL.
+- **Tests** alongside each feature: JUnit 5, MockMvc, Testcontainers MySQL; Vitest for frontend logic.
+- **Frontend design:** `frontend/PRODUCT.md` (product context) and `frontend/DESIGN.md` (the visual system, "Specification Sheet") govern UI work; the wireframes and mockups in `docs/design/` show which screens exist, not how they look. The UI must never present a feature the API does not support yet as working (use the documented ghost/absent states). The repo-root `DESIGN.md` is the course design document, not a visual system.
 
 ## Running locally
 
@@ -68,6 +69,8 @@ docker compose up -d                  # MySQL 8.4 on host port 3307 (MYSQL_PORT 
 cd backend && ./mvnw spring-boot:run  # "local" profile by default; Flyway migrates on startup
 cd backend && ./mvnw verify           # build, test (Testcontainers MySQL), JaCoCo report
 docker exec -it clausify-mysql mysql -uroot -proot clausify   # SQL shell
+cd frontend && npm start              # web app on :4200, proxies /api to :8080
+cd frontend && npx ng test --watch=false   # frontend unit tests
 ```
 
 The `local` profile needs no environment variables. The deployed API runs with `SPRING_PROFILES_ACTIVE=prod` and every value from `.env.example` set in Render.

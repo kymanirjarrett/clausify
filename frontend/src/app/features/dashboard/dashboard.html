@@ -1,0 +1,92 @@
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <h1 class="text-[2rem] font-semibold leading-tight tracking-[-0.03em]">Contracts</h1>
+    <p class="mt-1.5 text-ink-2">Upload a contract to add it to your register. Status updates automatically.</p>
+  </div>
+</div>
+
+<cl-upload-sheet class="mt-8" (uploaded)="onUploaded($event)" />
+
+<p class="sr-only" aria-live="polite">{{ announcement() }}</p>
+
+<section class="mt-12" aria-labelledby="register-title">
+  <div class="flex flex-wrap items-baseline justify-between gap-3 border-b border-ink pb-3">
+    <h2 id="register-title" class="text-lg font-semibold">Register</h2>
+    @if (range()) {
+      <p class="measure text-ink-3">{{ range() }}</p>
+    }
+  </div>
+
+  @if (loading() && !page()) {
+    <div class="mt-1" aria-busy="true" aria-label="Loading contracts">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="ghost-row"><span class="ghost h-4 w-48"></span><span class="ghost ml-auto h-4 w-20"></span></div>
+      }
+    </div>
+  } @else if (error()) {
+    <div role="alert" class="mt-6 flex flex-wrap items-center gap-4 rounded-[3px] border border-fail bg-fail-wash px-4 py-3.5 text-fail">
+      <cl-icon name="alert" [size]="20" />
+      <p class="flex-1">{{ error() }}</p>
+      <button type="button" class="btn btn-secondary min-h-9 text-sm text-ink" (click)="load()">
+        <cl-icon name="refresh" [size]="16" /> Try again
+      </button>
+    </div>
+  } @else if (rows().length === 0) {
+    <div class="mt-1">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="ghost-row" aria-hidden="true"><span class="ghost h-4 w-56"></span><span class="ghost ml-auto h-4 w-16"></span></div>
+      }
+      <p class="mt-6 text-ink-2">No contracts yet. Upload a PDF above to start your register.</p>
+    </div>
+  } @else {
+    <div class="overflow-x-auto">
+      <table class="register w-full text-left">
+        <caption class="sr-only">Your contracts, newest first</caption>
+        <thead>
+          <tr class="measure text-ink-3">
+            <th scope="col" class="font-normal">Document</th>
+            <th scope="col" class="font-normal">Uploaded</th>
+            <th scope="col" class="text-right font-normal">Pages</th>
+            <th scope="col" class="text-right font-normal">Size</th>
+            <th scope="col" class="font-normal">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (contract of rows(); track contract.id) {
+            <tr [class.row-new]="contract.id === justUploaded()">
+              <td>
+                <a [routerLink]="['/app/contracts', contract.id]" class="row-link">
+                  <cl-breakable class="block font-medium" [text]="contract.filename" />
+                  <span class="measure text-ink-3">{{ contractNumber(contract.id) }}</span>
+                </a>
+              </td>
+              <td class="cell-meta tabular whitespace-nowrap text-ink-2">{{ formatDateTime(contract.uploadedAt) }}</td>
+              <td class="cell-meta tabular text-right text-ink-2"><span class="sm:hidden">Pages </span>{{ contract.pageCount }}</td>
+              <td class="cell-meta tabular whitespace-nowrap text-right text-ink-2">{{ formatBytes(contract.sizeBytes) }}</td>
+              <td class="cell-status"><cl-status-stamp [status]="contract.status" /></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (inProgress()) {
+      <p class="mt-5 max-w-[46rem] text-sm leading-relaxed text-ink-3">
+        Automated analysis is not active in this release, so uploaded contracts remain at Uploaded. Their extracted text is stored.
+      </p>
+    }
+
+    @if (page(); as p) {
+      @if (p.totalPages > 1) {
+        <nav class="mt-6 flex items-center justify-end gap-2" aria-label="Register pages">
+          <button type="button" class="btn btn-secondary min-h-9 text-sm" [disabled]="p.page === 0" (click)="goTo(p.page - 1)">
+            <cl-icon name="arrowLeft" [size]="16" /> Newer
+          </button>
+          <button type="button" class="btn btn-secondary min-h-9 text-sm" [disabled]="p.page >= p.totalPages - 1" (click)="goTo(p.page + 1)">
+            Older <cl-icon name="arrowRight" [size]="16" />
+          </button>
+        </nav>
+      }
+    }
+  }
+</section>
