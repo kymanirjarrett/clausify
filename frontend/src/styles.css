@@ -1,0 +1,239 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+
+/*
+ * Clausify: Specification Sheet world.
+ * Vellum ground, graphite ink, construction blue for linework and actions,
+ * drafting amber reserved for out-of-tolerance callouts.
+ */
+@theme {
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --color-vellum: #f2f4f1;
+  --color-sheet: #fbfcfa;
+  --color-ink: #1a1e22;
+  --color-ink-2: #454d55;
+  --color-ink-3: #5f6870;
+  --color-rule: #cfd5d1;
+  --color-rule-strong: #9aa3a0;
+  --color-ghost: #e6eae6;
+
+  --color-blue: #3460d1;
+  --color-blue-ink: #2449a8;
+  --color-blue-wash: #e3eafb;
+
+  --color-amber: #d7832a;
+  --color-amber-ink: #8a4a0c;
+  --color-amber-wash: #fbeedd;
+
+  --color-pass: #2d7a4c;
+  --color-pass-wash: #e2f1e7;
+  --color-fail: #a4442b;
+  --color-fail-wash: #f7e4de;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    background: var(--color-vellum);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    scrollbar-color: var(--color-rule-strong) transparent;
+  }
+
+  body {
+    min-height: 100dvh;
+    caret-color: var(--color-blue);
+  }
+
+  ::selection {
+    background: var(--color-blue-wash);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  a {
+    text-underline-offset: 0.22em;
+    text-decoration-thickness: 1px;
+  }
+
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-rule-strong);
+    border: 3px solid var(--color-vellum);
+    border-radius: 999px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Numerals in data line up like a dimension table. */
+  .tabular {
+    font-variant-numeric: tabular-nums slashed-zero;
+  }
+
+  /* A drawing sheet: raised vellum with a hairline frame and registration ticks at the corners. */
+  .sheet {
+    position: relative;
+    background: var(--color-sheet);
+    border: 1px solid var(--color-rule);
+    box-shadow: 0 1px 2px rgb(26 30 34 / 0.04), 0 8px 24px -12px rgb(26 30 34 / 0.12);
+  }
+  .sheet::before,
+  .sheet::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    border-color: var(--color-rule-strong);
+    border-style: solid;
+  }
+  .sheet::before {
+    top: -1px;
+    left: -1px;
+    border-width: 1px 0 0 1px;
+  }
+  .sheet::after {
+    right: -1px;
+    bottom: -1px;
+    border-width: 0 1px 1px 0;
+  }
+
+  /* Measurement and identifiers only: ids, sizes, page counts, dates, stamps. */
+  .measure {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums slashed-zero;
+  }
+
+  /* Revision stamp: the status of a contract, boxed like a drawing's revision mark. */
+  .stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* An absent value, drawn rather than left blank. */
+  .ghost {
+    background: repeating-linear-gradient(-45deg, var(--color-ghost) 0 6px, transparent 6px 12px);
+    border: 1px dashed var(--color-rule);
+  }
+
+  /* Form fields: a baseline rule like a field on a title block. */
+  .field-input {
+    width: 100%;
+    padding: 0.7rem 0.75rem;
+    background: var(--color-sheet);
+    border: 1px solid var(--color-rule-strong);
+    border-radius: 3px;
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+    transition: border-color 160ms var(--ease-out-expo), box-shadow 160ms var(--ease-out-expo);
+  }
+  .field-input::placeholder {
+    color: var(--color-ink-3);
+  }
+  .field-input:hover {
+    border-color: var(--color-ink-3);
+  }
+  .field-input:focus {
+    outline: none;
+    border-color: var(--color-blue);
+    box-shadow: 0 0 0 3px var(--color-blue-wash);
+  }
+  .field-input[aria-invalid='true'] {
+    border-color: var(--color-fail);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.15rem;
+    font-size: 0.9375rem;
+    font-weight: 550;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    transition: background-color 160ms var(--ease-out-expo), border-color 160ms var(--ease-out-expo),
+      color 160ms var(--ease-out-expo), transform 160ms var(--ease-out-expo);
+    cursor: pointer;
+    user-select: none;
+  }
+  .btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+  .btn-primary {
+    background: var(--color-blue);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-blue-ink);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--color-ink);
+    border-color: var(--color-rule-strong);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    border-color: var(--color-ink);
+    background: var(--color-sheet);
+  }
+  .btn-quiet {
+    min-height: 2.25rem;
+    padding: 0 0.6rem;
+    color: var(--color-ink-2);
+    background: transparent;
+  }
+  .btn-quiet:hover:not(:disabled) {
+    color: var(--color-ink);
+    background: var(--color-ghost);
+  }
+}

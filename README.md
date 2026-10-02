@@ -33,7 +33,7 @@ Clausify is being rebuilt from a Next.js prototype into a Spring Boot + Angular 
 
 | Layer | Technology |
 |---|---|
-| Frontend | Angular, TypeScript, Tailwind CSS (not started) |
+| Frontend | Angular 22 (standalone, zoneless, signals), TypeScript, Tailwind CSS v4 |
 | Backend | Java 21, Spring Boot 4.1, Spring Web, Spring Data JPA (Hibernate 7), Spring Security, Lombok, Maven |
 | Database | MySQL: Docker locally, Aiven free tier when deployed |
 | Migrations | Flyway |
@@ -72,6 +72,7 @@ flowchart LR
 
 - JDK 21 or newer
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- Node.js LTS (includes npm), for the frontend
 - Git
 
 ### Run
@@ -84,13 +85,25 @@ cd backend
 ./mvnw spring-boot:run                # API on http://localhost:8080
 ```
 
-The app starts with the `local` Spring profile, which points at the Docker database and needs no environment variables. Flyway creates the schema on startup.
+In a second terminal, start the web app:
+
+```bash
+cd frontend
+npm install                           # first time only
+npm start                             # http://localhost:4200, proxies /api to the API on 8080
+```
+
+Open **http://localhost:4200**, create an account, and upload a contract PDF. Sample contracts are in [`backend/src/test/resources/contracts/`](backend/src/test/resources/contracts/).
+
+The API starts with the `local` Spring profile, which points at the Docker database and needs no environment variables. Flyway creates the schema on startup.
 
 ### Test
 
 ```bash
 cd backend
 ./mvnw verify                         # compile, run all tests, coverage report (Docker must be running)
+cd ../frontend
+npx ng test --watch=false             # frontend unit tests (Vitest)
 ```
 
 ### Configuration
@@ -108,17 +121,17 @@ With the API running, open **http://localhost:8080/swagger-ui.html** to browse a
 
 ## 🤝 Contributing
 
-Team workflow (issues, branch names, Conventional Commits, PR checks, reviews, lab tagging) is in [CONTRIBUTING.md](CONTRIBUTING.md). Every PR runs the backend build and tests against MySQL in GitHub Actions.
+Team workflow (issues, branch names, Conventional Commits, PR checks, reviews, lab tagging) is in [CONTRIBUTING.md](CONTRIBUTING.md). Every PR runs the backend tests (against MySQL) and the frontend tests and production build in GitHub Actions.
 
 ## 🗺️ Roadmap
 
 - [x] Spring Boot backend with Flyway migrations (course lab)
 - [x] Local and deployed configuration, CI, architecture decision records
-- [ ] Authentication: register, login, JWT
-- [ ] Contract upload with in-memory text extraction
+- [x] Authentication: register, login, JWT
+- [x] Contract upload with in-memory text extraction, contract list and detail
 - [ ] AI analysis with Groq, risk scoring, flagged clauses
 - [ ] Standard-clause similarity search
-- [ ] Angular frontend
+- [x] Angular frontend: landing, sign-up and login, dashboard with upload, contract detail, account
 - [ ] Deployment (Render, Vercel, Aiven)
 
 ## ⚖️ Legal disclaimer

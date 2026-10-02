@@ -1,0 +1,85 @@
+<a routerLink="/app" class="inline-flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink">
+  <cl-icon name="arrowLeft" [size]="16" /> All contracts
+</a>
+
+@if (error(); as e) {
+  <section class="mt-8 max-w-[36rem]" role="alert">
+    @if (e.status === 404) {
+      <h1 class="text-2xl font-semibold tracking-[-0.02em]">Contract not found</h1>
+      <p class="mt-3 leading-relaxed text-ink-2">This contract does not exist, or it belongs to another account.</p>
+    } @else {
+      <h1 class="text-2xl font-semibold tracking-[-0.02em]">This contract could not be loaded</h1>
+      <p class="mt-3 leading-relaxed text-ink-2">{{ e.message }}</p>
+      <button type="button" class="btn btn-secondary mt-5" (click)="load()"><cl-icon name="refresh" [size]="18" /> Try again</button>
+    }
+  </section>
+} @else if (contract(); as c) {
+  <header class="mt-6 flex flex-wrap items-start justify-between gap-4">
+    <h1 class="min-w-0 text-[1.875rem] font-semibold leading-tight tracking-[-0.03em]"><cl-breakable [text]="c.filename" /></h1>
+    <cl-status-stamp [status]="c.status" class="mt-2" />
+  </header>
+
+  <!-- Title block: the contract's particulars. -->
+  <dl class="title-block mt-8 grid grid-cols-2 sm:grid-cols-5">
+    <div><dt>Contract no.</dt><dd class="measure !text-[0.9375rem]">{{ contractNumber(c.id) }}</dd></div>
+    <div><dt>Uploaded</dt><dd class="tabular">{{ formatDateTime(c.uploadedAt) }}</dd></div>
+    <div><dt>Pages</dt><dd class="tabular">{{ c.pageCount }}</dd></div>
+    <div><dt>File size</dt><dd class="tabular">{{ formatBytes(c.sizeBytes) }}</dd></div>
+    <div><dt>File retained</dt><dd>No, text only</dd></div>
+  </dl>
+
+  <!-- Revision block: what has happened to this contract. -->
+  <section class="mt-12" aria-labelledby="track-title">
+    <h2 id="track-title" class="text-lg font-semibold">Revisions</h2>
+    <table class="revisions mt-4 w-full max-w-[44rem] text-left">
+      <caption class="sr-only">History of this contract</caption>
+      <thead>
+        <tr><th scope="col" class="w-14">Rev</th><th scope="col">Event</th><th scope="col">Date</th></tr>
+      </thead>
+      <tbody>
+        @for (r of revisions(); track r.rev) {
+          <tr [class]="'rev-' + r.state" [attr.aria-current]="r.state === 'current' ? 'step' : null">
+            <td><span class="rev-mark">{{ r.rev }}</span></td>
+            <td class="font-medium">{{ r.label }}</td>
+            <td class="measure text-ink-2">{{ r.note }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (c.status === 'FAILED') {
+      <div class="mt-8 max-w-[44rem] rounded-[3px] border border-fail bg-fail-wash px-4 py-3.5">
+        <p class="font-medium text-fail">Analysis failed</p>
+        <p class="mt-1 leading-relaxed text-ink-2">{{ c.failureReason || 'No reason was recorded.' }}</p>
+        <p class="mt-2 text-sm text-ink-3">Retrying a failed analysis will be available in a later release.</p>
+      </div>
+    }
+  </section>
+
+  <!-- Analysis: drawn as ghost cells until results exist. -->
+  <section class="mt-14" aria-labelledby="analysis-title">
+    <div class="flex items-baseline justify-between border-b border-ink pb-3">
+      <h2 id="analysis-title" class="text-lg font-semibold">Analysis</h2>
+      <p class="measure text-ink-3">Not yet available</p>
+    </div>
+    <div class="mt-6 grid grid-cols-[6.5rem_minmax(0,1fr)] gap-4 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-6">
+      <div class="ghost grid size-[6.5rem] place-items-center rounded-[3px] text-center sm:size-40">
+        <span class="measure text-ink-3">Risk score</span>
+      </div>
+      <div class="space-y-3" aria-hidden="true">
+        @for (w of ['82%', '64%', '74%', '50%']; track $index) {
+          <div class="ghost h-14 rounded-[3px]" [style.width]="w"></div>
+        }
+      </div>
+    </div>
+    <p class="mt-6 max-w-[44rem] leading-relaxed text-ink-2">
+      Automated analysis is not active in this release. When it is, this section will list each clause outside
+      tolerance with its category, risk score, explanation, and suggested revision.
+    </p>
+  </section>
+} @else {
+  <div class="mt-8 space-y-4" aria-busy="true" aria-label="Loading contract">
+    <div class="ghost h-9 w-80 max-w-full"></div>
+    <div class="ghost h-20 w-full"></div>
+  </div>
+}

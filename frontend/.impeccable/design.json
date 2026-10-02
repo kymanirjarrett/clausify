@@ -1,0 +1,541 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-02T15:07:07+00:00",
+  "title": "Design System: Clausify",
+  "extensions": {
+    "colorMeta": {
+      "vellum": {
+        "role": "neutral",
+        "displayName": "Vellum",
+        "canonical": "#f2f4f1",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#242524",
+          "#414240",
+          "#60625f",
+          "#818380",
+          "#a4a6a3",
+          "#c8cac7",
+          "#edefed"
+        ]
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Sheet",
+        "canonical": "#fbfcfa",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#252524",
+          "#424241",
+          "#616160",
+          "#828381",
+          "#a4a5a4",
+          "#c9c9c8",
+          "#eeefed"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "#1a1e22",
+        "tonalRamp": [
+          "#090b0e",
+          "#222528",
+          "#3f4246",
+          "#5d6266",
+          "#7e8388",
+          "#a1a6aa",
+          "#c5cace",
+          "#ebeff3"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Graphite 2",
+        "canonical": "#454d55",
+        "tonalRamp": [
+          "#080c0f",
+          "#21262b",
+          "#3c4349",
+          "#5b626a",
+          "#7b838c",
+          "#9ea6ae",
+          "#c2cad2",
+          "#e8eff6"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Graphite 3",
+        "canonical": "#5f6870",
+        "tonalRamp": [
+          "#080c0f",
+          "#20262b",
+          "#3c4349",
+          "#5a626a",
+          "#7a848c",
+          "#9da6ae",
+          "#c2cad2",
+          "#e8f0f6"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#cfd5d1",
+        "tonalRamp": [
+          "#090c0a",
+          "#232624",
+          "#3f4340",
+          "#5e635f",
+          "#7e8480",
+          "#a1a6a3",
+          "#c6cac7",
+          "#ebf0ed"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Strong Hairline",
+        "canonical": "#9aa3a0",
+        "tonalRamp": [
+          "#080c0b",
+          "#212625",
+          "#3d4442",
+          "#5c6361",
+          "#7c8582",
+          "#9fa7a4",
+          "#c4cbc9",
+          "#e9f0ee"
+        ]
+      },
+      "ghost": {
+        "role": "neutral",
+        "displayName": "Ghost",
+        "canonical": "#e6eae6",
+        "tonalRamp": [
+          "#0a0c0a",
+          "#242624",
+          "#404340",
+          "#5f625f",
+          "#808380",
+          "#a3a6a3",
+          "#c7cac7",
+          "#ecefec"
+        ]
+      },
+      "blue": {
+        "role": "primary",
+        "displayName": "Construction Blue",
+        "canonical": "#3460d1",
+        "tonalRamp": [
+          "#000035",
+          "#051a63",
+          "#19398f",
+          "#3159be",
+          "#4b7aed",
+          "#7ca2f8",
+          "#b0c9fd",
+          "#e7effd"
+        ]
+      },
+      "blue-ink": {
+        "role": "primary",
+        "displayName": "Pen Blue",
+        "canonical": "#2449a8",
+        "tonalRamp": [
+          "#000134",
+          "#081d5b",
+          "#1e3c86",
+          "#375bb2",
+          "#527de0",
+          "#78a2fe",
+          "#b1c9fb",
+          "#e7efff"
+        ]
+      },
+      "blue-wash": {
+        "role": "primary",
+        "displayName": "Blue Wash",
+        "canonical": "#e3eafb",
+        "tonalRamp": [
+          "#080b12",
+          "#21252e",
+          "#3d424d",
+          "#5c616e",
+          "#7c8291",
+          "#9fa5b3",
+          "#c4c9d6",
+          "#e9eefa"
+        ]
+      },
+      "amber": {
+        "role": "secondary",
+        "displayName": "Drafting Amber",
+        "canonical": "#d7832a",
+        "tonalRamp": [
+          "#150700",
+          "#391d00",
+          "#613604",
+          "#8b5213",
+          "#b76e20",
+          "#de9149",
+          "#ffb879",
+          "#ffeada"
+        ]
+      },
+      "amber-ink": {
+        "role": "secondary",
+        "displayName": "Amber Ink",
+        "canonical": "#8a4a0c",
+        "tonalRamp": [
+          "#160700",
+          "#3c1b00",
+          "#653303",
+          "#8b511f",
+          "#b3703b",
+          "#d49566",
+          "#f6bb90",
+          "#fdeadd"
+        ]
+      },
+      "amber-wash": {
+        "role": "secondary",
+        "displayName": "Amber Wash",
+        "canonical": "#fbeedd",
+        "tonalRamp": [
+          "#0f0a04",
+          "#2b241b",
+          "#494135",
+          "#6a6052",
+          "#8c8071",
+          "#aea395",
+          "#d2c7ba",
+          "#f6ede1"
+        ]
+      },
+      "pass": {
+        "role": "tertiary",
+        "displayName": "Pass Green",
+        "canonical": "#2d7a4c",
+        "tonalRamp": [
+          "#001004",
+          "#052d17",
+          "#104f2c",
+          "#2d7148",
+          "#4a9565",
+          "#74b78a",
+          "#9edab0",
+          "#c8fed8"
+        ]
+      },
+      "pass-wash": {
+        "role": "tertiary",
+        "displayName": "Pass Wash",
+        "canonical": "#e2f1e7",
+        "tonalRamp": [
+          "#070d09",
+          "#1f2722",
+          "#3b453e",
+          "#59655d",
+          "#79867d",
+          "#9ca9a0",
+          "#c1cdc5",
+          "#e7f2ea"
+        ]
+      },
+      "fail": {
+        "role": "tertiary",
+        "displayName": "Fail Rust",
+        "canonical": "#a4442b",
+        "tonalRamp": [
+          "#1b0300",
+          "#460f02",
+          "#702713",
+          "#99432d",
+          "#c46148",
+          "#e58970",
+          "#fcb6a3",
+          "#fee9e4"
+        ]
+      },
+      "fail-wash": {
+        "role": "tertiary",
+        "displayName": "Fail Wash",
+        "canonical": "#f7e4de",
+        "tonalRamp": [
+          "#100907",
+          "#2c221f",
+          "#4b3f3b",
+          "#6c5e59",
+          "#8f7e79",
+          "#b1a19c",
+          "#d4c5c1",
+          "#f9ebe7"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The landing hero headline only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Landing section headings."
+      },
+      "page-title": {
+        "displayName": "Page Title",
+        "purpose": "App page h1; detail 1.875rem, auth 1.75rem at the same weight and tracking."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section h2 inside app pages and step titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Reading text, max about 44rem; leads at 1.125rem in ink-2."
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "Buttons, nav links, field text."
+      },
+      "measure": {
+        "displayName": "Measure",
+        "purpose": "Ids, sizes, page counts, table dates, sheet captions, column heads."
+      },
+      "stamp": {
+        "displayName": "Stamp / Field Label",
+        "purpose": "Uppercase status stamps and title-block field labels."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sheet-lift",
+        "value": "0 1px 2px rgb(26 30 34 / 0.04), 0 8px 24px -12px rgb(26 30 34 / 0.12)",
+        "purpose": "Raised drawing sheets only."
+      },
+      {
+        "name": "callout-lift",
+        "value": "0 10px 28px -16px rgb(138 74 12 / 0.35)",
+        "purpose": "Out-of-tolerance callout at rest."
+      },
+      {
+        "name": "callout-lift-linked",
+        "value": "0 16px 36px -18px rgb(138 74 12 / 0.45)",
+        "purpose": "Callout while its flagged phrase is hovered."
+      },
+      {
+        "name": "focus-halo",
+        "value": "0 0 0 3px #e3eafb",
+        "purpose": "Focused field; current revision mark."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Every transition and entrance."
+      },
+      {
+        "name": "state",
+        "value": "160ms",
+        "purpose": "Hover, focus, and press transitions on controls and rows."
+      },
+      {
+        "name": "settle",
+        "value": "600-900ms, from opacity 0.35, translateY(6px), blur(2px)",
+        "purpose": "The single orchestrated page entrance; starts already visible."
+      },
+      {
+        "name": "rule",
+        "value": "700ms, scaleX(0.2) to 1",
+        "purpose": "Dimension line ruling across the hero plate."
+      },
+      {
+        "name": "arrive",
+        "value": "1600ms blue-wash fade",
+        "purpose": "A newly uploaded register row."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.01ms durations; hero field renders one static frame",
+        "purpose": "prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one filled construction-blue action per decision.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Create an account <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M5 12h14m0 0-5-5m5 5-5 5\"/></svg></button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.75rem; padding: 0 1.15rem; font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; font-size: 0.9375rem; font-weight: 550; border-radius: 3px; border: 1px solid transparent; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16,1,0.3,1), border-color 160ms cubic-bezier(0.16,1,0.3,1), color 160ms cubic-bezier(0.16,1,0.3,1), transform 160ms cubic-bezier(0.16,1,0.3,1); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid var(--color-blue, #3460d1); outline-offset: 3px; } .ds-btn-primary { background: var(--color-blue, #3460d1); color: #fff; } .ds-btn-primary:hover { background: var(--color-blue-ink, #2449a8); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined companion action, e.g. Log in beside Create an account.",
+      "html": "<button class=\"ds-btn ds-btn-secondary\">Log in</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.75rem; padding: 0 1.15rem; font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; font-size: 0.9375rem; font-weight: 550; border-radius: 3px; border: 1px solid transparent; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16,1,0.3,1), border-color 160ms cubic-bezier(0.16,1,0.3,1), color 160ms cubic-bezier(0.16,1,0.3,1), transform 160ms cubic-bezier(0.16,1,0.3,1); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid var(--color-blue, #3460d1); outline-offset: 3px; } .ds-btn-secondary { background: transparent; color: var(--color-ink, #1a1e22); border-color: var(--color-rule-strong, #9aa3a0); } .ds-btn-secondary:hover { border-color: var(--color-ink, #1a1e22); background: var(--color-sheet, #fbfcfa); }"
+    },
+    {
+      "name": "Quiet Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Borderless utility action such as Sign out.",
+      "html": "<button class=\"ds-btn ds-btn-quiet\">Sign out</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.75rem; padding: 0 1.15rem; font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; font-size: 0.9375rem; font-weight: 550; border-radius: 3px; border: 1px solid transparent; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16,1,0.3,1), border-color 160ms cubic-bezier(0.16,1,0.3,1), color 160ms cubic-bezier(0.16,1,0.3,1), transform 160ms cubic-bezier(0.16,1,0.3,1); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid var(--color-blue, #3460d1); outline-offset: 3px; } .ds-btn-quiet { min-height: 2.25rem; padding: 0 0.6rem; background: transparent; color: var(--color-ink-2, #454d55); } .ds-btn-quiet:hover { color: var(--color-ink, #1a1e22); background: var(--color-ghost, #e6eae6); }"
+    },
+    {
+      "name": "Field",
+      "kind": "input",
+      "refersTo": "field-input",
+      "description": "Text field with blue border and wash halo on focus.",
+      "html": "<label class=\"ds-label\">Email<input class=\"ds-field\" type=\"email\" placeholder=\"you@example.com\"></label>",
+      "css": ".ds-label { display: grid; gap: 0.4rem; font-family: 'Geist Variable', ui-sans-serif, sans-serif; font-size: 0.875rem; font-weight: 500; color: var(--color-ink, #1a1e22); } .ds-field { width: 100%; padding: 0.7rem 0.75rem; background: var(--color-sheet, #fbfcfa); border: 1px solid var(--color-rule-strong, #9aa3a0); border-radius: 3px; color: var(--color-ink, #1a1e22); font: inherit; font-size: 0.9375rem; font-weight: 400; transition: border-color 160ms cubic-bezier(0.16,1,0.3,1), box-shadow 160ms cubic-bezier(0.16,1,0.3,1); } .ds-field::placeholder { color: var(--color-ink-3, #5f6870); } .ds-field:hover { border-color: var(--color-ink-3, #5f6870); } .ds-field:focus { outline: none; border-color: var(--color-blue, #3460d1); box-shadow: 0 0 0 3px var(--color-blue-wash, #e3eafb); } .ds-field[aria-invalid='true'] { border-color: var(--color-fail, #a4442b); }"
+    },
+    {
+      "name": "Status Stamps",
+      "kind": "chip",
+      "refersTo": "stamp-uploaded",
+      "description": "Revision stamps; the word always carries the status.",
+      "html": "<span class=\"ds-stamp ds-st-up\">Uploaded</span> <span class=\"ds-stamp ds-st-an\"><span class=\"ds-dot\"></span>Analyzing</span> <span class=\"ds-stamp ds-st-ok\">Analyzed</span> <span class=\"ds-stamp ds-st-fail\">Failed</span>",
+      "css": ".ds-stamp { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.5rem; font-family: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid currentColor; border-radius: 2px; white-space: nowrap; } .ds-st-up { color: var(--color-ink-2, #454d55); background: var(--color-sheet, #fbfcfa); } .ds-st-an { color: var(--color-blue-ink, #2449a8); background: var(--color-blue-wash, #e3eafb); } .ds-st-ok { color: var(--color-pass, #2d7a4c); background: var(--color-pass-wash, #e2f1e7); } .ds-st-fail { color: var(--color-fail, #a4442b); background: var(--color-fail-wash, #f7e4de); } .ds-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }"
+    },
+    {
+      "name": "App Navigation",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Sticky header links with a blue rule under the active page.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" class=\"ds-nav-link ds-nav-active\" aria-current=\"page\">Contracts</a><a href=\"#\" class=\"ds-nav-link\">Account</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 0.25rem; padding: 0.85rem 0; border-bottom: 1px solid var(--color-rule, #cfd5d1); background: var(--color-vellum, #f2f4f1); font-family: 'Geist Variable', ui-sans-serif, sans-serif; } .ds-nav-link { position: relative; padding: 0.45rem 0.7rem; font-size: 0.9375rem; color: var(--color-ink-2, #454d55); text-decoration: none; border-radius: 3px; transition: color 160ms cubic-bezier(0.16,1,0.3,1), background-color 160ms cubic-bezier(0.16,1,0.3,1); } .ds-nav-link:hover { color: var(--color-ink, #1a1e22); background: var(--color-ghost, #e6eae6); } .ds-nav-link:focus-visible { outline: 2px solid var(--color-blue, #3460d1); outline-offset: 3px; } .ds-nav-active { color: var(--color-ink, #1a1e22); font-weight: 550; } .ds-nav-active::after { content: ''; position: absolute; left: 0.7rem; right: 0.7rem; bottom: -0.85rem; height: 2px; background: var(--color-blue, #3460d1); }"
+    },
+    {
+      "name": "Drawing Sheet",
+      "kind": "card",
+      "refersTo": "sheet",
+      "description": "The only lifted surface: hairline frame with corner registration ticks.",
+      "html": "<div class=\"ds-sheet\"><p class=\"ds-measure\">Sample analysis · synthetic contract</p><p class=\"ds-sheet-body\">7.2 Contractor shall be liable to Client without limitation as to amount or type.</p></div>",
+      "css": ".ds-sheet { position: relative; max-width: 28rem; padding: 1.5rem 2rem; background: var(--color-sheet, #fbfcfa); border: 1px solid var(--color-rule, #cfd5d1); box-shadow: 0 1px 2px rgb(26 30 34 / 0.04), 0 8px 24px -12px rgb(26 30 34 / 0.12); font-family: 'Geist Variable', ui-sans-serif, sans-serif; color: var(--color-ink, #1a1e22); } .ds-sheet::before, .ds-sheet::after { content: ''; position: absolute; width: 10px; height: 10px; border: solid var(--color-rule-strong, #9aa3a0); } .ds-sheet::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; } .ds-sheet::after { right: -1px; bottom: -1px; border-width: 0 1px 1px 0; } .ds-measure { margin: 0; font-family: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.75rem; letter-spacing: 0.02em; color: var(--color-ink-3, #5f6870); } .ds-sheet-body { margin: 1rem 0 0; line-height: 1.75; }"
+    },
+    {
+      "name": "Title Block",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Facts as bordered cells with mono field labels.",
+      "html": "<dl class=\"ds-tb\"><div><dt>Contract no.</dt><dd class=\"ds-mono\">CL-00002</dd></div><div><dt>Pages</dt><dd>2</dd></div><div><dt>File retained</dt><dd>No, text only</dd></div></dl>",
+      "css": ".ds-tb { display: grid; grid-template-columns: repeat(3, auto); margin: 0; border: 1px solid var(--color-rule-strong, #9aa3a0); background: var(--color-sheet, #fbfcfa); overflow: hidden; font-family: 'Geist Variable', ui-sans-serif, sans-serif; } .ds-tb > div { padding: 0.8rem 1rem; margin: -1px 0 0 -1px; border-left: 1px solid var(--color-rule, #cfd5d1); border-top: 1px solid var(--color-rule, #cfd5d1); } .ds-tb dt { font-family: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-3, #5f6870); } .ds-tb dd { margin: 0.3rem 0 0; font-weight: 500; color: var(--color-ink, #1a1e22); } .ds-mono { font-family: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace; font-variant-numeric: tabular-nums slashed-zero; }"
+    },
+    {
+      "name": "Ghost Cell",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Hatched placeholder for data the product cannot show yet.",
+      "html": "<div class=\"ds-ghost\"><span>Risk score</span></div>",
+      "css": ".ds-ghost { display: grid; place-items: center; width: 10rem; height: 10rem; border-radius: 3px; background: repeating-linear-gradient(-45deg, var(--color-ghost, #e6eae6) 0 6px, transparent 6px 12px); border: 1px dashed var(--color-rule, #cfd5d1); } .ds-ghost span { font-family: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.75rem; letter-spacing: 0.02em; color: var(--color-ink-3, #5f6870); }"
+    },
+    {
+      "name": "Out-of-Tolerance Callout",
+      "kind": "custom",
+      "refersTo": "stamp-out-of-tolerance",
+      "description": "The only home of amber: stamp, finding, and suggested revision.",
+      "html": "<div class=\"ds-callout\"><p class=\"ds-callout-head\"><span class=\"ds-stamp ds-st-amber\">Out of tolerance</span><strong>Uncapped liability</strong></p><p class=\"ds-callout-text\">Your exposure has no ceiling, including losses neither party could foresee.</p><p class=\"ds-callout-fix\">Contractor's total liability shall not exceed the fees paid in the three (3) months preceding the claim.</p></div>",
+      "css": ".ds-stamp { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.5rem; font-family: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid currentColor; border-radius: 2px; white-space: nowrap; } .ds-st-amber { color: var(--color-amber-ink, #8a4a0c); background: var(--color-amber-wash, #fbeedd); } .ds-callout { max-width: 26rem; padding: 1.1rem 1.25rem 1.2rem; background: var(--color-sheet, #fbfcfa); border: 1px solid var(--color-amber, #d7832a); border-radius: 3px; box-shadow: 0 10px 28px -16px rgb(138 74 12 / 0.35); font-family: 'Geist Variable', ui-sans-serif, sans-serif; color: var(--color-ink, #1a1e22); transition: transform 260ms cubic-bezier(0.16,1,0.3,1), box-shadow 260ms cubic-bezier(0.16,1,0.3,1); } .ds-callout:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -18px rgb(138 74 12 / 0.45); } .ds-callout-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 0; } .ds-callout-text { margin: 0.5rem 0 0; font-size: 0.9375rem; line-height: 1.625; color: var(--color-ink-2, #454d55); } .ds-callout-fix { margin: 1rem 0 0; padding-top: 0.625rem; border-top: 1px solid var(--color-rule, #cfd5d1); font-size: 0.9375rem; line-height: 1.625; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Specification Sheet",
+    "overview": "Clausify reads a contract the way an engineer checks a drawing: every clause measured against tolerance, every deviation called out and pinned to its corrected spec. The interface is a set of drawing sheets laid on cool vellum. Graphite ink carries the words, construction blue carries linework, focus, and the one action that matters on a screen, and drafting amber appears only where something is out of tolerance. Status is a revision stamp, facts sit in title-block tables, and anything the product cannot show yet is drawn as a hatched ghost cell rather than faked or left blank.\n\nDensity is calm and exact. Pages are hairline-ruled rather than boxed into cards; tables and registers do the organizing. A workhorse grotesk (Geist) sets everything people read, and a technical monospace (Geist Mono) is reserved for what a draftsman would letter by stencil: identifiers, measurements, dates, stamps, and the field labels of title blocks and schedules. The voice of the type matches the product voice: formal, precise, never alarmed.\n\nThe world refuses the category default of a centered headline over three feature cards and a screenshot, and it refuses red-alert risk theatre. Risk is stated by text and position (a stamp, a leader line, a callout), never by color alone.",
+    "keyCharacteristics": [
+      "Vellum ground, raised sheets with hairline frames and corner registration ticks.",
+      "Hairline rules and title-block grids instead of cards.",
+      "Construction blue for linework, focus, and primary actions; amber only for out-of-tolerance callouts.",
+      "Revision stamps carry status as words; color only supports them.",
+      "Absent states are drawn as hatched ghost cells.",
+      "Mono only for ids, measures, dates, stamps, and title-block field labels.",
+      "One orchestrated entrance; grid texture only on the hero drawing surface."
+    ],
+    "rules": [
+      {
+        "name": "The Tolerance Rule",
+        "body": "Amber means \"out of tolerance\" and nothing else. It is never an accent, a warning for ordinary errors, or a decorative highlight. The wordmark's amber callout point is the single brand exception, and it depicts exactly that callout.",
+        "section": "colors"
+      },
+      {
+        "name": "The Stamp Carries the Word Rule",
+        "body": "Status is never color-only. Every status color appears inside a stamp whose text states the status; a colored dot or tinted row with no label is not a status.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Blue Action Rule",
+        "body": "A screen has at most one filled blue button per decision; everything else is secondary (outlined) or quiet.",
+        "section": "colors"
+      },
+      {
+        "name": "The Stencil Rule",
+        "body": "Mono is for what a draftsman would letter: identifiers, measurements, dates, stamps, and the field and column labels of title blocks, revision tables, and schedules. Prose, headings, buttons, and notices are always Geist.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Kicker Rule",
+        "body": "No eyebrow or kicker label above a heading. A heading stands on its own or on a hairline rule; mono labels belong to fields and columns, not to sections.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Numerals Rule",
+        "body": "Every number in data is tabular with a slashed zero, so columns line up like a dimension table.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Sheet Rule",
+        "body": "Only sheets lift. Tables, title blocks, notices, and ghost cells lie flat on the page.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Drawing Surface Rule",
+        "body": "Grid texture appears only on an actual drawing surface: the hero's WebGL construction field (static under reduced motion, CSS grid fallback without WebGL). Auth, app, and content surfaces sit on plain vellum.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do reserve amber (#d7832a family) for out-of-tolerance callouts: stamp, leader, flagged phrase, callout border.",
+      "Do put every status in a stamp whose text names it; color only supports the word.",
+      "Do draw unavailable data as ghost cells, sized like the content to come, with honest copy beside them.",
+      "Do use mono only for ids, measurements, dates, stamps, and title-block or column field labels, with tabular slashed-zero numerals.",
+      "Do organize with hairline rules, registers, and title blocks; lift only drawing sheets.",
+      "Do give a page one orchestrated entrance (settle 600 to 900ms on cubic-bezier(0.16, 1, 0.3, 1)) that starts from an already-visible state, and honor reduced motion.",
+      "Do let long identifiers break only after _ . @ -."
+    ],
+    "donts": [
+      "Don't use amber as an accent, a generic warning, or decoration.",
+      "Don't convey status or risk with color alone.",
+      "Don't place an eyebrow or kicker label above a heading.",
+      "Don't set prose, headings, buttons, or notices in mono.",
+      "Don't put grid textures on anything but the hero's drawing surface.",
+      "Don't stack per-element entrance animations or animate content in from invisible.",
+      "Don't wrap content in rounded, shadowed cards; corners stay at 2 to 3px and only sheets lift.",
+      "Don't present a capability the API does not support as working; draw it as a ghost."
+    ]
+  }
+}

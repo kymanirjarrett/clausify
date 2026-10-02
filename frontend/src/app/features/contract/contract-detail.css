@@ -1,0 +1,22 @@
+:host { display: block; }
+.title-block { border: 1px solid var(--color-rule-strong); background: var(--color-sheet); }
+.title-block > div { padding: 0.8rem 1rem; border-left: 1px solid var(--color-rule); border-top: 1px solid var(--color-rule); }
+.title-block dt { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-3); }
+.title-block dd { margin-top: 0.3rem; font-weight: 500; }
+.title-block { overflow: hidden; }
+.title-block > div { margin: -1px 0 0 -1px; }
+
+.revisions { border: 1px solid var(--color-rule-strong); background: var(--color-sheet); border-collapse: collapse; }
+.revisions th { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 400; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--color-ink-3); padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--color-rule-strong); }
+.revisions td { padding: 0.8rem 0.9rem; border-top: 1px solid var(--color-rule); vertical-align: middle; }
+.revisions td + td, .revisions th + th { border-left: 1px solid var(--color-rule); }
+.rev-mark { display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border: 1px solid var(--color-ink);
+  border-radius: 2px; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; }
+.rev-done .rev-mark { background: var(--color-ink); color: var(--color-sheet); }
+.rev-current .rev-mark { border-color: var(--color-blue); color: var(--color-blue-ink); box-shadow: 0 0 0 3px var(--color-blue-wash); }
+.rev-failed .rev-mark { border-color: var(--color-fail); background: var(--color-fail); color: #fff; }
+.rev-absent td { color: var(--color-ink-3); }
+.rev-absent td:not(:first-child) { background: repeating-linear-gradient(-45deg, var(--color-ghost) 0 6px, transparent 6px 12px); }
+.rev-absent .rev-mark { border-style: dashed; border-color: var(--color-rule-strong); color: var(--color-ink-3); }
+@media (max-width: 639px) { .title-block > div:last-child:nth-child(odd) { grid-column: span 2; } }

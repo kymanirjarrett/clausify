@@ -1,0 +1,25 @@
+:host { display: block; }
+.drop {
+  padding: 1.75rem; border-style: dashed; border-color: var(--color-rule-strong);
+  transition: border-color 200ms var(--ease-out-expo), background-color 200ms var(--ease-out-expo);
+}
+@media (min-width: 640px) { .drop { padding: 2rem 2.25rem; } }
+.drop-active { border-color: var(--color-blue); background-color: var(--color-blue-wash); }
+.drop-icon {
+  display: grid; place-items: center; width: 3.25rem; height: 3.25rem; border-radius: 3px;
+  border: 1px solid var(--color-blue); color: var(--color-blue-ink); background: var(--color-sheet);
+  transition: transform 260ms var(--ease-out-expo);
+}
+.drop-active .drop-icon { transform: translateY(-3px); }
+/* Progress drawn as a dimension line filling between its extension ticks. */
+.gauge { position: relative; height: 13px; }
+.gauge::before {
+  content: ''; position: absolute; inset: 6px 0 auto; height: 1px; background: var(--color-rule-strong);
+}
+.gauge::after {
+  content: ''; position: absolute; inset: 0; border-left: 1px solid var(--color-ink-3); border-right: 1px solid var(--color-ink-3);
+}
+.gauge-fill {
+  position: absolute; inset: 5px 0 auto; height: 3px; background: var(--color-blue); transform-origin: left;
+  transition: transform 240ms var(--ease-out-expo);
+}
