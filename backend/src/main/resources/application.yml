@@ -22,3 +22,10 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
+server:
+  tomcat:
+    # After rejecting an upload over 10MB, Tomcat reads and discards the rest of the body (up to this size)
+    # so the client receives the 413 response. Above it, Tomcat drops the connection and the browser sees a
+    # network error instead. The Angular upload screen should also check size before sending.
+    max-swallow-size: 50MB
