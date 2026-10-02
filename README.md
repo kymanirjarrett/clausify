@@ -104,7 +104,7 @@ Every environment variable the deployed API needs is listed with a placeholder i
 
 ### API documentation
 
-Swagger UI will be served at `http://localhost:8080/swagger-ui.html` once springdoc-openapi is added with the first endpoints.
+With the API running, open **http://localhost:8080/swagger-ui.html** to browse and call every endpoint (the raw OpenAPI spec is at `/v3/api-docs`). To call protected endpoints, use **register** or **login**, copy the `token` from the response, click **Authorize**, and paste it.
 
 ## 🤝 Contributing
 
