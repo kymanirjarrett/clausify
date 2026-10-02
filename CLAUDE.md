@@ -4,7 +4,7 @@ Shared instructions for every Claude Code session in this repo. Personal prefere
 
 ## What this project is
 
-Clausify is an AI contract-analysis web app for freelancers: upload a contract PDF, get a risk score, flagged clauses, and suggested revisions. It is also the semester-long group final project for Enterprise Application Development at the University of Cincinnati. Team: Kymani Jarrett, Ashton Cashier, Venkat Yuva Raaj Narra, Rival Young. The instructor grades Spring Boot layering (controllers, services, repositories), REST APIs, database integration, security, and testing.
+Clausify is an AI contract-analysis web app for freelancers: upload a contract PDF, get a risk score, flagged clauses, and suggested revisions. It is also the semester-long group final project for Enterprise Application Development (IT4045C, Fall 2026) at the University of Cincinnati. Team: Kymani Jarrett, Ashton Cashier, Venkat Yuva Raaj Narra, Rival Young. The instructor grades Spring Boot layering (controllers, services, repositories), REST APIs, database integration, security, and testing.
 
 **One GitHub repo is submitted for every course lab and the final project.** Each lab submission is marked with a git tag so the grader can see exactly what was submitted, even after later commits.
 
@@ -81,11 +81,13 @@ Full details in `CONTRIBUTING.md`.
 - Open a PR into `main` (`Closes #<issue>`); CI and the PR-title check must pass and one teammate approves. PRs are merged with a merge commit.
 - **Tagging a lab submission:** on `main` after the lab's PR merges, `git tag -a lab-<name> -m "Lab: <title> (submitted)"`, `git push origin lab-<name>`, then add a row to the README's "Course submissions" table in a follow-up PR.
 
-## Up next (do not build until the detailed plan arrives)
+## Current plan
 
-The Weeks 2-3 window ends Oct 4. Order:
+The plan lives in two places; read them instead of guessing:
 
-1. **Auth:** `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`, BCrypt, JWT filter. Reuse the lab's `users` table (new columns via V4 if needed).
-2. **Contracts:** V5 `contracts` table (owner FK, filename, size, page count, extracted text, status, timestamps, failure reason); upload endpoint per the upload flow; `GET /api/contracts`, `GET /api/contracts/{id}`, `DELETE`, `POST /{id}/retry`.
-3. **Analysis:** `analyses` and `flagged_clauses` tables; Groq prompt returning structured JSON over seven categories (payment terms, liability, IP rights, termination, non-compete, confidentiality, jurisdiction) with 0 to 100 clause scores plus an overall score and High/Medium/Low; `@Async` runner; `GET /api/contracts/{id}/analysis`.
-4. Tests with each slice; springdoc-openapi for Swagger UI.
+- **[`DESIGN.md`](DESIGN.md)** (submitted design document): requirements FR-1 to FR-12 with acceptance criteria, class diagrams, REST API table (7.4), migrations V4 to V7 (7.5), risk scoring formula (7.6), AI JSON contract (7.7), AI evaluation methodology (7.9).
+- **[Project board](https://github.com/users/kymanirjarrett/projects/6)**: three sprints as milestones. Each story is an issue; Sprint 1 stories have technical tasks as sub-issues with implementation details. Work from a task issue (`gh issue view <n>`).
+
+Sprint 1 (ends Oct 11) is the backend API: E-1 foundations, auth (FR-1, FR-2), contracts (FR-3, FR-4, FR-8), analysis (FR-5 to FR-7). Analysis uses **8** risk categories (the proposal's 7 plus Indemnification) stored in `analyses` and `clause_findings`.
+
+**Migration numbers are reserved:** V4 `users` email/created_at (FR-1), V5 `contracts` (FR-3), V6 `analyses` and `clause_findings` (FR-5), V7 `standard_clauses` (FR-9). Merge them in number order; Flyway rejects a lower version once a higher one is applied.
