@@ -119,6 +119,27 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
+				<!-- Exposes ${org.mockito:mockito-core:jar} (the jar's path) for the surefire argLine below. -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>properties</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!-- Load Mockito as a Java agent instead of letting it self-attach, which newer JDKs block.
+				     @{argLine} keeps the JaCoCo agent that prepare-agent adds. -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
 				<!-- Test coverage: instruments tests, writes target/site/jacoco/index.html on verify.
 				     No minimum is enforced until Sprint 3 (E-3). -->
 				<groupId>org.jacoco</groupId>

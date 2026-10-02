@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 // Security filters are off: this test is about error formatting, not authentication.
-@WebMvcTest
+@WebMvcTest(GlobalExceptionHandlerTest.ThrowingController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @Import(GlobalExceptionHandlerTest.ThrowingController.class)
 class GlobalExceptionHandlerTest {
