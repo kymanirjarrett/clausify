@@ -8,7 +8,7 @@ Clausify helps freelancers and small business owners understand legal contracts 
 
 ## 🎓 Course submissions
 
-Enterprise Application Development, University of Cincinnati. Each submission is marked with a git tag, so the graded state stays viewable after later commits.
+Enterprise Application Development (IT4045C), University of Cincinnati, Fall 2026. Each submission is marked with a git tag, so the graded state stays viewable after later commits.
 
 | Lab | Tag | Key paths |
 |---|---|---|
