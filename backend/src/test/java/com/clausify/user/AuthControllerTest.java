@@ -1,6 +1,7 @@
 package com.clausify.user;
 
 import com.clausify.common.ConflictException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -83,6 +84,40 @@ class AuthControllerTest {
         register("Maria Lopez", "maria@example.com", "Str0ng!Passw0rd")
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.detail").value("An account with this email already exists."));
+    }
+
+    @Test
+    void loginReturns200WithToken() throws Exception {
+        when(authService.login(any())).thenReturn(
+                new AuthResponse("jwt-token", new UserResponse(1L, "Maria Lopez", "maria@example.com")));
+
+        login("maria@example.com", "Str0ng!Passw0rd")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").value("jwt-token"));
+    }
+
+    @Test
+    void failedLoginIs401WithGenericMessage() throws Exception {
+        when(authService.login(any())).thenThrow(new BadCredentialsException("Invalid email or password."));
+
+        login("maria@example.com", "wrong-password1")
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.detail").value("Invalid email or password."));
+    }
+
+    @Test
+    void loginWithBlankFieldsIs400() throws Exception {
+        login("", "")
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.email").value("Email is required"))
+                .andExpect(jsonPath("$.errors.password").value("Password is required"));
+        verifyNoInteractions(authService);
+    }
+
+    private ResultActions login(String email, String password) throws Exception {
+        String body = """
+                {"email": "%s", "password": "%s"}""".formatted(email, password);
+        return mockMvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(body));
     }
 
     private ResultActions register(String name, String email, String password) throws Exception {
