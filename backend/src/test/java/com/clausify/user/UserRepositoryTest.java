@@ -7,8 +7,10 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Runs the lab entities against real MySQL with the Flyway schema, so a mapping that
@@ -43,5 +45,22 @@ class UserRepositoryTest {
                 .satisfies(address -> assertThat(address.getCity()).isEqualTo("Cincinnati"));
         assertThat(reloaded.getProfile().getId()).isEqualTo(id);
         assertThat(reloaded.getProfile().getLoyalityPoints()).isZero();
+    }
+
+    @Test
+    void databaseSetsCreatedAtOnInsert() {
+        User saved = userRepository.saveAndFlush(
+                User.builder().name("Maria Lopez").email("maria@example.com").password("hash").build());
+
+        assertThat(saved.getCreatedAt()).isNotNull();
+    }
+
+    @Test
+    void rejectsDuplicateEmailIgnoringCase() {
+        userRepository.saveAndFlush(User.builder().name("Maria").email("maria@example.com").password("hash").build());
+
+        assertThatThrownBy(() -> userRepository.saveAndFlush(
+                User.builder().name("Other").email("MARIA@example.com").password("hash").build()))
+                .isInstanceOf(DataIntegrityViolationException.class);
     }
 }

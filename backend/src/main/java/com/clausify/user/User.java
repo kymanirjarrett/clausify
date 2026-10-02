@@ -15,7 +15,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Generated;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +42,11 @@ public class User {
     @Column(nullable = false)
     @ToString.Exclude
     private String password;
+
+    // Set by the database default (V4); Hibernate reads it back after insert.
+    @Generated
+    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
+    private Instant createdAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
