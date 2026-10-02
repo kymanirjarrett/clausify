@@ -28,16 +28,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Sends real bearer tokens through the security filter chain. Until FR-3 adds the contracts controller,
- * an authenticated GET /api/contracts reaches Spring MVC and returns 404, which proves the token was
- * accepted; a rejected token stops at the filter with 401.
+ * Sends real bearer tokens through the security filter chain to GET /api/auth/me. The tokens are for
+ * user 42, who does not exist: an accepted token reaches the controller and gets 404 "User not found",
+ * while a rejected token stops at the filter with 401.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestcontainersConfiguration.class)
 class JwtAuthenticationTest {
 
-    private static final String PROTECTED = "/api/contracts";
+    private static final String PROTECTED = "/api/auth/me";
 
     @Autowired
     private MockMvc mockMvc;
