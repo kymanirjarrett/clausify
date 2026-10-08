@@ -2,28 +2,17 @@
 
 > AI-Powered Contract Analysis Platform for Freelancers
 
+[![CI](https://github.com/kymanirjarrett/clausify/actions/workflows/ci.yml/badge.svg)](https://github.com/kymanirjarrett/clausify/actions/workflows/ci.yml)
+
 **Design document:** [DESIGN.md](DESIGN.md)
 
 Clausify helps freelancers and small business owners understand legal contracts by using AI to identify risky clauses, suggest negotiation points, and compare terms against industry standards.
-
-## 🎓 Course submissions
-
-Enterprise Application Development (IT4045C), University of Cincinnati, Fall 2026. Each submission is marked with a git tag, so the graded state stays viewable after later commits.
-
-| Lab | Tag | Key paths |
-|---|---|---|
-| Flyway migrations + Lombok entities | [`lab-flyway-mysql`](https://github.com/kymanirjarrett/clausify/tree/lab-flyway-mysql) | [`backend/src/main/resources/db/migration/`](backend/src/main/resources/db/migration/), [`backend/src/main/java/com/clausify/user/`](backend/src/main/java/com/clausify/user/) |
-| Design document + GitHub project board | [`design-doc`](https://github.com/kymanirjarrett/clausify/tree/design-doc) | [`DESIGN.md`](DESIGN.md), [`docs/design/`](docs/design/), [project board](https://github.com/users/kymanirjarrett/projects/6), [milestones](https://github.com/kymanirjarrett/clausify/milestones) |
-
-## 👥 Team
-
-Kymani Jarrett, Ashton Cashier, Venkat Yuva Raaj Narra, Rival Young.
 
 ## 🚀 Features (planned)
 
 Clausify is being rebuilt from a Next.js prototype into a Spring Boot + Angular application. Target features:
 
-- **AI risk analysis:** upload a contract PDF and get an overall risk score (High / Medium / Low) plus flagged clauses across seven categories: payment terms, liability, IP rights, termination, non-compete, confidentiality, and jurisdiction
+- **AI risk analysis:** upload a contract PDF and get an overall risk score (High / Medium / Low) plus flagged clauses across eight categories: payment terms, liability, IP rights, termination, non-compete, confidentiality, jurisdiction, and indemnification
 - **Negotiation suggestions:** concrete revisions for unfavourable clauses
 - **Standard-clause comparison:** semantic similarity against a library of standard contract terms
 - **Privacy by design:** the PDF is never stored; only its extracted text is kept
@@ -133,6 +122,19 @@ Team workflow (issues, branch names, Conventional Commits, PR checks, reviews, l
 - [ ] Standard-clause similarity search
 - [x] Angular frontend: landing, sign-up and login, dashboard with upload, contract detail, account
 - [ ] Deployment (Render, Vercel, Aiven)
+
+## 👥 Team
+
+Kymani Jarrett, Ashton Cashier, Venkat Yuva Raaj Narra, Rival Young.
+
+## 🎓 Course submissions
+
+Enterprise Application Development (IT4045C), University of Cincinnati, Fall 2026. Each submission is marked with a git tag, so the graded state stays viewable after later commits.
+
+| Lab | Tag | Key paths |
+|---|---|---|
+| Flyway migrations + Lombok entities | [`lab-flyway-mysql`](https://github.com/kymanirjarrett/clausify/tree/lab-flyway-mysql) | [`backend/src/main/resources/db/migration/`](backend/src/main/resources/db/migration/), [`backend/src/main/java/com/clausify/user/`](backend/src/main/java/com/clausify/user/) |
+| Design document + GitHub project board | [`design-doc`](https://github.com/kymanirjarrett/clausify/tree/design-doc) | [`DESIGN.md`](DESIGN.md), [`docs/design/`](docs/design/), [project board](https://github.com/users/kymanirjarrett/projects/6), [milestones](https://github.com/kymanirjarrett/clausify/milestones) |
 
 ## ⚖️ Legal disclaimer
 
