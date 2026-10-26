@@ -86,6 +86,8 @@ Full details in `CONTRIBUTING.md`.
 
 ## Current plan
 
+For a map of where every file lives, what is built, and who owns the outstanding work, read **[`docs/CODEBASE.md`](docs/CODEBASE.md)** first.
+
 The plan lives in two places; read them instead of guessing:
 
 - **[`DESIGN.md`](DESIGN.md)** (submitted design document): requirements FR-1 to FR-12 with acceptance criteria, class diagrams, REST API table (7.4), migrations V4 to V7 (7.5), risk scoring formula (7.6), AI JSON contract (7.7), AI evaluation methodology (7.9).
