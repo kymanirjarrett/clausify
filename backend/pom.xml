@@ -32,6 +32,9 @@
 		<!-- springdoc 3.1.x targets Spring Boot 4.1 (2.x is the Boot 3 line). -->
 		<springdoc.version>3.1.1</springdoc.version>
 		<pdfbox.version>3.0.8</pdfbox.version>
+		<maven.compiler.source>25</maven.compiler.source>
+		<maven.compiler.target>25</maven.compiler.target>
+		<java.version>25</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
