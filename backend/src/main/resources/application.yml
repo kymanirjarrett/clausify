@@ -27,6 +27,13 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  ai:
+    openai:
+      api-key: ${GROQ_API_KEY}
+      base-url: https://groq.com
+      chat:
+        options:
+          model: llama3-8b-8192
 
 server:
   tomcat:
