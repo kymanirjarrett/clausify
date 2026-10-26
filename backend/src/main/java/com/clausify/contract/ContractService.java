@@ -36,6 +36,7 @@ public class ContractService {
     private final PdfTextExtractor pdfTextExtractor;
     private final ApplicationEventPublisher events;
     private final Clock clock;
+    static final String NOT_RETRYABLE = "Only failed analyses can be retried.";
 
     public ContractService(ContractRepository contractRepository, UserRepository userRepository,
                            PdfTextExtractor pdfTextExtractor, ApplicationEventPublisher events, Clock clock) {
@@ -44,6 +45,32 @@ public class ContractService {
         this.pdfTextExtractor = pdfTextExtractor;
         this.events = events;
         this.clock = clock;
+    }
+
+
+
+    /**
+     * FR-7: puts a FAILED contract back in the queue so its stored text is analyzed again (no re-upload).
+     * Any other status is a 409 and nothing changes.
+     */
+    @Transactional
+    public void retry(Long id, Long userId) {
+        Contract contract = findOwned(id, userId);
+        if (!contract.isRetryable()) {
+            throw new ConflictException(NOT_RETRYABLE);
+        }
+        contract.resetForRetry();
+        events.publishEvent(new ContractUploadedEvent(contract.getId()));
+    }
+
+    /** FR-7: 202 Accepted, because analysis runs in the background; poll the Location URL. 409 unless FAILED. */
+    @Operation(summary = "Retry a failed analysis",
+            description = "Only for contracts whose analysis failed. The stored text is analyzed again; no re-upload needed.")
+    @PostMapping("/{id}/retry")
+    public ResponseEntity<Void> retry(@Parameter(description = "Contract id") @PathVariable Long id,
+                                      @AuthenticationPrincipal Jwt jwt) {
+        contractService.retry(id, CurrentUser.id(jwt));
+        return ResponseEntity.accepted().location(URI.create("/api/contracts/" + id)).build();
     }
 
     /**
