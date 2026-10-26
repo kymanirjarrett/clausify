@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/kymanirjarrett/clausify/actions/workflows/ci.yml/badge.svg)](https://github.com/kymanirjarrett/clausify/actions/workflows/ci.yml)
 
-**Design document:** [DESIGN.md](DESIGN.md)
+**Design document:** [DESIGN.md](DESIGN.md) · **New to the code?** [Codebase guide](docs/CODEBASE.md)
 
 Clausify helps freelancers and small business owners understand legal contracts by using AI to identify risky clauses, suggest negotiation points, and compare terms against industry standards.
 
