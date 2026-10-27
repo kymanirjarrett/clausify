@@ -1,79 +1,62 @@
 package com.clausify.analysis;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import java.time.Instant;
 
 @Entity
 @Table(name = "clause_findings")
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ClauseFinding {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analysis_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Analysis analysis;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 100)
-    private RiskCategory category;
+    @Column(nullable = false)
+    private String title;
 
-    @Column(name = "risk_score", nullable = false)
-    private Integer riskScore;
+    @Column(name = "section_ref", length = 100)
+    private String sectionRef;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "risk_category", nullable = false, length = 50)
+    private RiskCategory riskCategory;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "risk_level", nullable = false, length = 50)
     private RiskLevel riskLevel;
 
-    @Column(name = "original_text", nullable = false, columnDefinition = "TEXT")
-    private String originalText;
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private boolean favorable;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String explanation;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
-    @Column(name = "suggested_revision", columnDefinition = "TEXT")
-    private String suggestedRevision;
+    @Column(name = "suggested_remediation", columnDefinition = "TEXT")
+    private String suggestedRemremediation;
 
-    @Column(name = "is_favorable", nullable = false)
-    private boolean isFavorable = false;
+    @Column(columnDefinition = "JSON")
+    private String embedding;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", updatable = false, nullable = false)
+    private Instant createdAt;
 
-    // --- Constructors ---
-    public ClauseFinding() {}
-
-    // --- Getters and Setters ---
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
-
-    public Analysis getAnalysis() { return analysis; }
-    public void setAnalysis(Analysis analysis) { this.analysis = analysis; }
-
-    public RiskCategory getCategory() { return category; }
-    public void setCategory(RiskCategory category) { this.category = category; }
-
-    public Integer getRiskScore() { return riskScore; }
-    public void setRiskScore(Integer riskScore) { this.riskScore = riskScore; }
-
-    public RiskLevel getRiskLevel() { return riskLevel; }
-    public void setRiskLevel(RiskLevel riskLevel) { this.riskLevel = riskLevel; }
-
-    public String getOriginalText() { return originalText; }
-    public void setOriginalText(String originalText) { this.originalText = originalText; }
-
-    public String getExplanation() { return explanation; }
-    public void setExplanation(String explanation) { this.explanation = explanation; }
-
-    public String getSuggestedRevision() { return suggestedRevision; }
-    public void setSuggestedRevision(String suggestedRevision) { this.suggestedRevision = suggestedRevision; }
-
-    public boolean isFavorable() { return isFavorable; }
-    public void setFavorable(boolean favorable) { isFavorable = favorable; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 }

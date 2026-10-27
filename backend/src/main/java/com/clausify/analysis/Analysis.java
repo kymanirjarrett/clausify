@@ -1,27 +1,33 @@
 package com.clausify.analysis;
 
+import com.clausify.contract.Contract;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "analyses")
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Analysis {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "contract_id", nullable = false)
-    private UUID contractId;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
-    private AnalysisStatus status;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contract_id", nullable = false, unique = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Contract contract;
 
     @Column(name = "overall_score")
     private Integer overallScore;
@@ -30,51 +36,33 @@ public class Analysis {
     @Column(name = "overall_risk_level", length = 50)
     private RiskLevel overallRiskLevel;
 
-    @Column(name = "error_reason", columnDefinition = "TEXT")
-    private String errorReason;
+    @Column(name = "contract_type", length = 100)
+    private String contractType;
+
+    @Column(columnDefinition = "TEXT")
+    private String summary;
+
+    @Column(name = "model_name", length = 100)
+    private String modelName;
+
+    @Column(name = "duration_ms")
+    private Long durationMs;
 
     @OneToMany(mappedBy = "analysis", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<ClauseFinding> findings = new ArrayList<>();
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", updatable = false, nullable = false)
+    private Instant createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
-    // --- Constructors ---
-    public Analysis() {}
-
-    // --- Helper Methods to Manage Relationship ---
     public void addFinding(ClauseFinding finding) {
         findings.add(finding);
         finding.setAnalysis(this);
     }
-
-    // --- Getters and Setters ---
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
-
-    public UUID getContractId() { return contractId; }
-    public void setContractId(UUID contractId) { this.contractId = contractId; }
-
-    public AnalysisStatus getStatus() { return status; }
-    public void setStatus(AnalysisStatus status) { this.status = status; }
-
-    public Integer getOverallScore() { return overallScore; }
-    public void setOverallScore(Integer overallScore) { this.overallScore = overallScore; }
-
-    public RiskLevel getOverallRiskLevel() { return overallRiskLevel; }
-    public void setOverallRiskLevel(RiskLevel overallRiskLevel) { this.overallRiskLevel = overallRiskLevel; }
-
-    public String getErrorReason() { return errorReason; }
-    public void setErrorReason(String errorReason) { this.errorReason = errorReason; }
-
-    public List<ClauseFinding> getFindings() { return findings; }
-    public void setFindings(List<ClauseFinding> findings) { this.findings = findings; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }

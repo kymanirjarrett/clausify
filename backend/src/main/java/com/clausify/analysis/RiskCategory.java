@@ -1,10 +1,12 @@
 package com.clausify.analysis;
 
 public enum RiskCategory {
+    PAYMENT_TERMS,
     LIABILITY,
-    PAYMENT,
     INDEMNIFICATION,
+    IP_RIGHTS,
     TERMINATION,
-    INTELLECTUAL_PROPERTY,
-    OTHER
+    NON_COMPETE,
+    CONFIDENTIALITY,
+    JURISDICTION
 }
