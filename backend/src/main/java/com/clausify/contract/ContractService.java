@@ -74,6 +74,12 @@ public class ContractService {
         return ContractDetailResponse.from(findOwned(id, userId));
     }
 
+    /** FR-8: permanently deletes the caller's contract. 404 if it is missing or belongs to someone else. */
+    @Transactional
+    public void delete(Long id, Long userId) {
+        contractRepository.delete(findOwned(id, userId));
+    }
+
     /**
      * The only way to load a contract for a user request. Another user's contract throws the same 404 as
      * a missing one, so ids cannot be probed (CLAUDE.md "Ownership").
