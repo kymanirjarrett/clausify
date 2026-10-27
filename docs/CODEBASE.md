@@ -6,7 +6,7 @@ Start here. This page tells you where everything lives, what is built, what is n
 - **Requirements, API table, schema plan:** [`DESIGN.md`](../DESIGN.md) (FR-1 to FR-12, section 7.4 API, 7.5 database)
 - **Live task status:** the [project board](https://github.com/users/kymanirjarrett/projects/6). If this page and the board disagree, the board wins.
 
-_Last updated Oct 26, 2026, against `main` at `ecda76f`._
+_Last updated Oct 26, 2026._
 
 ---
 
@@ -22,6 +22,8 @@ clausify/
 │   └── CODEBASE.md         This file
 ├── legacy/nextjs-prototype/  Old prototype. Reference only, do not edit. Will be deleted.
 ├── .github/workflows/      CI (ci.yml) and PR title check (pr-title.yml)
+├── backend/Dockerfile      Production image for Render (multi-stage, layered jar)
+├── frontend/vercel.json    Vercel routing: Angular deep links (and, later, the /api proxy)
 ├── docker-compose.yml      Local MySQL 8.4 on port 3307
 ├── .env.example            Every env var the deployed API needs (placeholders only)
 ├── DESIGN.md               Course design document (requirements, diagrams, API, schema)
@@ -47,7 +49,7 @@ Code is **packaged by feature**: each folder under `backend/src/main/java/com/cl
 | `contract/` | Ashton | Partly built | `Contract`, `ContractStatus`, `ContractRepository`, `ContractService`, `ContractController`, `PdfTextExtractor`, `ExtractedDocument`, `ContractUploadedEvent`, DTOs `ContractSummaryResponse`, `ContractDetailResponse`. Still to add: delete, retry, `ReportService`, and Venkat's `ComparisonService` |
 | `analysis/` | Rival | **Not started** | Planned: `Analysis`, `ClauseFinding`, `RiskCategory`, `RiskLevel`, `AnalysisService`, `ContractAnalyzer`, `GroqContractAnalyzer`, `RiskScorer`, prompt templates |
 | `clause/` | Venkat | **Not started** | Planned: `StandardClause`, `StandardClauseRepository`, `ClauseController`, `ClauseSimilarityService`, `EmbeddingService`, `StandardClauseLoader`, seed data |
-| `config/` | Shared | Built | `SecurityConfig` (which URLs are public), `JwtConfig`, `JwtProperties`, `CorsProperties`, `OpenApiConfig` (Swagger), `ProblemDetailAuthenticationEntryPoint` |
+| `config/` | Shared | Built | `SecurityConfig` (which URLs are public, including `/actuator/health`), `JwtConfig`, `JwtProperties`, `CorsProperties`, `OpenApiConfig` (Swagger), `ProblemDetailAuthenticationEntryPoint` |
 | `common/` | Shared | Built | `GlobalExceptionHandler` (turns exceptions into RFC 9457 error JSON), `NotFoundException`, `ConflictException`, `UnreadablePdfException`, `UnsupportedFileTypeException`, `PageResponse`, `CurrentUser` |
 
 ### Recipes
@@ -70,7 +72,7 @@ Code is **packaged by feature**: each folder under `backend/src/main/java/com/cl
 |---|---|---|
 | `application.yml` | Always | Shared settings: Flyway on, `ddl-auto: validate`, 10 MB upload cap, max page size 100 |
 | `application-local.yml` | Default on your machine | Points at Docker MySQL; needs no env vars |
-| `application-prod.yml` | Render (`SPRING_PROFILES_ACTIVE=prod`) | Everything from env vars: `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET`, `CORS_ALLOWED_ORIGINS`, `GROQ_API_KEY`, `GROQ_MODEL` |
+| `application-prod.yml` | Render (`SPRING_PROFILES_ACTIVE=prod`) | Trusts `X-Forwarded-*` from the proxies. Everything else from env vars: `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET`, `CORS_ALLOWED_ORIGINS`, `GROQ_API_KEY`, `GROQ_MODEL` |
 
 ## 3. Database
 
@@ -111,8 +113,8 @@ Full table with request/response details: [DESIGN.md section 7.4](../DESIGN.md#7
 | `GET /api/contracts/{id}/analysis` | FR-5, FR-6 | Rival | Not started (#42) |
 | `GET /api/standard-clauses`, `GET /api/clauses/{findingId}/similar` | FR-9 | Venkat | Not started (#50) |
 | `POST /api/contracts/{id}/compare/{otherId}` | FR-10 | Venkat | Not started (#51) |
-| `GET /api/contracts/{id}/report` | FR-11 | Ashton (proposed) | Not started (#52) |
-| `GET /api/users/me/stats`, `PATCH /api/users/me` | FR-12 | Kymani (proposed) | Not started (#57) |
+| `GET /api/contracts/{id}/report` | FR-11 | Ashton | Not started (#52) |
+| `GET /api/users/me/stats`, `PATCH /api/users/me` | FR-12 | Kymani | Not started (#57) |
 
 Errors are always RFC 9457 `ProblemDetail` JSON: 400 validation, 401 no/bad token, 404 missing **or not yours**, 409 conflict, 413 too large, 415 not a PDF, 422 unreadable PDF.
 
@@ -149,7 +151,7 @@ Test naming patterns already used: `*Test` for unit/slice tests, `*IntegrationTe
 
 **Test files go in `src/test/java`, never `src/main/java`.** Test libraries aren't on the main classpath, so tests in `src/main` break the build.
 
-CI (`.github/workflows/ci.yml`) runs on every PR: `backend` (`./mvnw verify`) and `frontend` (tests + production build). `pr-title.yml` fails the PR unless the title is Conventional Commits, e.g. `feat(contract): add delete endpoint`.
+CI (`.github/workflows/ci.yml`) runs on every PR: `backend` (`./mvnw verify`), `frontend` (tests + production build), and `docker` (builds the Render image when `backend/` changed). `pr-title.yml` fails the PR unless the title is Conventional Commits, e.g. `feat(contract): add delete endpoint`.
 
 ## 7. Workflow in 30 seconds
 
@@ -178,12 +180,10 @@ If V6 and V7 aren't merged by the report deadline, say so in the report's Challe
 
 ### Who works on what (Oct 26 to Nov 15)
 
-"Proposed" means the issue isn't assigned on the board yet.
-
 **Rival (AI analysis):** critical path, so V6 goes first.
 - Week 1: #34 V6 migration, #35 entities (merge these first; they unblock Venkat's V7), #36 Groq config, #37 analyzer, #38 `RiskScorer`
 - Week 2: #39 `AnalysisService` + #40 tests, #42/#43 analysis endpoint, finish FR-7 (#45/#46, PR #84)
-- Week 3: #55 Analysis Results screen; #64 AI evaluation harness (proposed)
+- Week 3: #55 Analysis Results screen; #64 AI evaluation harness
 
 **Venkat (clause library and comparison):**
 - Week 1: FR-9 part 1 (#50): `StandardClause` entity, repository, seed data, `GET /api/standard-clauses` with category filter. Write V7 now but merge it **after** Rival's V6
@@ -192,13 +192,13 @@ If V6 and V7 aren't merged by the report deadline, say so in the report's Challe
 
 **Ashton (contracts and documents, Scrum Master):**
 - Week 1: #48 `DELETE /api/contracts/{id}` + #49 tests
-- Week 2: #52 FR-11 PDF report with PDFBox (proposed; needs FR-5 data, so start with layout using fake data)
+- Week 2: #52 FR-11 PDF report with PDFBox (needs FR-5 data, so start with the layout using fake data)
 - Week 3: Dashboard follow-ups (delete and retry buttons); keep the board current
 
 **Kymani (accounts, security, deployment):**
-- Week 1: #58 E-2 deploy phase 1 (Vercel); #80 rate limiting on auth and upload (proposed)
-- Week 2: E-2 phase 2 (Render + Aiven); #57 FR-12 account stats and profile update (proposed)
-- Week 3: #59 E-3 coverage + Playwright (shared, proposed); #60 E-4 final docs (shared)
+- Week 1: #58 E-2 deploy: Vercel project, Aiven and Render setup (code for #87, #88, #89 is merged); #80 rate limiting on auth and upload
+- Week 2: E-2 #90 `render.yaml` and API rewrite, #91 smoke test and docs; #57 FR-12 account stats and profile update
+- Week 3: #59 E-3 coverage + Playwright and #60 E-4 final docs (both shared by all four)
 
 **Everyone:** for the Part 3 report, send code snippets and Postman screenshots for your own area's entities, repositories, controllers, and endpoints.
 
@@ -208,4 +208,5 @@ If V6 and V7 aren't merged by the report deadline, say so in the report's Challe
 - **Aiven requires primary keys** on every table (`sql_require_primary_key`). Every new table needs one.
 - **Don't commit `frontend/angular.json` analytics IDs.** The Angular CLI adds an `"analytics"` entry if you accept its prompt; discard that change.
 - **Ownership tests:** every new endpoint on user data needs a test that another user gets 404. Copy `ContractQueryIntegrationTest`.
+- **Render is slow to start.** At Render's 0.1 CPU the API took about 4 minutes to boot in local tests. Wake it (and Aiven) well before a demo.
 - **The AI is slow and can fail.** Never call Groq inside a request; do it in the async listener and set the contract to `FAILED` with a readable `failureReason` on errors.
