@@ -42,6 +42,8 @@ Useful Docker commands: `docker compose ps` (status), `docker compose logs mysql
 - **Schema changes are new Flyway migrations** (`V<n>__description.sql`). Never edit a migration that has been applied or pushed.
 - Secrets come from environment variables. Add every new variable to [`.env.example`](.env.example) with a placeholder and a one-line comment.
 - Significant or hard-to-reverse technical decisions get an ADR in [`docs/adr/`](docs/adr/).
+- **AI:** only `GroqContractAnalyzer` calls an LLM, and only in production. Don't add other AI SDKs or use your own API keys; local runs and tests use a fake analyzer and need no key. Details in [`CLAUDE.md`](CLAUDE.md#ai-integration-one-provider-one-key).
+- Files listed in [`.github/CODEOWNERS`](.github/CODEOWNERS) (dependencies, config, the AI analyzer, migrations, deployment, CI) automatically request Kymani's review.
 
 ## Tests
 

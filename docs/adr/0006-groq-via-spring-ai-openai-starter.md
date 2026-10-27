@@ -15,6 +15,12 @@ Similarity search (ADR 0003) also needs text embeddings, and Groq's free tier do
 - Use model **`openai/gpt-oss-120b`**, read from the `GROQ_MODEL` environment variable so a future retirement is a config change, not a code change. The key comes from `GROQ_API_KEY`.
 - Compute embeddings in-process with **Spring AI ONNX Transformers** and `all-MiniLM-L6-v2` (384 dimensions): free, no API key, no network call.
 
+## Usage rules (added 2026-10-27)
+
+- `GroqContractAnalyzer`, behind the `ContractAnalyzer` interface, is the only code that calls an LLM. Other AI SDKs and providers are not used.
+- One Groq key, owned by the project lead and stored only in Render. Team members do not create personal keys.
+- The `local` profile and all tests use a fake `ContractAnalyzer`, so development and CI never need a key or spend quota. The real analyzer is enabled only in `prod`.
+
 ## Consequences
 
 - Swapping to another OpenAI-compatible provider (or OpenAI itself) means changing the base URL, key, and model, not code.
