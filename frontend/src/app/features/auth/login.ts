@@ -3,14 +3,16 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { toApiError } from '../../core/problem';
+import { SLOW_AFTER_MS, STILL_STARTING, ServerStatus, isStarting } from '../../core/server-status';
 import { Icon } from '../../shared/icon';
 import { AuthFrame } from './auth-frame';
 import { FieldError } from './field-error';
+import { WakingNotice } from './waking-notice';
 
 @Component({
   selector: 'cl-login',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, RouterLink, AuthFrame, FieldError, Icon],
+  imports: [ReactiveFormsModule, RouterLink, AuthFrame, FieldError, Icon, WakingNotice],
   template: `
     <cl-auth-frame heading="Log in">
       @if (expired) {
@@ -23,6 +25,8 @@ import { FieldError } from './field-error';
           <cl-icon name="alert" [size]="18" />{{ formError() }}
         </p>
       }
+
+      <cl-waking-notice [show]="pending() && (slow() || server.waking())" />
 
       <form class="mt-7 space-y-5" [formGroup]="form" (ngSubmit)="submit()" novalidate>
         <div>
@@ -68,6 +72,9 @@ export class Login {
     password: ['', Validators.required],
   });
   protected readonly pending = signal(false);
+  /** True once a submit has waited longer than SLOW_AFTER_MS. */
+  protected readonly slow = signal(false);
+  protected readonly server = inject(ServerStatus);
   protected readonly submitted = signal(false);
   protected readonly showPassword = signal(false);
   protected readonly formError = signal<string | null>(null);
@@ -87,11 +94,17 @@ export class Login {
       return;
     }
     this.pending.set(true);
+    const slowTimer = setTimeout(() => this.slow.set(true), SLOW_AFTER_MS);
     this.auth.login(this.form.getRawValue()).subscribe({
-      next: () => void this.router.navigateByUrl(this.safeReturnUrl()),
+      next: () => {
+        clearTimeout(slowTimer);
+        void this.router.navigateByUrl(this.safeReturnUrl());
+      },
       error: (error) => {
+        clearTimeout(slowTimer);
+        this.slow.set(false);
         this.pending.set(false);
-        this.formError.set(toApiError(error).message);
+        this.formError.set(isStarting(error) ? STILL_STARTING : toApiError(error).message);
       },
     });
   }
