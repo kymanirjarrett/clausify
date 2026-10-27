@@ -42,6 +42,16 @@ Clausify is an AI contract-analysis web app for freelancers: upload a contract P
 
 Do not build a file-storage abstraction until retaining files is actually needed (see ADR 0005).
 
+## AI integration (one provider, one key)
+
+The project uses exactly one LLM: Groq `openai/gpt-oss-120b`, through Spring AI's OpenAI starter (ADR 0006). These rules keep cost, data handling, and behavior consistent; follow them even if a task seems easier another way.
+
+- **One integration point.** Only `analysis/GroqContractAnalyzer`, which implements the `ContractAnalyzer` interface, calls an LLM. Do not add other AI SDKs or providers (OpenAI, Anthropic, Gemini, LangChain4j, Ollama, and so on), call an LLM from any other class, or add a second chat model bean.
+- **No personal API keys.** Do not create or use your own Groq or other AI keys for this project, and never commit one. The only key belongs to Kymani and lives in Render's environment.
+- **Local and tests never call the AI.** The `local` profile and every test use a fake `ContractAnalyzer` that returns fixed findings, so the app starts and the tests pass without `GROQ_API_KEY`. The real analyzer is active only in the `prod` profile. If you need to see real model output, ask Kymani.
+- **Changing the model, prompt contract, or AI dependencies** is a team decision: open an issue first. `CODEOWNERS` requests Kymani's review on those files.
+- Embeddings (FR-9) run in-process with ONNX `all-MiniLM-L6-v2` and need no key.
+
 ## Code layout and rules
 
 ```

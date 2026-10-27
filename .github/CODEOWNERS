@@ -1,0 +1,14 @@
+# GitHub requests a review from these owners on any PR that changes matching files.
+# These areas affect cost, security, or production for everyone: dependencies, configuration,
+# the AI integration, database migrations (applied to production permanently), deployment, and CI.
+
+/backend/pom.xml                                   @kymanirjarrett
+/backend/src/main/resources/application*.yml       @kymanirjarrett
+/backend/src/main/resources/db/migration/          @kymanirjarrett
+/backend/src/main/java/com/clausify/config/        @kymanirjarrett
+/backend/src/main/java/com/clausify/analysis/*Analyzer*.java  @kymanirjarrett
+/backend/Dockerfile                                @kymanirjarrett
+/frontend/package.json                             @kymanirjarrett
+/frontend/vercel.json                              @kymanirjarrett
+/render.yaml                                       @kymanirjarrett
+/.github/                                          @kymanirjarrett
