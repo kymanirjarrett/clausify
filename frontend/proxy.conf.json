@@ -1,4 +1,11 @@
 {
+  "/api/health": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/health": "/actuator/health"
+    }
+  },
   "/api": {
     "target": "http://localhost:8080",
     "secure": false

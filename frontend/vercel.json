@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
+    { "source": "/api/health", "destination": "https://clausify-api.onrender.com/actuator/health" },
     { "source": "/api/:path*", "destination": "https://clausify-api.onrender.com/api/:path*" },
     { "source": "/swagger-ui.html", "destination": "https://clausify-api.onrender.com/swagger-ui.html" },
     { "source": "/swagger-ui/:path*", "destination": "https://clausify-api.onrender.com/swagger-ui/:path*" },

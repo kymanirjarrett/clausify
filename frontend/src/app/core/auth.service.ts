@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, firstValueFrom, tap } from 'rxjs';
 import { AuthResponse, User } from './api.models';
+import { retryWhileStarting } from './server-status';
 
 const TOKEN_KEY = 'clausify.token';
 
@@ -46,15 +47,21 @@ export class AuthService {
     return this.http.post<AuthResponse>('/api/auth/login', request).pipe(tap((r) => this.signIn(r)));
   }
 
-  /** Called once at startup: confirms a stored token still works and loads the user. */
+  /**
+   * Called once at startup, without blocking it: confirms a stored token still works and loads the user.
+   * A sleeping API (Render's cold start) is waited for, not treated as a bad token; only a 401 (handled by
+   * the interceptor) or a deleted account (404) signs the user out.
+   */
   async restore(): Promise<void> {
     if (!this.tokenSignal()) {
       return;
     }
     try {
-      this.userSignal.set(await firstValueFrom(this.http.get<User>('/api/auth/me')));
-    } catch {
-      this.clear();
+      this.userSignal.set(await firstValueFrom(this.http.get<User>('/api/auth/me').pipe(retryWhileStarting())));
+    } catch (error) {
+      if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 404)) {
+        this.clear();
+      }
     }
   }
 

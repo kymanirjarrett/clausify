@@ -3,9 +3,11 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { toApiError } from '../../core/problem';
+import { SLOW_AFTER_MS, STILL_STARTING, ServerStatus, isStarting } from '../../core/server-status';
 import { Icon } from '../../shared/icon';
 import { AuthFrame } from './auth-frame';
 import { FieldError } from './field-error';
+import { WakingNotice } from './waking-notice';
 
 /** Mirrors the API's RegisterRequest rules so mistakes show before submitting. */
 export const PASSWORD_PATTERN = /^(?=.*\p{L})(?=.*\d).{8,72}$/u;
@@ -14,7 +16,7 @@ export const PASSWORD_RULE = 'Password must be at least 8 characters and include
 @Component({
   selector: 'cl-signup',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, RouterLink, AuthFrame, FieldError, Icon],
+  imports: [ReactiveFormsModule, RouterLink, AuthFrame, FieldError, Icon, WakingNotice],
   template: `
     <cl-auth-frame heading="Create your account">
       <p class="mt-2 text-[0.9375rem] leading-relaxed text-ink-2">
@@ -26,6 +28,8 @@ export const PASSWORD_RULE = 'Password must be at least 8 characters and include
           <cl-icon name="alert" [size]="18" />{{ formError() }}
         </p>
       }
+
+      <cl-waking-notice [show]="pending() && (slow() || server.waking())" />
 
       <form class="mt-7 space-y-5" [formGroup]="form" (ngSubmit)="submit()" novalidate>
         <div>
@@ -80,6 +84,9 @@ export class Signup {
     password: ['', [Validators.required, Validators.pattern(PASSWORD_PATTERN)]],
   });
   protected readonly pending = signal(false);
+  /** True once a submit has waited longer than SLOW_AFTER_MS. */
+  protected readonly slow = signal(false);
+  protected readonly server = inject(ServerStatus);
   protected readonly submitted = signal(false);
   protected readonly showPassword = signal(false);
   protected readonly formError = signal<string | null>(null);
@@ -107,13 +114,21 @@ export class Signup {
       return;
     }
     this.pending.set(true);
+    const slowTimer = setTimeout(() => this.slow.set(true), SLOW_AFTER_MS);
     this.auth.register(this.form.getRawValue()).subscribe({
-      next: () => void this.router.navigate(['/app']),
+      next: () => {
+        clearTimeout(slowTimer);
+        void this.router.navigate(['/app']);
+      },
       error: (error) => {
+        clearTimeout(slowTimer);
+        this.slow.set(false);
         const apiError = toApiError(error);
         this.pending.set(false);
         this.serverErrors.set(apiError.fieldErrors);
-        if (!Object.keys(apiError.fieldErrors).length) this.formError.set(apiError.message);
+        if (!Object.keys(apiError.fieldErrors).length) {
+          this.formError.set(isStarting(error) ? STILL_STARTING : apiError.message);
+        }
       },
     });
   }

@@ -3,7 +3,8 @@ import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 
-const PUBLIC = ['/api/auth/login', '/api/auth/register'];
+// The health ping carries no token, so a stale one can't trigger a sign-out from a public page.
+const PUBLIC = ['/api/auth/login', '/api/auth/register', '/api/health'];
 
 /** Attaches the bearer token to API calls, and signs out when the API rejects it. */
 export const authInterceptor: HttpInterceptorFn = (request, next) => {
