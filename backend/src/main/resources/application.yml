@@ -28,6 +28,23 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+clausify:
+  # Abuse and cost limits (#80, ADR 0009). Each allows `capacity` requests per `period`, refilling smoothly.
+  rate-limit:
+    enabled: true
+    login:                    # per client IP
+      capacity: 10
+      period: 1m
+    register:                 # per client IP; generous so a classroom on one network can sign up
+      capacity: 20
+      period: 1h
+    login-failures-per-email: # failed logins per account, from any IP
+      capacity: 10
+      period: 15m
+    analysis:                 # uploads and retries per user; each one starts a Groq call
+      capacity: 20
+      period: 1h
+
 management:
   endpoints:
     web:

@@ -1,6 +1,8 @@
 package com.clausify.user;
 
 import com.clausify.common.ConflictException;
+import com.clausify.common.RateLimiter;
+import com.clausify.config.RateLimitProperties;
 import com.clausify.common.NotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,13 +22,18 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final RateLimiter rateLimiter;
+    private final RateLimitProperties limits;
     /** Checked against when the email is unknown, so every failed login costs one BCrypt comparison. */
     private final String dummyHash;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService,
+                       RateLimiter rateLimiter, RateLimitProperties limits) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.rateLimiter = rateLimiter;
+        this.limits = limits;
         this.dummyHash = passwordEncoder.encode("timing-equalizer-not-a-real-password");
     }
 
@@ -54,12 +61,19 @@ public class AuthService {
     /**
      * Signs a user in (FR-2). Unknown email and wrong password fail the same way, with the same message
      * and the same BCrypt cost, so neither the response nor its timing reveals which emails are registered.
+     * <p>
+     * Failed attempts are also limited per email (429), so guessing one account's password from many IPs
+     * doesn't work. Known and unknown emails are counted alike, so the 429 reveals nothing either.
      */
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
-        Optional<User> user = userRepository.findByEmail(normalizeEmail(request.email()));
+        String email = normalizeEmail(request.email());
+        String failuresKey = "login-failures:" + email;
+        rateLimiter.requireAvailable(failuresKey, limits.loginFailuresPerEmail());
+        Optional<User> user = userRepository.findByEmail(email);
         boolean passwordMatches = passwordMatches(request.password(), user.map(User::getPassword).orElse(dummyHash));
         if (user.isEmpty() || !passwordMatches) {
+            rateLimiter.record(failuresKey, limits.loginFailuresPerEmail());
             throw new BadCredentialsException(INVALID_CREDENTIALS);
         }
         return new AuthResponse(jwtService.issueToken(user.get()), UserResponse.from(user.get()));
