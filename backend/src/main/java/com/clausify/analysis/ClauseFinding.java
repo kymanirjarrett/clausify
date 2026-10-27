@@ -2,10 +2,8 @@ package com.clausify.analysis;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import java.time.Instant;
 
+/** One flagged clause in an analysis, with the model's score, explanation, and suggested revision. */
 @Entity
 @Table(name = "clause_findings")
 @Getter
@@ -33,30 +31,31 @@ public class ClauseFinding {
     private String sectionRef;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "risk_category", nullable = false, length = 50)
-    private RiskCategory riskCategory;
+    @Column(nullable = false, length = 30)
+    private RiskCategory category;
+
+    /** The model's 0 to 100 score for this clause (DESIGN.md 7.7). */
+    @Column(name = "risk_score", nullable = false)
+    private Integer riskScore;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "risk_level", nullable = false, length = 50)
+    @Column(name = "risk_level", nullable = false, length = 20)
     private RiskLevel riskLevel;
 
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean favorable;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    /** The clause exactly as it appears in the contract; FR-9 embeds this text. */
+    @Column(name = "original_text", nullable = false, columnDefinition = "TEXT")
+    private String originalText;
 
-    @Column(name = "suggested_remediation", columnDefinition = "TEXT")
-    private String suggestedRemremediation;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String explanation;
 
+    @Column(name = "suggested_revision", columnDefinition = "TEXT")
+    private String suggestedRevision;
+
+    /** all-MiniLM-L6-v2 vector as a JSON array, filled in for FR-9 (ADR 0003). */
     @Column(columnDefinition = "JSON")
     private String embedding;
-
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false, nullable = false)
-    private Instant createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
 }

@@ -4,11 +4,11 @@ import com.clausify.contract.Contract;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+/** The AI review of one contract (FR-5): its overall score and the clause findings behind it. */
 @Entity
 @Table(name = "analyses")
 @Getter
@@ -29,12 +29,13 @@ public class Analysis {
     @EqualsAndHashCode.Exclude
     private Contract contract;
 
-    @Column(name = "overall_score")
+    /** 0 to 100, computed in Java from the findings (DESIGN.md 7.6), not taken from the model. */
+    @Column(name = "overall_score", nullable = false)
     private Integer overallScore;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "overall_risk_level", length = 50)
-    private RiskLevel overallRiskLevel;
+    @Column(name = "risk_level", nullable = false, length = 20)
+    private RiskLevel riskLevel;
 
     @Column(name = "contract_type", length = 100)
     private String contractType;
@@ -42,10 +43,10 @@ public class Analysis {
     @Column(columnDefinition = "TEXT")
     private String summary;
 
-    @Column(name = "model_name", length = 100)
+    @Column(name = "model_name", nullable = false, length = 100)
     private String modelName;
 
-    @Column(name = "duration_ms")
+    @Column(name = "duration_ms", nullable = false)
     private Long durationMs;
 
     @OneToMany(mappedBy = "analysis", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -56,10 +57,6 @@ public class Analysis {
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
 
     public void addFinding(ClauseFinding finding) {
         findings.add(finding);
