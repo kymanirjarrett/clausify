@@ -1,0 +1,9 @@
+# Keep the build context small and free of secrets; the image builds from source.
+target/
+.idea/
+.vscode/
+*.iml
+.env
+.env.*
+*.log
+HELP.md
