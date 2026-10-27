@@ -19,4 +19,6 @@ Alternatives considered:
 
 - Aiven powers off free services after a period of inactivity, emailing a warning first; someone must power it back on in the console. **Wake it before every demo or grading session.**
 - Free services have no choice of region, no VPC, no static IP, and no connection pooling. The API's connection pool must stay well under 20 connections.
-- **TODO:** when the service is created, record its MySQL version and exact storage limit here (Aiven's docs list up to 8 GB of disk), and pin the Docker image in `docker-compose.yml` to the same MySQL version. Until then, Docker stays on 8.4.
+- **Created 2026-10-27:** `clausify-db`, MySQL **8.4.11**, in DigitalOcean `sfo`; the Render API runs in Oregon, the nearest Render region. Local Docker and Testcontainers use the `mysql:8.4` tag, the same release line, so no change was needed.
+- Aiven enables `sql_require_primary_key`: every new table needs a primary key, or its migration fails in production.
+- The API's connection pool is Spring Boot's default (HikariCP, 10 connections), well under the 20-connection limit.

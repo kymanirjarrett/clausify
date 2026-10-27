@@ -6,7 +6,7 @@ Start here. This page tells you where everything lives, what is built, what is n
 - **Requirements, API table, schema plan:** [`DESIGN.md`](../DESIGN.md) (FR-1 to FR-12, section 7.4 API, 7.5 database)
 - **Live task status:** the [project board](https://github.com/users/kymanirjarrett/projects/6). If this page and the board disagree, the board wins.
 
-_Last updated Oct 26, 2026._
+_Last updated Oct 27, 2026._
 
 ---
 
@@ -24,6 +24,7 @@ clausify/
 ├── .github/workflows/      CI (ci.yml) and PR title check (pr-title.yml)
 ├── backend/Dockerfile      Production image for Render (multi-stage, layered jar)
 ├── frontend/vercel.json    Vercel routing: Angular deep links (and, later, the /api proxy)
+├── render.yaml             Render Blueprint for the API (region, health check, env vars)
 ├── docker-compose.yml      Local MySQL 8.4 on port 3307
 ├── .env.example            Every env var the deployed API needs (placeholders only)
 ├── DESIGN.md               Course design document (requirements, diagrams, API, schema)
@@ -46,11 +47,11 @@ Code is **packaged by feature**: each folder under `backend/src/main/java/com/cl
 | Package | Owner | Status | What's in it |
 |---|---|---|---|
 | `user/` | Kymani | Built | `User`, `Address`, `Profile` (+ repositories, from the Flyway lab), `AuthController`, `AuthService`, `JwtService`, DTOs `RegisterRequest`, `LoginRequest`, `AuthResponse`, `UserResponse` |
-| `contract/` | Ashton | Partly built | `Contract`, `ContractStatus`, `ContractRepository`, `ContractService`, `ContractController`, `PdfTextExtractor`, `ExtractedDocument`, `ContractUploadedEvent`, DTOs `ContractSummaryResponse`, `ContractDetailResponse`. Still to add: delete, retry, `ReportService`, and Venkat's `ComparisonService` |
-| `analysis/` | Rival | **Not started** | Planned: `Analysis`, `ClauseFinding`, `RiskCategory`, `RiskLevel`, `AnalysisService`, `ContractAnalyzer`, `GroqContractAnalyzer`, `RiskScorer`, prompt templates |
+| `contract/` | Ashton | Partly built | `Contract`, `ContractStatus`, `ContractRepository`, `ContractService`, `ContractController`, `PdfTextExtractor`, `ExtractedDocument`, `ContractUploadedEvent`, DTOs `ContractSummaryResponse`, `ContractDetailResponse`. Delete is built. Still to add: retry, `ReportService`, and Venkat's `ComparisonService` |
+| `analysis/` | Rival | Partly built | Built: `Analysis`, `ClauseFinding`, `RiskCategory`, `RiskLevel`, `AnalysisRepository`, `ClauseFindingRepository`. Planned: `ContractAnalyzer` (with a fake for local and tests), `GroqContractAnalyzer` (prod only), `RiskScorer`, `AnalysisService` |
 | `clause/` | Venkat | **Not started** | Planned: `StandardClause`, `StandardClauseRepository`, `ClauseController`, `ClauseSimilarityService`, `EmbeddingService`, `StandardClauseLoader`, seed data |
-| `config/` | Shared | Built | `SecurityConfig` (which URLs are public, including `/actuator/health`), `JwtConfig`, `JwtProperties`, `CorsProperties`, `OpenApiConfig` (Swagger), `ProblemDetailAuthenticationEntryPoint` |
-| `common/` | Shared | Built | `GlobalExceptionHandler` (turns exceptions into RFC 9457 error JSON), `NotFoundException`, `ConflictException`, `UnreadablePdfException`, `UnsupportedFileTypeException`, `PageResponse`, `CurrentUser` |
+| `config/` | Shared | Built | `SecurityConfig` (which URLs are public, including `/actuator/health`), `JwtConfig`, `JwtProperties`, `CorsProperties`, `OpenApiConfig` (Swagger), `ProblemDetailAuthenticationEntryPoint`, `RateLimitProperties`, `RateLimitInterceptor` + `WebConfig` (429 limits on login, register, upload, retry) |
+| `common/` | Shared | Built | `GlobalExceptionHandler` (turns exceptions into RFC 9457 error JSON), `NotFoundException`, `ConflictException`, `UnreadablePdfException`, `UnsupportedFileTypeException`, `TooManyRequestsException`, `RateLimiter` (token buckets, ADR 0009), `PageResponse`, `CurrentUser` |
 
 ### Recipes
 
@@ -83,7 +84,7 @@ Flyway runs every migration on startup. Migration numbers are **reserved** and m
 | V1 to V3 | `users`, `addresses`, `profiles` | Kymani (lab) | Applied, frozen |
 | V4 | `users` unique email + `created_at` | Kymani | Applied |
 | V5 | `contracts` (FK `user_id`, cascade delete, index `(user_id, uploaded_at)`) | Ashton | Applied |
-| V6 | `analyses` (one per contract), `clause_findings` (many per analysis) | Rival | **Not started** (#34) |
+| V6 | `analyses` (one per contract), `clause_findings` (many per analysis) | Rival | Applied |
 | V7 | `standard_clauses` + seed data | Venkat | **Not started** (#50) |
 
 ### Entity relationships
@@ -93,8 +94,8 @@ Flyway runs every migration on startup. Migration numbers are **reserved** and m
 | `User` → `Address` | one-to-many | Built |
 | `User` → `Profile` | one-to-one | Built |
 | `Contract` → `User` | many-to-one | Built |
-| `Analysis` → `Contract` | one-to-one | Planned (V6) |
-| `ClauseFinding` → `Analysis` | many-to-one | Planned (V6) |
+| `Analysis` → `Contract` | one-to-one | Built |
+| `Analysis` → `ClauseFinding` | one-to-many | Built |
 | `StandardClause` | standalone, compared by embedding | Planned (V7) |
 
 Embeddings are stored as JSON and compared with cosine similarity **in Java**, because MySQL Community can't do vector math ([ADR 0003](adr/0003-mysql-with-java-cosine-similarity.md)). PDFs are never stored, only their extracted text ([ADR 0005](adr/0005-extract-text-do-not-store-pdfs.md)).
@@ -108,15 +109,15 @@ Full table with request/response details: [DESIGN.md section 7.4](../DESIGN.md#7
 | `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me` | FR-1, FR-2 | Kymani | ✅ Built |
 | `POST /api/contracts` (upload) | FR-3 | Ashton | ✅ Built |
 | `GET /api/contracts`, `GET /api/contracts/{id}` | FR-4 | Ashton | ✅ Built |
-| `DELETE /api/contracts/{id}` | FR-8 | Ashton | Not started (#48) |
-| `POST /api/contracts/{id}/retry` | FR-7 | Rival | In progress (PR #84) |
+| `DELETE /api/contracts/{id}` | FR-8 | Ashton | ✅ Built |
+| `POST /api/contracts/{id}/retry` | FR-7 | Ashton | Not started (#45) |
 | `GET /api/contracts/{id}/analysis` | FR-5, FR-6 | Rival | Not started (#42) |
 | `GET /api/standard-clauses`, `GET /api/clauses/{findingId}/similar` | FR-9 | Venkat | Not started (#50) |
 | `POST /api/contracts/{id}/compare/{otherId}` | FR-10 | Venkat | Not started (#51) |
 | `GET /api/contracts/{id}/report` | FR-11 | Ashton | Not started (#52) |
 | `GET /api/users/me/stats`, `PATCH /api/users/me` | FR-12 | Kymani | Not started (#57) |
 
-Errors are always RFC 9457 `ProblemDetail` JSON: 400 validation, 401 no/bad token, 404 missing **or not yours**, 409 conflict, 413 too large, 415 not a PDF, 422 unreadable PDF.
+Errors are always RFC 9457 `ProblemDetail` JSON: 400 validation, 401 no/bad token, 404 missing **or not yours**, 409 conflict, 413 too large, 415 not a PDF, 422 unreadable PDF, 429 rate limited (with `Retry-After`).
 
 ## 5. Frontend: where things go
 
@@ -125,7 +126,7 @@ Angular 22 with standalone components, signals, and no Zone.js. Code lives in `f
 | Folder | What's in it |
 |---|---|
 | `app.routes.ts` | All routes. `/`, `/login`, `/signup` are public; everything under `/app` needs sign-in (`signedInGuard`) |
-| `core/` | App-wide services: `auth.service.ts` (token + current user), `auth.interceptor.ts` (adds `Authorization` to `/api/` calls), `auth.guards.ts`, `contracts.service.ts`, `api.models.ts` (TypeScript shapes of API responses), `problem.ts` (reads error JSON) |
+| `core/` | App-wide services: `auth.service.ts` (token + current user), `auth.interceptor.ts` (adds `Authorization` to `/api/` calls), `auth.guards.ts`, `contracts.service.ts`, `api.models.ts` (TypeScript shapes of API responses), `problem.ts` (reads error JSON), `server-status.ts` (wakes the sleeping API on load; drives the "Waking up the server" notice) |
 | `shared/` | Small reusable pieces: `icon`, `wordmark`, `status-stamp`, `format`, `breakable` |
 | `features/landing/` | Landing page |
 | `features/auth/` | Login and sign-up |
@@ -164,43 +165,33 @@ CI (`.github/workflows/ci.yml`) runs on every PR: `backend` (`./mvnw verify`), `
 
 Sprint 1 (due Oct 11) and Sprint 2 (due Oct 25) both have open work; Sprint 3 ends Nov 8. The analysis pipeline (FR-5) is the critical path: FR-6, FR-7, FR-9 similarity, FR-10 risk deltas, FR-11 reports, and the Analysis Results screen all read its data.
 
-### For the Part 3 progress report
+### Data model status
 
-The assignment expects these to be **complete** at report time:
+All planned tables except `standard_clauses` exist: 7 tables, 6 entities (`User`, `Address`, `Profile`, `Contract`, `Analysis`, `ClauseFinding`), and one-to-one, one-to-many, and many-to-one relationships, each covered by repository tests. V7 (`standard_clauses`, Venkat, #50) is next.
 
-| Requirement | Status | Gap and owner |
-|---|---|---|
-| Database schema fully implemented | V1 to V5 done | **V6 (Rival, #34) and V7 (Venkat, #50)** |
-| All entities mapped | `User`, `Address`, `Profile`, `Contract` | **`Analysis`, `ClauseFinding` (Rival, #35), `StandardClause` (Venkat)** |
-| All relationships working | 4 of 6 | Analysis↔Contract, ClauseFinding→Analysis (Rival) |
-| Repositories for all entities | 4 of 7 | Come with the entities above |
-| Some controllers, DTOs, APIs | ✅ Auth and Contracts (6 endpoints) | Already satisfied |
+### Who works on what (Oct 28 to Nov 15)
 
-If V6 and V7 aren't merged by the report deadline, say so in the report's Challenges section with the catch-up plan below.
+Live task status is on the board; this is the plan.
 
-### Who works on what (Oct 26 to Nov 15)
-
-**Rival (AI analysis):** critical path, so V6 goes first.
-- Week 1: #34 V6 migration, #35 entities (merge these first; they unblock Venkat's V7), #36 Groq config, #37 analyzer, #38 `RiskScorer`
-- Week 2: #39 `AnalysisService` + #40 tests, #42/#43 analysis endpoint, finish FR-7 (#45/#46, PR #84)
-- Week 3: #55 Analysis Results screen; #64 AI evaluation harness
+**Rival (AI analysis):** the critical path. Fresh branches from `main`, one issue each.
+- #36 Groq config: the real analyzer only in `prod`, a fake one for `local` and tests (see the issue comment and `CLAUDE.md`, "AI integration"). Agree the Spring AI 2.0 version with the team before adding it.
+- #37 `GroqContractAnalyzer`, #38 `RiskScorer` (DESIGN.md 7.6), #39 `AnalysisService` + #40 tests
+- #42/#43 `GET /api/contracts/{id}/analysis`, then #55 Analysis Results screen and #64 AI evaluation
 
 **Venkat (clause library and comparison):**
-- Week 1: FR-9 part 1 (#50): `StandardClause` entity, repository, seed data, `GET /api/standard-clauses` with category filter. Write V7 now but merge it **after** Rival's V6
-- Week 2: FR-9 part 2: `EmbeddingService` (ONNX MiniLM), cosine similarity, `GET /api/clauses/{findingId}/similar` (needs FR-5 findings to exist)
-- Week 3: #56 Clause and Version Comparison screens; FR-10 (#51, a "Could" priority, so it can slip)
+- #50 FR-9 part 1: V7 `standard_clauses`, `StandardClause` entity, repository, seed data, `GET /api/standard-clauses` with category filter
+- FR-9 part 2: `EmbeddingService` (ONNX MiniLM, no API key), cosine similarity, `GET /api/clauses/{findingId}/similar` (needs FR-5 findings)
+- #56 Clause and Version Comparison screens; FR-10 (#51, a "Could", so it can slip)
 
 **Ashton (contracts and documents, Scrum Master):**
-- Week 1: #48 `DELETE /api/contracts/{id}` + #49 tests
-- Week 2: #52 FR-11 PDF report with PDFBox (needs FR-5 data, so start with the layout using fake data)
-- Week 3: Dashboard follow-ups (delete and retry buttons); keep the board current
+- #45/#46 FR-7 `POST /api/contracts/{id}/retry` (reuse the tests from closed PR #84)
+- #52 FR-11 PDF report with PDFBox (start the layout with fake data until FR-5 lands)
+- Dashboard delete and retry buttons; keep the board and #99 current
 
 **Kymani (accounts, security, deployment):**
-- Week 1: #58 E-2 deploy: Vercel project, Aiven and Render setup (code for #87, #88, #89 is merged); #80 rate limiting on auth and upload
-- Week 2: E-2 #90 `render.yaml` and API rewrite, #91 smoke test and docs; #57 FR-12 account stats and profile update
-- Week 3: #59 E-3 coverage + Playwright and #60 E-4 final docs (both shared by all four)
-
-**Everyone:** for the Part 3 report, send code snippets and Postman screenshots for your own area's entities, repositories, controllers, and endpoints.
+- Done: deployment (Vercel, Render, Aiven), rate limiting (#80), cold-start handling (#106), deployment docs (#91)
+- #57 FR-12 account stats and profile update; #92 verify Aiven's TLS certificate
+- #59 E-3 coverage + Playwright and #60 E-4 final docs (shared by all four)
 
 ## 9. Gotchas
 
@@ -208,5 +199,8 @@ If V6 and V7 aren't merged by the report deadline, say so in the report's Challe
 - **Aiven requires primary keys** on every table (`sql_require_primary_key`). Every new table needs one.
 - **Don't commit `frontend/angular.json` analytics IDs.** The Angular CLI adds an `"analytics"` entry if you accept its prompt; discard that change.
 - **Ownership tests:** every new endpoint on user data needs a test that another user gets 404. Copy `ContractQueryIntegrationTest`.
-- **Render is slow to start.** At Render's 0.1 CPU the API took about 4 minutes to boot in local tests. Wake it (and Aiven) well before a demo.
+- **Merging to `main` deploys.** Render deploys the API after CI passes, so a merged migration is applied to the production database immediately. Get schema changes right in the PR.
+- **Render is slow to start.** The free API sleeps after 15 idle minutes and takes about 2 minutes to wake. Open the site (or `/api/health`) and check Aiven is running well before a demo.
+- **After a migration file is renamed or removed, run `./mvnw clean` once.** A stale copy in `target/` makes Flyway report a duplicate version.
+- **Rate limits are off locally.** They're on in production (429 after 10 logins a minute from one IP); `RateLimitIntegrationTest` covers them.
 - **The AI is slow and can fail.** Never call Groq inside a request; do it in the async listener and set the contract to `FAILED` with a readable `failureReason` on errors.

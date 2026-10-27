@@ -10,7 +10,7 @@ Clausify is an AI contract-analysis web app for freelancers: upload a contract P
 
 ## Hard constraints
 
-1. **Never edit an applied migration.** V1 to V3 (`users`, `addresses`, `profiles`) were submitted for a graded lab. Every schema change is a new `V<n>__description.sql`. `spring.jpa.hibernate.ddl-auto` stays `validate`; if validation fails, report the exact error instead of changing it.
+1. **Never edit an applied migration.** V1 to V3 (`users`, `addresses`, `profiles`) were submitted for a graded lab. Every schema change is a new `V<n>__description.sql`. `spring.jpa.hibernate.ddl-auto` stays `validate`; if validation fails, report the exact error instead of changing it. Render deploys `main` automatically, so **a merged migration is applied to the production database at once**; get it right in the PR. Aiven requires a primary key on every table (`sql_require_primary_key`).
 2. **Never move, delete, or re-point a tag** listed in the README's "Course submissions" table. Never rewrite history on `main` or force-push it.
 3. **No secrets in git.** Credentials and keys come from environment variables only; `.env.example` lists them with placeholders.
 4. **Ask before** destructive git operations, deleting files outside the task, adding dependencies, or creating cloud resources (Aiven, Render, and Vercel are set up by a human).
@@ -30,7 +30,7 @@ Clausify is an AI contract-analysis web app for freelancers: upload a contract P
 | Embeddings | Spring AI ONNX Transformers, `all-MiniLM-L6-v2`, 384 dims, in the JVM |
 | Vector search | Cosine similarity in Java (MySQL Community's `DISTANCE()` is HeatWave-only). Embeddings stored as JSON (`VECTOR` needs MySQL 9.0+; see ADR 0003). |
 | Auth | Spring Security, BCrypt, stateless JWT |
-| Hosting | Angular on Vercel; API on Render free tier (Docker; sleeps when idle, disk not persistent) |
+| Hosting | Live at https://clausifysolutions.vercel.app. Angular on Vercel, proxying `/api` and Swagger to Render (ADR 0008). API on Render free tier (`render.yaml`, Docker, Oregon; sleeps when idle, ~2 min to wake, disk not persistent; deploys `main` only after CI passes). Aiven MySQL 8.4.11 (sfo). |
 
 ### Upload flow
 
