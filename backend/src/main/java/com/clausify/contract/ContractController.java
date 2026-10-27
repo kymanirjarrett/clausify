@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,5 +61,15 @@ public class ContractController {
     public ContractDetailResponse get(@Parameter(description = "Contract id") @PathVariable Long id,
                                       @AuthenticationPrincipal Jwt jwt) {
         return contractService.get(id, CurrentUser.id(jwt));
+    }
+
+    /** FR-8: 204 once deleted. 404 if missing or not yours. */
+    @Operation(summary = "Delete one of my contracts",
+            description = "Permanently removes the contract, its extracted text, and its analysis.")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@Parameter(description = "Contract id") @PathVariable Long id,
+                                       @AuthenticationPrincipal Jwt jwt) {
+        contractService.delete(id, CurrentUser.id(jwt));
+        return ResponseEntity.noContent().build();
     }
 }
