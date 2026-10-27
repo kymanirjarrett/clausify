@@ -41,6 +41,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, PUBLIC_AUTH).permitAll()
                         .requestMatchers(API_DOCS).permitAll()
+                        // Render's health check; every other actuator endpoint stays behind auth (and unexposed).
+                        .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                         // Spring's error page must stay reachable, or real errors would surface as 401.
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated())

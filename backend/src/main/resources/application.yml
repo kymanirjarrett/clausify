@@ -28,6 +28,20 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+management:
+  endpoints:
+    web:
+      exposure:
+        # Only the health check, for Render. Everything else (env, beans, heapdump) can leak secrets.
+        include: health
+      # No /actuator index page listing the endpoints.
+      discovery:
+        enabled: false
+  endpoint:
+    health:
+      # UP or DOWN only; component details (database version, disk) stay private.
+      show-details: never
+
 server:
   tomcat:
     # After rejecting an upload over 10MB, Tomcat reads and discards the rest of the body (up to this size)

@@ -2,6 +2,9 @@
 # DB_URL is the full JDBC URL from the Aiven console, including its SSL parameters.
 server:
   port: ${PORT:8080}
+  # Vercel and Render terminate HTTPS and pass the original scheme and host in X-Forwarded-* headers;
+  # trust them so Location headers point at the public URL instead of the container's.
+  forward-headers-strategy: framework
 
 spring:
   datasource:
