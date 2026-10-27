@@ -5,7 +5,6 @@ import com.clausify.user.JwtService;
 import com.clausify.user.User;
 import com.clausify.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -102,7 +101,6 @@ class ContractDeleteIntegrationTest {
     }
 
     /** FR-8 example 1: the analysis and its findings go with the contract. Columns follow the V6 spec in #34. */
-    @Disabled("Enable once V6 (#34) adds analyses.contract_id -> contracts(id) ON DELETE CASCADE")
     @Test
     void deletingAContractAlsoDeletesItsAnalysisAndFindings() throws Exception {
         Long id = contracts.save(Contract.uploaded(maria, "nda.pdf", 1, 1, "text", T0)).getId();
