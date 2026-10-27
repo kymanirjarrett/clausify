@@ -2,6 +2,8 @@ package com.clausify.user;
 
 import com.clausify.common.ConflictException;
 import com.clausify.common.NotFoundException;
+import com.clausify.common.RateLimiter;
+import com.clausify.config.RateLimitProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import java.time.Duration;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -35,6 +38,12 @@ class AuthServiceTest {
     @Mock
     private JwtService jwtService;
 
+    @Mock
+    private RateLimiter rateLimiter;
+
+    private static final RateLimitProperties.Limit ANY = new RateLimitProperties.Limit(10, Duration.ofMinutes(1));
+    private static final RateLimitProperties LIMITS = new RateLimitProperties(true, ANY, ANY, ANY, ANY);
+
     private AuthService authService;
 
     private final RegisterRequest request = new RegisterRequest("  Maria Lopez ", " Maria@Example.COM ", "Str0ng!Passw0rd");
@@ -45,7 +54,7 @@ class AuthServiceTest {
     void createService() {
         // The constructor hashes a dummy password once, used to equalize failed-login timing.
         when(passwordEncoder.encode(startsWith("timing-equalizer"))).thenReturn("dummy-hash");
-        authService = new AuthService(userRepository, passwordEncoder, jwtService);
+        authService = new AuthService(userRepository, passwordEncoder, jwtService, rateLimiter, LIMITS);
     }
 
     @Test
