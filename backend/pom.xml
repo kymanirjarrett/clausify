@@ -39,17 +39,11 @@
 	</properties>
 	<dependencyManagement>
 		<dependencies>
-			<!-- Spring AI's BOM pins swagger-annotations-jakarta to 2.2.38 and the OpenAI SDK brings
-			     swagger-annotations 2.2.31 (same classes, same package). springdoc needs 2.2.55, or
-			     /v3/api-docs fails with NoSuchMethodError. Declared before the BOM so these win. -->
+			<!-- Spring AI's BOM pins swagger-annotations-jakarta to 2.2.38; springdoc needs 2.2.55, or
+			     /v3/api-docs fails with NoSuchMethodError. Declared before the BOM so this one wins. -->
 			<dependency>
 				<groupId>io.swagger.core.v3</groupId>
 				<artifactId>swagger-annotations-jakarta</artifactId>
-				<version>${swagger-annotations.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.swagger.core.v3</groupId>
-				<artifactId>swagger-annotations</artifactId>
 				<version>${swagger-annotations.version}</version>
 			</dependency>
 			<dependency>
@@ -108,6 +102,13 @@
 			<!-- Groq is OpenAI-compatible; only GroqContractAnalyzer (prod) uses it (ADR 0006). -->
 			<groupId>org.springframework.ai</groupId>
 			<artifactId>spring-ai-starter-model-openai</artifactId>
+			<exclusions>
+				<!-- Same classes as swagger-annotations-jakarta (which springdoc brings); keep one copy. -->
+				<exclusion>
+					<groupId>io.swagger.core.v3</groupId>
+					<artifactId>swagger-annotations</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

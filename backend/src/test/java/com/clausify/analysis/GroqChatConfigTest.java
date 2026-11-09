@@ -36,12 +36,17 @@ class GroqChatConfigTest {
     }
 
     @Test
+    void groqModelEnvVarOverridesTheDefault() {
+        // Deliberately not the default, so this fails if GROQ_MODEL were ignored.
+        prodRunner().withPropertyValues("GROQ_API_KEY=test-key-not-real", "GROQ_MODEL=openai/gpt-oss-20b")
+                .run(ctx -> assertThat(ctx.getBean(OpenAiChatModel.class).getOptions().getModel())
+                        .isEqualTo("openai/gpt-oss-20b"));
+    }
+
+    @Test
     void prodConfigPointsTheChatModelAtGroq() {
-        runner.withInitializer(ctx -> {
-                    load(ctx, "application.yml");
-                    load(ctx, "application-prod.yml"); // added first, so it wins, like an active profile
-                })
-                .withPropertyValues("GROQ_API_KEY=test-key-not-real", "GROQ_MODEL=openai/gpt-oss-120b")
+        // GROQ_MODEL unset: the default in application-prod.yml applies.
+        prodRunner().withPropertyValues("GROQ_API_KEY=test-key-not-real")
                 .run(ctx -> {
                     assertThat(ctx).hasSingleBean(ChatModel.class);
 
@@ -57,6 +62,13 @@ class GroqChatConfigTest {
                     assertThat(model.getOptions().getModel()).isEqualTo("openai/gpt-oss-120b");
                     assertThat(model.getOptions().getReplayReasoningContent()).isFalse();
                 });
+    }
+
+    private ApplicationContextRunner prodRunner() {
+        return runner.withInitializer(ctx -> {
+            load(ctx, "application.yml");
+            load(ctx, "application-prod.yml"); // added last with addFirst, so it wins, like an active profile
+        });
     }
 
     private static void load(ConfigurableApplicationContext ctx, String file) {
