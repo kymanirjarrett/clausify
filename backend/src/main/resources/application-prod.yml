@@ -12,13 +12,18 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   ai:
+    model:
+      # Only the chat client, and only in prod. Groq has no embeddings API; FR-9 embeds in-process.
+      chat: openai
     openai:
       # Groq's API is OpenAI-compatible, so Spring AI's OpenAI starter talks to it.
+      # Spring AI 2.0's Groq guide: the base URL includes /v1.
       api-key: ${GROQ_API_KEY}
       base-url: https://api.groq.com/openai/v1
       chat:
-        options:
-          model: ${GROQ_MODEL:openai/gpt-oss-120b}
+        model: ${GROQ_MODEL:openai/gpt-oss-120b}
+        # gpt-oss returns reasoning content; Groq rejects it if it is sent back on the next turn.
+        replay-reasoning-content: false
 
 clausify:
   jwt:

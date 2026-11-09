@@ -27,6 +27,18 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  ai:
+    # The OpenAI starter would auto-create chat, embedding, image, audio, and moderation clients and fail
+    # without an API key. Everything is off here; application-prod.yml turns on chat only (ADR 0006).
+    # Local runs and tests use FakeContractAnalyzer and never reach Groq.
+    model:
+      chat: none
+      embedding: none
+      image: none
+      audio:
+        speech: none
+        transcription: none
+      moderation: none
 
 clausify:
   # Abuse and cost limits (#80, ADR 0009). Each allows `capacity` requests per `period`, refilling smoothly.

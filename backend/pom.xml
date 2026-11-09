@@ -32,7 +32,35 @@
 		<!-- springdoc 3.1.x targets Spring Boot 4.1 (2.x is the Boot 3 line). -->
 		<springdoc.version>3.1.1</springdoc.version>
 		<pdfbox.version>3.0.8</pdfbox.version>
+		<!-- Spring AI 2.0.x is built against Spring Boot 4.1 (2.1 targets Boot 4.2). -->
+		<spring-ai.version>2.0.2</spring-ai.version>
+		<!-- The version springdoc 3.1.1 is built with. Keep in step when upgrading springdoc. -->
+		<swagger-annotations.version>2.2.55</swagger-annotations.version>
 	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<!-- Spring AI's BOM pins swagger-annotations-jakarta to 2.2.38 and the OpenAI SDK brings
+			     swagger-annotations 2.2.31 (same classes, same package). springdoc needs 2.2.55, or
+			     /v3/api-docs fails with NoSuchMethodError. Declared before the BOM so these win. -->
+			<dependency>
+				<groupId>io.swagger.core.v3</groupId>
+				<artifactId>swagger-annotations-jakarta</artifactId>
+				<version>${swagger-annotations.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.swagger.core.v3</groupId>
+				<artifactId>swagger-annotations</artifactId>
+				<version>${swagger-annotations.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.ai</groupId>
+				<artifactId>spring-ai-bom</artifactId>
+				<version>${spring-ai.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -75,6 +103,11 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
+		</dependency>
+		<dependency>
+			<!-- Groq is OpenAI-compatible; only GroqContractAnalyzer (prod) uses it (ADR 0006). -->
+			<groupId>org.springframework.ai</groupId>
+			<artifactId>spring-ai-starter-model-openai</artifactId>
 		</dependency>
 
 		<dependency>
