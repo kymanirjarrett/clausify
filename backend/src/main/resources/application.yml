@@ -56,6 +56,19 @@ clausify:
     analysis:                 # uploads and retries per user; each one starts a Groq call
       capacity: 20
       period: 1h
+  analysis:
+    # GroqContractAnalyzer (prod only). Sized for Groq's free tier on gpt-oss-120b: 8K tokens/minute, 200K/day.
+    # One request = system prompt (~900 tokens) + chunk (10,000 chars ≈ 2,500 tokens) + up to 3,000 completion
+    # tokens (reasoning + answer) ≈ 6,400 tokens, under the per-minute limit.
+    groq:
+      max-chunk-chars: 10000
+      max-chunks: 8               # about 26 pages; longer contracts would use a large share of the daily budget
+      max-findings-per-chunk: 15
+      max-completion-tokens: 3000
+      temperature: 0.2            # low, for consistent scores
+      reasoning-effort: low       # fewer reasoning tokens per request
+      max-rate-limit-wait: 65s    # per-minute limits reset within a minute; longer waits mean the daily limit
+      max-attempts: 4
 
 management:
   endpoints:

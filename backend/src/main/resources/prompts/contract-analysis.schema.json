@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractType", "summary", "findings"],
+  "properties": {
+    "contractType": { "type": ["string", "null"] },
+    "summary": { "type": ["string", "null"] },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["category", "riskScore", "favorable", "title", "sectionRef", "originalText", "explanation", "suggestedRevision"],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["PAYMENT_TERMS", "LIABILITY", "INDEMNIFICATION", "IP_RIGHTS", "TERMINATION", "NON_COMPETE", "CONFIDENTIALITY", "JURISDICTION"]
+          },
+          "riskScore": { "type": "integer" },
+          "favorable": { "type": "boolean" },
+          "title": { "type": "string" },
+          "sectionRef": { "type": ["string", "null"] },
+          "originalText": { "type": "string" },
+          "explanation": { "type": "string" },
+          "suggestedRevision": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}
