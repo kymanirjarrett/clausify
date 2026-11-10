@@ -43,7 +43,7 @@ export class ContractDetailPage {
     const c = this.contract();
     if (!c) return [];
     const analysis: Record<ContractDetail['status'], Revision> = {
-      UPLOADED: { rev: 'B', label: 'Analysis', state: 'absent', note: 'Not active in this release' },
+      UPLOADED: { rev: 'B', label: 'Analysis', state: 'absent', note: 'Queued' },
       ANALYZING: { rev: 'B', label: 'Analysis', state: 'current', note: 'In progress' },
       ANALYZED: { rev: 'B', label: 'Analysis', state: 'done', note: formatDateTime(c.analyzedAt) },
       FAILED: { rev: 'B', label: 'Analysis failed', state: 'failed', note: 'See the reason below' },

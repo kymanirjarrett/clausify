@@ -73,8 +73,19 @@
       </div>
     </div>
     <p class="mt-6 max-w-[44rem] leading-relaxed text-ink-2">
-      Automated analysis is not active in this release. When it is, this section will list each clause outside
-      tolerance with its category, risk score, explanation, and suggested revision.
+      @switch (c.status) {
+        @case ('ANALYZED') {
+          Analysis is complete. Viewing the findings here arrives in a later release; this section will then list
+          each clause outside tolerance with its category, risk score, explanation, and suggested revision.
+        }
+        @case ('FAILED') {
+          No results, because the analysis failed.
+        }
+        @default {
+          Analysis runs in the background and can take several minutes for a long contract. This page updates on
+          its own.
+        }
+      }
     </p>
   </section>
 } @else {

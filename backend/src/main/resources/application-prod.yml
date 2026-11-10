@@ -22,6 +22,9 @@ spring:
       base-url: https://api.groq.com/openai/v1
       # GroqContractAnalyzer retries 429s itself: the SDK caps each wait at 8s, Groq can ask for up to 60s.
       max-retries: 0
+      # Per HTTP request (Spring AI's default, stated so it is visible). A reply of 3,000 tokens takes seconds on
+      # Groq; the whole analysis has its own limit, clausify.analysis.timeout.
+      timeout: 60s
       chat:
         model: ${GROQ_MODEL:openai/gpt-oss-120b}
         # gpt-oss returns reasoning content; Groq rejects it if it is sent back on the next turn.

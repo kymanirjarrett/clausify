@@ -57,6 +57,13 @@ clausify:
       capacity: 20
       period: 1h
   analysis:
+    # Background analysis (AnalysisService, AsyncConfig). One worker, because Groq's free tier allows about one
+    # request a minute anyway. 20 waiting is far more than a demo needs; beyond that, uploads fail as "busy".
+    worker-threads: 1
+    queue-capacity: 20
+    # An 8-chunk contract at one chunk a minute, plus rate-limit waits, finishes well inside this.
+    timeout: 15m
+    recover-on-startup: true
     # GroqContractAnalyzer (prod only). Sized for Groq's free tier on gpt-oss-120b: 8K tokens/minute, 200K/day.
     # One request = system prompt (~900 tokens) + chunk (10,000 chars ≈ 2,500 tokens) + up to 3,000 completion
     # tokens (reasoning + answer) ≈ 6,400 tokens, under the per-minute limit.

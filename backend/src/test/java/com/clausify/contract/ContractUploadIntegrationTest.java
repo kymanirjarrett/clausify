@@ -1,6 +1,10 @@
 package com.clausify.contract;
 
+import com.clausify.Polling;
 import com.clausify.TestcontainersConfiguration;
+import com.clausify.analysis.Analysis;
+import com.clausify.analysis.AnalysisRepository;
+import com.clausify.analysis.RiskLevel;
 import com.clausify.user.JwtService;
 import com.clausify.user.User;
 import com.clausify.user.UserRepository;
@@ -49,6 +53,9 @@ class ContractUploadIntegrationTest {
     @Autowired
     private ApplicationEvents events;
 
+    @Autowired
+    private AnalysisRepository analyses;
+
     private User owner;
     private String token;
 
@@ -71,11 +78,18 @@ class ContractUploadIntegrationTest {
                 .andReturn().getResponse().getContentAsString();
         long id = Long.parseLong(body.replaceAll(".*\"id\"\\s*:\\s*(\\d+).*", "$1"));
 
-        Contract saved = contracts.findByIdAndUserId(id, owner.getId()).orElseThrow();
-        assertThat(saved.getStatus()).isEqualTo(ContractStatus.UPLOADED);
+        // The response said UPLOADED; the background analysis (FakeContractAnalyzer here) then finishes it.
+        Contract saved = Polling.await(() -> contracts.findByIdAndUserId(id, owner.getId()).orElseThrow(),
+                c -> c.getStatus() == ContractStatus.ANALYZED);
         assertThat(saved.getExtractedText()).contains("without limitation as to amount or type");
         assertThat(saved.getFileSizeBytes()).isEqualTo(fixture("risky-consulting-agreement.pdf").length);
         assertThat(events.stream(ContractUploadedEvent.class)).containsExactly(new ContractUploadedEvent(id));
+
+        // FakeContractAnalyzer's 85, 78, 55 and a favorable 20 score 80 (High), as worked in AnalysisServiceIntegrationTest.
+        Analysis analysis = analyses.findByContractId(id).orElseThrow();
+        assertThat(analysis.getOverallScore()).isEqualTo(80);
+        assertThat(analysis.getRiskLevel()).isEqualTo(RiskLevel.HIGH);
+        assertThat(analysis.getModelName()).isEqualTo("fake-analyzer");
     }
 
     @Test
