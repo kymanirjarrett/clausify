@@ -22,7 +22,7 @@ import { Icon } from '../../shared/icon';
     <section class="mt-12 max-w-[44rem]" aria-labelledby="privacy-title">
       <h2 id="privacy-title" class="text-lg font-semibold">Your data</h2>
       <ul class="mt-4 space-y-3 leading-relaxed text-ink-2">
-        <li class="flex gap-2.5"><cl-icon name="lock" [size]="18" class="mt-0.5 text-blue-ink" />Uploaded PDFs are read in memory and never stored. Only the extracted text is kept.</li>
+        <li class="flex gap-2.5"><cl-icon name="lock" [size]="18" class="mt-0.5 text-blue-ink" />Uploaded PDFs are read in memory and never stored. Only the extracted text is kept, and it is sent to Groq, a third-party AI provider, for analysis.</li>
         <li class="flex gap-2.5"><cl-icon name="lock" [size]="18" class="mt-0.5 text-blue-ink" />Your contracts and analyses are visible only to your account.</li>
       </ul>
     </section>

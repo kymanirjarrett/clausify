@@ -20,6 +20,8 @@ spring:
       # Spring AI 2.0's Groq guide: the base URL includes /v1.
       api-key: ${GROQ_API_KEY}
       base-url: https://api.groq.com/openai/v1
+      # GroqContractAnalyzer retries 429s itself: the SDK caps each wait at 8s, Groq can ask for up to 60s.
+      max-retries: 0
       chat:
         model: ${GROQ_MODEL:openai/gpt-oss-120b}
         # gpt-oss returns reasoning content; Groq rejects it if it is sent back on the next turn.

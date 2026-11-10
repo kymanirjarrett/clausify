@@ -17,7 +17,8 @@ Clausify is being rebuilt from a Next.js prototype into a Spring Boot + Angular 
 - **AI risk analysis:** upload a contract PDF and get an overall risk score (High / Medium / Low) plus flagged clauses across eight categories: payment terms, liability, IP rights, termination, non-compete, confidentiality, jurisdiction, and indemnification
 - **Negotiation suggestions:** concrete revisions for unfavourable clauses
 - **Standard-clause comparison:** semantic similarity against a library of standard contract terms
-- **Privacy by design:** the PDF is never stored; only its extracted text is kept
+- **Privacy by design:** the PDF is never stored; only its extracted text is kept. For analysis, that text is sent to Groq, a third-party AI provider.
+- **Honest limits:** on Groq's free tier, a long contract is analyzed in parts at about one part per minute, so a 10-page contract takes roughly 2 to 3 minutes. Contracts over about 26 pages are not analyzed.
 - **Zero cost:** runs entirely on free tiers
 
 ## 🛠️ Tech stack
