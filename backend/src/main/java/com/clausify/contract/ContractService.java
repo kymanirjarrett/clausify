@@ -30,7 +30,7 @@ public class ContractService {
     /** Every PDF starts with these bytes; the declared content type alone can be faked. */
     private static final byte[] PDF_SIGNATURE = "%PDF-".getBytes(StandardCharsets.US_ASCII);
     private static final int MAX_FILENAME_LENGTH = 255;
-
+    private static final int MAX_PAGE_SIZE = 100;
     private final ContractRepository contractRepository;
     private final UserRepository userRepository;
     private final PdfTextExtractor pdfTextExtractor;
@@ -62,10 +62,12 @@ public class ContractService {
         return ContractSummaryResponse.from(contract);
     }
 
-    /** FR-4: the caller's contracts, newest first. Clients choose page and size, never the sort. */
+    /** FR-4: the caller's contracts, newest first. Clients choose page and size (capped at 100), never the sort. */
     @Transactional(readOnly = true)
     public PageResponse<ContractSummaryResponse> list(Long userId, Pageable pageable) {
-        Pageable newestFirst = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), NEWEST_FIRST);
+        int page = Math.max(0, pageable.getPageNumber());
+        int size = Math.min(Math.max(1, pageable.getPageSize()), MAX_PAGE_SIZE);
+        Pageable newestFirst = PageRequest.of(page, size, NEWEST_FIRST);
         return PageResponse.of(contractRepository.findAllByUserId(userId, newestFirst), ContractSummaryResponse::from);
     }
 
