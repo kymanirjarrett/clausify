@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import jakarta.validation.ConstraintViolationException;
 
 /**
  * Turns exceptions into RFC 9457 {@link ProblemDetail} JSON so every error has the same shape:
@@ -97,6 +98,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemDetail body = problem(HttpStatus.BAD_REQUEST, "One or more fields are invalid.");
         body.setProperty("errors", errors);
         return handleExceptionInternal(ex, body, headers, status, request);
+    }
+
+    /** 400 when method-level constraints (@Positive, @NotBlank on parameters) fail validation. */
+    @ExceptionHandler(ConstraintViolationException.class)
+    ProblemDetail handleConstraintViolation(ConstraintViolationException ex) {
+        Map<String, String> errors = new LinkedHashMap<>();
+        ex.getConstraintViolations().forEach(violation -> {
+            String path = violation.getPropertyPath().toString();
+            String field = path.contains(".") ? path.substring(path.lastIndexOf('.') + 1) : path;
+            errors.putIfAbsent(field, violation.getMessage());
+        });
+        ProblemDetail body = problem(HttpStatus.BAD_REQUEST, "One or more parameters are invalid.");
+        body.setProperty("errors", errors);
+        return body;
     }
 
     /** 413 when an upload exceeds spring.servlet.multipart.max-file-size (10 MB). */
