@@ -4,14 +4,16 @@ import com.clausify.common.CurrentUser;
 import com.clausify.common.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Positive;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URI;
 
 @Tag(name = "Contracts", description = "Upload and manage contracts (FR-3, FR-4, FR-7, FR-8)")
+@Validated
 @RestController
 @RequestMapping("/api/contracts")
 public class ContractController {
@@ -58,7 +61,7 @@ public class ContractController {
     /** FR-4: status and details; poll while UPLOADED or ANALYZING. 404 if missing or not yours. */
     @Operation(summary = "Get one of my contracts")
     @GetMapping("/{id}")
-    public ContractDetailResponse get(@Parameter(description = "Contract id") @PathVariable Long id,
+    public ContractDetailResponse get(@Parameter(description = "Contract id") @PathVariable @Positive Long id,
                                       @AuthenticationPrincipal Jwt jwt) {
         return contractService.get(id, CurrentUser.id(jwt));
     }
@@ -67,7 +70,7 @@ public class ContractController {
     @Operation(summary = "Delete one of my contracts",
             description = "Permanently removes the contract, its extracted text, and its analysis.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@Parameter(description = "Contract id") @PathVariable Long id,
+    public ResponseEntity<Void> delete(@Parameter(description = "Contract id") @PathVariable @Positive Long id,
                                        @AuthenticationPrincipal Jwt jwt) {
         contractService.delete(id, CurrentUser.id(jwt));
         return ResponseEntity.noContent().build();
