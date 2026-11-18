@@ -11,7 +11,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -23,14 +24,17 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false)
@@ -60,7 +64,18 @@ public class User {
     private Profile profile;
 
     public void addAddress(Address address) {
-        addresses.add(address);
-        address.setUser(this);
+    if (address == null) {
+        throw new IllegalArgumentException("Address cannot be null.");
     }
+
+    if (!addresses.contains(address)) {
+            addresses.add(address);
+            address.setUser(this);
+        }
+}
+    public void removeAddress(Address address) {
+    if (address != null && addresses.remove(address)) {
+        address.setUser(null);
+    }
+}
 }
