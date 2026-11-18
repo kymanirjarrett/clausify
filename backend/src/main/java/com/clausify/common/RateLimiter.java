@@ -83,3 +83,41 @@ public class RateLimiter {
             return OptionalLong.of(bucket.secondsUntilToken());
         }
     }
+
+    private void sweepOccasionally() {
+        if (calls.incrementAndGet() % SWEEP_EVERY != 0) {
+            return;
+        }
+        long now = clock.millis();
+        buckets.values().removeIf(bucket -> {
+            synchronized (bucket) {
+                bucket.refill(now);
+                return bucket.tokens >= bucket.capacity;
+            }
+        });
+    }
+
+    private static final class Bucket {
+
+        private final double capacity;
+        private final double tokensPerMilli;
+        private double tokens;
+        private long updatedAt;
+
+        private Bucket(Limit limit, long now) {
+            this.capacity = limit.capacity();
+            this.tokensPerMilli = limit.capacity() / (double) limit.period().toMillis();
+            this.tokens = capacity;
+            this.updatedAt = now;
+        }
+
+        private void refill(long now) {
+            tokens = Math.min(capacity, tokens + (now - updatedAt) * tokensPerMilli);
+            updatedAt = now;
+        }
+
+        private long secondsUntilToken() {
+            return Math.max(1, (long) Math.ceil((1 - tokens) / tokensPerMilli / 1000));
+        }
+    }
+}
