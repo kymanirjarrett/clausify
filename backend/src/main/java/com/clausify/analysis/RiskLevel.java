@@ -7,8 +7,12 @@ public enum RiskLevel {
     HIGH;
 
     public static RiskLevel fromScore(int score) {
-        if (score < 40) return LOW;
-        if (score < 70) return MEDIUM;
-        return HIGH;
+    if (score < 0 || score > 100) {
+        throw new IllegalArgumentException("Risk score must be between 0 and 100.");
     }
+
+    if (score < 40) return LOW;
+    if (score < 70) return MEDIUM;
+    return HIGH;
+}
 }
