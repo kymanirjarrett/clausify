@@ -78,6 +78,23 @@ class AuthControllerTest {
     }
 
     @Test
+    void multibytePasswordOver72BytesIs400BeforeCallingService() throws Exception {
+        register("Maria Lopez", "maria@example.com", "é".repeat(36) + "1")
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.password").value("Password must be 72 UTF-8 bytes or fewer"));
+        verifyNoInteractions(authService);
+    }
+
+    @Test
+    void multibytePasswordAt72BytesIsAccepted() throws Exception {
+        when(authService.register(any())).thenReturn(
+                new AuthResponse("jwt-token", new UserResponse(1L, "Maria Lopez", "maria@example.com")));
+
+        register("Maria Lopez", "maria@example.com", "é".repeat(35) + "a1")
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     void duplicateEmailIs409() throws Exception {
         when(authService.register(any())).thenThrow(new ConflictException("An account with this email already exists."));
 
