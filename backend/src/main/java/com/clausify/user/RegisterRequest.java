@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
- * Body of {@code POST /api/auth/register}. The 72-character password cap matches BCrypt's input limit,
+ * Body of {@code POST /api/auth/register}. The 72-byte UTF-8 password cap matches BCrypt's input limit,
  * so long passwords get a clear 400 instead of failing inside the encoder.
  */
 public record RegisterRequest(
@@ -20,6 +20,7 @@ public record RegisterRequest(
         String email,
 
         @NotBlank(message = "Password is required")
+        @BcryptPasswordLength
         @Size(min = 8, max = 72, message = "Password must be at least 8 characters and include a letter and a number")
         @Pattern(regexp = "^(?=.*\\p{L})(?=.*\\d).+$",
                 message = "Password must be at least 8 characters and include a letter and a number")
