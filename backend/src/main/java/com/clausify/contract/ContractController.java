@@ -35,8 +35,13 @@ public class ContractController {
     }
 
     /**
+     * Uploads a contract PDF for analysis from the active user
      * FR-3: 202 Accepted, because analysis continues in the background; poll the Location URL for status.
      * 413 over 10 MB, 415 if not a PDF, 422 if no text can be read.
+     *
+     * @param file multipart file in a PDF format (10MB file limit)
+     * @param jwt security token for the current active user
+     * @return a response entity with accepted status and a URI for the uploaded contract
      */
     @Operation(summary = "Upload a contract PDF",
             description = "PDF only, up to 10 MB. Text is extracted immediately and the file is discarded; analysis runs in the background.")
@@ -47,7 +52,14 @@ public class ContractController {
         return ResponseEntity.accepted().location(URI.create("/api/contracts/" + contract.id())).body(contract);
     }
 
-    /** FR-4: the caller's contracts, newest first. {@code page} is zero-based; {@code size} is at most 100. */
+    /**
+     * Lists out the active users uploaded contracts.
+     * FR-4: the caller's contracts, newest first. {@code page} is zero-based; {@code size} is at most 100.
+     *
+     * @param pageable an object from the request parameters that defines how the list of contracts is displayed
+     * @param jwt security token for the active user
+     * @return a list of the current users contracts filtered by the pageable object
+     */
     @Operation(summary = "List my contracts", description = "Newest first. Query parameters: page (0-based), size (default 20, max 100).")
     @GetMapping
     public PageResponse<ContractSummaryResponse> list(@ParameterObject @PageableDefault(size = 20) Pageable pageable,
@@ -55,7 +67,14 @@ public class ContractController {
         return contractService.list(CurrentUser.id(jwt), pageable);
     }
 
-    /** FR-4: status and details; poll while UPLOADED or ANALYZING. 404 if missing or not yours. */
+    /**
+     * Gets a specific user contract by the id
+     * FR-4: status and details; poll while UPLOADED or ANALYZING. 404 if missing or not yours.
+     *
+     * @param id the id of the requested contract
+     * @param jwt security token for the current user
+     * @return a ContractDetailResponse dto for the request contract
+     */
     @Operation(summary = "Get one of my contracts")
     @GetMapping("/{id}")
     public ContractDetailResponse get(@Parameter(description = "Contract id") @PathVariable Long id,
@@ -63,7 +82,14 @@ public class ContractController {
         return contractService.get(id, CurrentUser.id(jwt));
     }
 
-    /** FR-8: 204 once deleted. 404 if missing or not yours. */
+    /**
+     * Deletes a user's contract by the contact id
+     * FR-8: 204 once deleted. 404 if missing or not yours.
+     *
+     * @param id the id of the contract to be deleted
+     * @param jwt security token for the current user
+     * @return a 204 status if success or 404 status if there is an error
+     */
     @Operation(summary = "Delete one of my contracts",
             description = "Permanently removes the contract, its extracted text, and its analysis.")
     @DeleteMapping("/{id}")
