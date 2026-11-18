@@ -35,11 +35,14 @@ public class RateLimiter {
 
     /** Takes one token, or throws 429 if the bucket is empty. */
     public void acquire(String key, Limit limit) {
-        take(key, limit, true);
+        OptionalLong retryAfterSeconds = tryTake(key, limit);
+        if (retryAfterSeconds.isPresent()) {
+            throw new TooManyRequestsException(retryAfterSeconds.getAsLong());
+        }
     }
 
-    /** Throws 429 if the bucket is empty, without taking a token. */
-    public void requireAvailable(String key, Limit limit) {
+    /** Throws 429 if the bucket is empty, without taking a token. A key that has never been used is available. */
+    public void requireAvailable(String key) {
         if (!enabled) {
             return;
         }
@@ -57,12 +60,16 @@ public class RateLimiter {
 
     /** Takes one token if there is one and never throws: for counting failures after they happen. */
     public void record(String key, Limit limit) {
-        take(key, limit, false);
+        tryTake(key, limit);
     }
 
-    private void take(String key, Limit limit, boolean throwWhenEmpty) {
+    /**
+     * Takes one token if the bucket has one. Otherwise takes nothing and returns how many seconds until one
+     * is available. Does nothing when rate limiting is disabled.
+     */
+    private OptionalLong tryTake(String key, Limit limit) {
         if (!enabled) {
-            return;
+            return OptionalLong.empty();
         }
         sweepOccasionally();
         long now = clock.millis();
@@ -71,46 +78,8 @@ public class RateLimiter {
             bucket.refill(now);
             if (bucket.tokens >= 1) {
                 bucket.tokens -= 1;
-            } else if (throwWhenEmpty) {
-                throw new TooManyRequestsException(bucket.secondsUntilToken());
+                return OptionalLong.empty();
             }
+            return OptionalLong.of(bucket.secondsUntilToken());
         }
     }
-
-    private void sweepOccasionally() {
-        if (calls.incrementAndGet() % SWEEP_EVERY != 0) {
-            return;
-        }
-        long now = clock.millis();
-        buckets.values().removeIf(bucket -> {
-            synchronized (bucket) {
-                bucket.refill(now);
-                return bucket.tokens >= bucket.capacity;
-            }
-        });
-    }
-
-    private static final class Bucket {
-
-        private final double capacity;
-        private final double tokensPerMilli;
-        private double tokens;
-        private long updatedAt;
-
-        private Bucket(Limit limit, long now) {
-            this.capacity = limit.capacity();
-            this.tokensPerMilli = limit.capacity() / (double) limit.period().toMillis();
-            this.tokens = capacity;
-            this.updatedAt = now;
-        }
-
-        private void refill(long now) {
-            tokens = Math.min(capacity, tokens + (now - updatedAt) * tokensPerMilli);
-            updatedAt = now;
-        }
-
-        private long secondsUntilToken() {
-            return Math.max(1, (long) Math.ceil((1 - tokens) / tokensPerMilli / 1000));
-        }
-    }
-}
