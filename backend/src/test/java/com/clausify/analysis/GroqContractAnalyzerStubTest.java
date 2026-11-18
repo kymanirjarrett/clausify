@@ -18,6 +18,8 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.ai.model.openai.autoconfigure.OpenAiAutoConfigurationUtil;
 import org.springframework.ai.model.openai.autoconfigure.OpenAiChatAutoConfiguration;
 import org.springframework.ai.model.openai.autoconfigure.OpenAiChatProperties;
@@ -151,6 +153,18 @@ class GroqContractAnalyzerStubTest {
 
         assertThat(requests).hasSize(2);              // the SDK did not retry on its own
         assertThat(sleeps).containsExactly(Duration.ofSeconds(7));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"-1", "NaN", "-Infinity", "Infinity", "invalid"})
+    void invalidRetryAfterUsesBackoff(String retryAfter) {
+        responses.add(new StubResponse(429, Map.of("retry-after", retryAfter), error("rate_limit_exceeded")));
+        reply(VALID);
+
+        run(analyzer -> assertThat(analyzer.analyze("Some clause.").findings()).hasSize(1));
+
+        assertThat(requests).hasSize(2);
+        assertThat(sleeps).containsExactly(Duration.ofSeconds(2));
     }
 
     @Test
