@@ -52,12 +52,12 @@ class RateLimiterTest {
 
     @Test
     void requireAvailableChecksWithoutTakingATokenAndRecordNeverThrows() {
-        limiter.requireAvailable("k", THREE_PER_MINUTE);
-        limiter.requireAvailable("k", THREE_PER_MINUTE);
+        limiter.requireAvailable("k");
+        limiter.requireAvailable("k");
         exhaust("k");
 
         assertThatCode(() -> limiter.record("k", THREE_PER_MINUTE)).doesNotThrowAnyException();
-        assertThatThrownBy(() -> limiter.requireAvailable("k", THREE_PER_MINUTE))
+        assertThatThrownBy(() -> limiter.requireAvailable("k"))
                 .isInstanceOf(TooManyRequestsException.class);
     }
 

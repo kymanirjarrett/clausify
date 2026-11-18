@@ -69,7 +69,7 @@ public class AuthService {
     public AuthResponse login(LoginRequest request) {
         String email = normalizeEmail(request.email());
         String failuresKey = "login-failures:" + email;
-        rateLimiter.requireAvailable(failuresKey, limits.loginFailuresPerEmail());
+        rateLimiter.requireAvailable(failuresKey);
         Optional<User> user = userRepository.findByEmail(email);
         boolean passwordMatches = passwordMatches(request.password(), user.map(User::getPassword).orElse(dummyHash));
         if (user.isEmpty() || !passwordMatches) {
