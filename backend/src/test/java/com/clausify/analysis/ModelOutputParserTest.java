@@ -113,4 +113,16 @@ class ModelOutputParserTest {
     private static String wrap(String finding) {
         return "{\"contractType\":null,\"summary\":null,\"findings\":[" + finding + "]}";
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "{\"findings\":[1],\"findings\":[]}",
+            "{\"findings\":[],\"summary\":\"first\",\"summary\":\"second\"}",
+            "{\"findings\":[{\"category\":\"LIABILITY\",\"riskScore\":101,\"riskScore\":1,"
+                    + "\"favorable\":false,\"title\":\"Risk\",\"originalText\":\"Clause\",\"explanation\":\"Reason\"}]}"
+    })
+    void rejectsDuplicateFields(String reply) {
+        assertThatThrownBy(() -> ModelOutputParser.parse(reply, 15))
+                .isInstanceOf(InvalidModelOutputException.class);
+    }
 }
