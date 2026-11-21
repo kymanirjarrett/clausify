@@ -1,5 +1,6 @@
 package com.clausify.contract;
 
+import com.clausify.common.ConflictException;
 import com.clausify.common.NotFoundException;
 import com.clausify.common.PageResponse;
 import com.clausify.common.UnsupportedFileTypeException;
@@ -25,6 +26,7 @@ public class ContractService {
 
     static final String ONLY_PDF = "Only PDF files are supported.";
     static final String NOT_FOUND = "Contract not found.";
+    static final String NOT_RETRYABLE = "Only a failed analysis can be retried.";
     /** Newest first; id breaks ties between uploads in the same instant so pages never overlap. */
     private static final Sort NEWEST_FIRST = Sort.by(Sort.Order.desc("uploadedAt"), Sort.Order.desc("id"));
     /** Every PDF starts with these bytes; the declared content type alone can be faked. */
@@ -78,6 +80,21 @@ public class ContractService {
     @Transactional
     public void delete(Long id, Long userId) {
         contractRepository.delete(findOwned(id, userId));
+    }
+
+    /**
+     * FR-7: analyzes a FAILED contract again from its stored text, so no re-upload is needed.
+     * 404 if missing or not yours; 409 if its analysis did not fail.
+     */
+    @Transactional
+    public ContractSummaryResponse retry(Long id, Long userId) {
+        Contract contract = findOwned(id, userId);
+        if (!contract.isRetryable()) {
+            throw new ConflictException(NOT_RETRYABLE);
+        }
+        contract.resetForRetry();
+        events.publishEvent(new ContractUploadedEvent(contract.getId()));
+        return ContractSummaryResponse.from(contract);
     }
 
     /**
