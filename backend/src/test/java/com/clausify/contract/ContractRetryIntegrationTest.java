@@ -1,6 +1,8 @@
 package com.clausify.contract;
 
+import com.clausify.Polling;
 import com.clausify.TestcontainersConfiguration;
+import com.clausify.analysis.AnalysisRepository;
 import com.clausify.user.JwtService;
 import com.clausify.user.User;
 import com.clausify.user.UserRepository;
@@ -30,10 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * FR-7 through the full stack: {@code POST /api/contracts/{id}/retry} (examples 1 and 2, plus ownership and auth).
  * <p>
- * Nothing consumes {@link ContractUploadedEvent} yet (FR-5), so a retried contract stays UPLOADED and these tests
- * can assert that. Once the analysis listener exists it will move the contract on in the background, which would
- * make the UPLOADED assertion in the retry-from-FAILED test and the 409 on the second call in the retry-twice test
- * race with it: replace the ContractAnalyzer with a stub in this class at that point.
+ * The real analysis pipeline (FR-5) consumes {@link ContractUploadedEvent} in the background, with the fake
+ * ContractAnalyzer every test uses, so a retried contract is followed until it is ANALYZED again.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -59,6 +59,9 @@ class ContractRetryIntegrationTest {
     private JwtService jwtService;
 
     @Autowired
+    private AnalysisRepository analyses;
+
+    @Autowired
     private ApplicationEvents events;
 
     private User maria;
@@ -71,18 +74,18 @@ class ContractRetryIntegrationTest {
         bob = newUser("bob");
     }
 
-    /** FR-7 example 1: 202, and the stored text is queued for analysis again without a re-upload. */
+    /** FR-7 example 1: 202, and the stored text is analyzed again without a re-upload, through the real pipeline. */
     @Test
-    void failedContractIsAcceptedAndQueuedAgainFromItsStoredText() throws Exception {
+    void failedContractIsAcceptedAndAnalyzedAgainFromItsStoredText() throws Exception {
         Long id = save(maria, ContractStatus.FAILED);
 
         retry(maria, id).andExpect(status().isAccepted());
 
-        Contract after = reload(maria, id);
-        assertThat(after.getStatus()).isEqualTo(ContractStatus.UPLOADED); // queued; the FR-5 listener moves it to ANALYZING
+        assertThat(events.stream(ContractUploadedEvent.class)).containsExactly(new ContractUploadedEvent(id));
+        Contract after = Polling.await(() -> reload(maria, id), c -> c.getStatus() == ContractStatus.ANALYZED);
         assertThat(after.getFailureReason()).isNull();
         assertThat(after.getExtractedText()).isEqualTo(STORED_TEXT);
-        assertThat(events.stream(ContractUploadedEvent.class)).containsExactly(new ContractUploadedEvent(id));
+        assertThat(analyses.findByContractId(id)).isPresent();
     }
 
     /** FR-7 example 2: 409 Conflict, and the existing analysis is unchanged. */
