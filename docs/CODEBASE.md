@@ -189,18 +189,18 @@ Live task status is on the board; this is the plan.
 - Dashboard delete and retry buttons; keep the board and #99 current
 
 **Kymani (accounts, security, deployment):**
-- Done: deployment (Vercel, Render, Aiven), rate limiting (#80), cold-start handling (#106), deployment docs (#91)
-- #57 FR-12 account stats and profile update; #92 verify Aiven's TLS certificate
+- Done: deployment (Vercel, Render, TiDB Cloud, #118), rate limiting (#80), cold-start handling (#106), deployment docs (#91)
+- #57 FR-12 account stats and profile update
 - #59 E-3 coverage + Playwright and #60 E-4 final docs (shared by all four)
 
 ## 9. Gotchas
 
 - **Migration order:** V6 before V7. If you need a schema change outside your reserved number, take the next free number after V7 and tell the team.
-- **Aiven requires primary keys** on every table (`sql_require_primary_key`). Every new table needs one.
+- **Every table needs a primary key.** TiDB doesn't enforce it (`sql_require_primary_key` is off), so check it in review.
 - **Don't commit `frontend/angular.json` analytics IDs.** The Angular CLI adds an `"analytics"` entry if you accept its prompt; discard that change.
 - **Ownership tests:** every new endpoint on user data needs a test that another user gets 404. Copy `ContractQueryIntegrationTest`.
 - **Merging to `main` deploys.** Render deploys the API after CI passes, so a merged migration is applied to the production database immediately. Get schema changes right in the PR.
-- **Render is slow to start.** The free API sleeps after 15 idle minutes and takes about 2 minutes to wake. Open the site (or `/api/health`) and check Aiven is running well before a demo.
+- **Render is slow to start.** The free API sleeps after 15 idle minutes and takes about 2 minutes to wake. Open the site (or `/api/health`) well before a demo, and check the TiDB request-unit quota.
 - **After a migration file is renamed or removed, run `./mvnw clean` once.** A stale copy in `target/` makes Flyway report a duplicate version.
 - **Rate limits are off locally.** They're on in production (429 after 10 logins a minute from one IP); `RateLimitIntegrationTest` covers them.
 - **The AI is slow and can fail.** Never call Groq inside a request; do it in the async listener and set the contract to `FAILED` with a readable `failureReason` on errors.

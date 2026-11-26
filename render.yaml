@@ -6,7 +6,7 @@ services:
     name: clausify-api
     runtime: docker
     plan: free
-    # Nearest Render region to the Aiven service (DigitalOcean sfo); every query crosses this distance.
+    # Same AWS region as the TiDB Cloud Starter instance (us-west-2, Oregon), so queries stay in-region.
     region: oregon
     branch: main
     dockerContext: ./backend
