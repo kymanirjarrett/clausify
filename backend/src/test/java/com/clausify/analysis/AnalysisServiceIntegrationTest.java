@@ -220,6 +220,29 @@ class AnalysisServiceIntegrationTest {
     }
 
     @Test
+    void duplicateSubmitOnFullQueueLeavesQueuedContractAlone() throws InterruptedException {
+        CountDownLatch release = new CountDownLatch(1);
+        when(analyzer.analyze("blocker")).thenAnswer(call -> {
+            release.await(10, TimeUnit.SECONDS);
+            return fourFindings();
+        });
+        try {
+            Long blocker = upload("blocker");
+            awaitStatus(blocker, ContractStatus.ANALYZING); // the only worker is busy
+            Long queued = upload("queued");                 // fills the queue of one
+
+            service.submit(queued); // a duplicate, e.g. startup recovery; the full queue would reject it
+
+            assertThat(contracts.findById(queued).orElseThrow().getStatus()).isEqualTo(ContractStatus.UPLOADED);
+            release.countDown();
+            awaitStatus(queued, ContractStatus.ANALYZED);
+            verify(analyzer, times(1)).analyze("queued");
+        } finally {
+            release.countDown();
+        }
+    }
+
+    @Test
     void startupRecoveryFailsInterruptedAnalysesAndQueuesWaitingUploads() {
         Long interrupted = tx.execute(status -> {
             Contract contract = contracts.save(contract("was running"));

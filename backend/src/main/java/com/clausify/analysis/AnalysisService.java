@@ -9,6 +9,8 @@ import java.time.Clock;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
@@ -62,6 +64,8 @@ public class AnalysisService {
     private final TaskExecutor executor;
     private final TransactionTemplate newTransaction;
     private final Clock clock;
+    /** Contracts queued or running. A second submit of one of these is dropped, so it can never be rejected. */
+    private final Set<Long> inFlight = ConcurrentHashMap.newKeySet();
 
     public AnalysisService(ContractRepository contracts, AnalysisRepository analyses, ContractAnalyzer analyzer,
                            RiskScorer scorer, AnalysisProperties properties,
@@ -118,9 +122,22 @@ public class AnalysisService {
     }
 
     void submit(Long contractId) {
+        // Without this, a duplicate (say, startup recovery plus the upload event) hitting a full queue would fail
+        // the contract the first submit already queued, and that worker would then crash on FAILED -> ANALYZED.
+        if (!inFlight.add(contractId)) {
+            log.info("Contract {} is already queued or running; ignoring duplicate submit", contractId);
+            return;
+        }
         try {
-            executor.execute(() -> run(contractId));
+            executor.execute(() -> {
+                try {
+                    run(contractId);
+                } finally {
+                    inFlight.remove(contractId);
+                }
+            });
         } catch (TaskRejectedException e) {
+            inFlight.remove(contractId);
             log.warn("Analysis queue is full; contract {} fails as busy", contractId);
             fail(contractId, BUSY);
         }
