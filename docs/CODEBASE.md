@@ -2,7 +2,7 @@
 
 Start here. This page tells you where everything lives, what is built, what is not, and who is working on what. It is written for teammates and for Claude Code sessions.
 
-- **Rules and conventions:** [`CLAUDE.md`](../CLAUDE.md) and [`CONTRIBUTING.md`](../CONTRIBUTING.md)
+- **Rules and conventions:** [`CLAUDE.md`](../CLAUDE.md)
 - **Requirements, API table, schema plan:** [`DESIGN.md`](../DESIGN.md) (FR-1 to FR-12, section 7.4 API, 7.5 database)
 - **Live task status:** the [project board](https://github.com/users/kymanirjarrett/projects/6). If this page and the board disagree, the board wins.
 
@@ -20,7 +20,6 @@ clausify/
 │   ├── adr/                Architecture decision records (why we chose X)
 │   ├── design/             Early wireframes and mockups (which screens exist, not how they look)
 │   └── CODEBASE.md         This file
-├── legacy/nextjs-prototype/  Old prototype. Reference only, do not edit. Will be deleted.
 ├── .github/workflows/      CI (ci.yml) and PR title check (pr-title.yml)
 ├── backend/Dockerfile      Production image for Render (multi-stage, layered jar)
 ├── frontend/vercel.json    Vercel routing: Angular deep links (and, later, the /api proxy)
@@ -28,8 +27,7 @@ clausify/
 ├── docker-compose.yml      Local MySQL 8.4 on port 3307
 ├── .env.example            Every env var the deployed API needs (placeholders only)
 ├── DESIGN.md               Course design document (requirements, diagrams, API, schema)
-├── CLAUDE.md               Rules for Claude Code and humans alike
-└── CONTRIBUTING.md         Branch, commit, and PR workflow
+└── CLAUDE.md               Rules and team workflow for Claude Code and humans alike
 ```
 
 ## 2. Backend: where things go

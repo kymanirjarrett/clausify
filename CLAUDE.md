@@ -61,7 +61,6 @@ backend/src/main/resources/
   application.yml, application-local.yml, application-prod.yml
   db/migration/V<n>__description.sql                           one change per file
 frontend/                                                      Angular app (core/, shared/, features/)
-legacy/nextjs-prototype/                                       delete once Angular exists
 docs/adr/                                                      architecture decisions
 ```
 
@@ -86,8 +85,6 @@ cd frontend && npx ng test --watch=false   # frontend unit tests
 The `local` profile needs no environment variables. The deployed API runs with `SPRING_PROFILES_ACTIVE=prod` and every value from `.env.example` set in Render.
 
 ## Workflow
-
-Full details in `CONTRIBUTING.md`.
 
 - Create a GitHub issue, then a branch `type/<issue>-short-desc` (e.g. `feat/12-jwt-auth`).
 - Commits and PR titles use Conventional Commits: `type(optional-scope): imperative summary`. Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `ci`, `build`, `perf`, `style`.

@@ -36,7 +36,7 @@ Clausify is being rebuilt from a Next.js prototype into a Spring Boot + Angular 
 | Hosting | Vercel (frontend), Render (API, Docker) |
 | CI | GitHub Actions |
 
-Each choice and its trade-offs are recorded in the [architecture decision records](docs/adr/). The original prototype used Next.js, Supabase (Postgres + pgvector), and Supabase Storage; its code is kept for reference in [`legacy/nextjs-prototype/`](legacy/nextjs-prototype/) until the Angular app replaces it.
+Each choice and its trade-offs are recorded in the [architecture decision records](docs/adr/). The original prototype used Next.js, Supabase (Postgres + pgvector), and Supabase Storage; the Angular app replaced it.
 
 ## 🏛️ Architecture
 
@@ -144,7 +144,7 @@ The browser only ever talks to Vercel, which proxies API calls to Render, so the
 
 ## 🤝 Contributing
 
-Team workflow (issues, branch names, Conventional Commits, PR checks, reviews, lab tagging) is in [CONTRIBUTING.md](CONTRIBUTING.md). Every PR runs the backend tests (against MySQL) and the frontend tests and production build in GitHub Actions.
+Clausify is closed source and does not accept outside contributions. The team workflow (issues, branch names, Conventional Commits, PR checks, reviews, lab tagging) is in [CLAUDE.md](CLAUDE.md). Every PR runs the backend tests (against MySQL) and the frontend tests and production build in GitHub Actions.
 
 ## 🗺️ Roadmap
 
