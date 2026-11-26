@@ -1,6 +1,6 @@
 # 4. Aiven free tier for hosted MySQL
 
-- **Status:** Accepted
+- **Status:** Superseded by [0011](0011-tidb-cloud-starter-for-hosted-mysql.md)
 - **Date:** 2026-09-27
 
 ## Context

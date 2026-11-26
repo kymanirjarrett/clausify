@@ -1,5 +1,5 @@
 # Deployed API. Every value comes from the environment; nothing secret lives here.
-# DB_URL is the full JDBC URL from the Aiven console, including its SSL parameters.
+# DB_URL is the TiDB Cloud Starter JDBC URL for the clausify database, with sslMode=VERIFY_IDENTITY (see .env.example).
 server:
   port: ${PORT:8080}
   # Vercel and Render terminate HTTPS and pass the original scheme and host in X-Forwarded-* headers;
@@ -11,6 +11,9 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    hikari:
+      # TiDB Starter drops AWS public-endpoint connections after 340 s idle; retiring each one at 5 min (TiDB's advice) means none outlives that.
+      max-lifetime: 300000
   ai:
     model:
       # Only the chat client, and only in prod. Groq has no embeddings API; FR-9 embeds in-process.
