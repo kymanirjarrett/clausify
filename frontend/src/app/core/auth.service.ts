@@ -58,13 +58,18 @@ export class AuthService {
    * the interceptor) or a deleted account (404) signs the user out.
    */
   async restore(): Promise<void> {
-    if (!this.tokenSignal()) {
+    const token = this.tokenSignal();
+    if (!token) {
       return;
     }
     try {
-      this.userSignal.set(await firstValueFrom(this.http.get<User>('/api/auth/me').pipe(retryWhileStarting())));
+      const user = await firstValueFrom(this.http.get<User>('/api/auth/me').pipe(retryWhileStarting()));
+      // The user may have signed out or into another account while this waited out a cold start.
+      if (this.tokenSignal() === token) {
+        this.userSignal.set(user);
+      }
     } catch (error) {
-      if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 404)) {
+      if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 404) && this.tokenSignal() === token) {
         this.clear();
       }
     }
