@@ -130,7 +130,7 @@ Angular 22 with standalone components, signals, and no Zone.js. Code lives in `f
 | `features/auth/` | Login and sign-up |
 | `features/shell/` | Signed-in layout wrapping the `/app` pages |
 | `features/dashboard/` | Contract list + upload sheet (FR-3, FR-4) |
-| `features/contract/` | Contract detail. Analysis area is drawn as "ghost" placeholders until FR-6 exists |
+| `features/contract/` | Contract detail, and the FR-6 analysis results (score gauge, risk by category, findings with level filters and Copy, favorable clauses) once ANALYZED; ghost placeholders while it runs |
 | `features/account/` | Account page |
 
 **Where new screens go:** Analysis Results (#55, Rival) extends `features/contract/`. Clause and Version Comparison (#56, Venkat) go in a new `features/comparison/` with routes under `/app`. Add API calls to a service in `core/` and response types to `api.models.ts`.

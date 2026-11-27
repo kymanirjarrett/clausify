@@ -1,0 +1,150 @@
+@let a = analysis();
+
+<div class="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-12">
+  <!-- Side panel first on small screens: the score is the answer people look for. -->
+  <aside class="space-y-8 lg:order-2" aria-label="Risk summary">
+    <section aria-labelledby="score-title">
+      <h3 id="score-title" class="sr-only">Overall risk</h3>
+      <div class="flex items-end justify-between gap-4">
+        <p class="text-[3.25rem] font-semibold leading-none tracking-[-0.03em] tabular">
+          {{ a.overallScore }}<span class="measure ml-1 !text-[0.875rem] text-ink-3">/ 100</span>
+        </p>
+        <span class="stamp" [class]="outOfTolerance(a.riskLevel) ? 'text-amber-ink bg-amber-wash' : 'text-ink-2 bg-sheet'">
+          {{ levelLabel(a.riskLevel) }} risk
+        </span>
+      </div>
+      <!-- Gauge: a dimension line from 0 to 100 with the band edges at 40 and 70. -->
+      <div class="gauge mt-5" role="img"
+           [attr.aria-label]="'Overall risk ' + a.overallScore + ' out of 100, ' + levelLabel(a.riskLevel)">
+        <div class="gauge-line"></div>
+        <div class="gauge-fill" [class.gauge-fill-out]="outOfTolerance(a.riskLevel)" [style.width]="gaugePercent(a.overallScore)"></div>
+        <span class="gauge-tick" style="left: 40%"></span>
+        <span class="gauge-tick" style="left: 70%"></span>
+        <span class="gauge-mark" [style.left]="gaugePercent(a.overallScore)"></span>
+      </div>
+      <div class="measure mt-2 flex justify-between text-ink-3" aria-hidden="true">
+        <span>0</span><span class="gauge-label" style="left: 40%">40</span><span class="gauge-label" style="left: 70%">70</span><span>100</span>
+      </div>
+      @if (a.summary) {
+        <p class="mt-5 leading-relaxed text-ink-2">{{ a.summary }}</p>
+      }
+    </section>
+
+    <section aria-labelledby="categories-title">
+      <h3 id="categories-title" class="border-b border-rule pb-2 font-semibold">Risk by category</h3>
+      @if (a.categories.length) {
+        <table class="schedule mt-1 w-full text-left">
+          <caption class="sr-only">Highest risk score in each category</caption>
+          <thead>
+            <tr><th scope="col">Category</th><th scope="col" class="text-right">Score</th><th scope="col" class="text-right">Level</th></tr>
+          </thead>
+          <tbody>
+            @for (c of a.categories; track c.category) {
+              <tr>
+                <td>{{ categoryLabel(c.category) }} <span class="measure text-ink-3">×{{ c.findingCount }}</span></td>
+                <td class="measure text-right !text-[0.875rem]">{{ c.highestScore }}</td>
+                <td class="text-right text-sm text-ink-2">{{ levelLabel(c.riskLevel) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <p class="mt-3 text-sm text-ink-2">No risky clauses were found in any category.</p>
+      }
+    </section>
+
+    <dl class="title-block grid grid-cols-2">
+      <div class="col-span-2"><dt>Contract type</dt><dd>{{ a.contractType || 'Not identified' }}</dd></div>
+      <div><dt>Findings</dt><dd class="tabular">{{ a.findings.length }}</dd></div>
+      <div><dt>In your favor</dt><dd class="tabular">{{ a.favorable.length }}</dd></div>
+      <div class="col-span-2"><dt>Analysis time</dt><dd class="tabular">{{ formatDuration(a.document.analysisMs) }}</dd></div>
+    </dl>
+  </aside>
+
+  <div class="min-w-0 lg:order-1">
+    <section aria-labelledby="findings-title">
+      <div class="flex flex-wrap items-baseline justify-between gap-3">
+        <h3 id="findings-title" class="font-semibold">Findings</h3>
+        <div class="flex flex-wrap gap-1.5" role="group" aria-label="Filter findings by risk">
+          @for (f of filters; track f) {
+            <button type="button" class="chip" [attr.aria-pressed]="filter() === f" (click)="filter.set(f)"
+                    [attr.aria-label]="levelLabel(f) + ': ' + counts()[f] + (counts()[f] === 1 ? ' finding' : ' findings')">
+              {{ levelLabel(f) }} · <span class="tabular">{{ counts()[f] }}</span>
+            </button>
+          }
+        </div>
+      </div>
+
+      @if (shown().length) {
+        <ol class="mt-4 border-t border-rule-strong">
+          @for (f of shown(); track f.id) {
+            <li class="finding" [class.finding-out]="outOfTolerance(f.riskLevel)">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                <span class="stamp" [class]="outOfTolerance(f.riskLevel) ? 'text-amber-ink bg-amber-wash' : 'text-ink-2 bg-sheet'">
+                  {{ levelLabel(f.riskLevel) }} · {{ f.riskScore }}
+                </span>
+                <span class="measure text-ink-2">{{ categoryLabel(f.category) }}</span>
+                @if (f.sectionRef) {
+                  <span class="measure text-ink-3">{{ f.sectionRef }}</span>
+                }
+              </div>
+              <h4 class="mt-2.5 text-[1.0625rem] font-semibold leading-snug">{{ f.title }}</h4>
+              <blockquote class="clause mt-3">{{ f.originalText }}</blockquote>
+              <p class="mt-4 text-sm font-semibold">Why this matters</p>
+              <p class="mt-1 leading-relaxed text-ink-2">{{ f.explanation }}</p>
+              @if (f.suggestedRevision) {
+                <div class="revision mt-4">
+                  <div class="flex items-center justify-between gap-3">
+                    <p class="text-sm font-semibold">Suggested revision</p>
+                    <button type="button" class="btn btn-quiet !h-8 text-sm" (click)="copy(f)"
+                            [attr.aria-label]="'Copy suggested revision for ' + f.title">
+                      <cl-icon [name]="copied() === f.id ? 'check' : 'copy'" [size]="16" />
+                      {{ copied() === f.id ? 'Copied' : 'Copy' }}
+                    </button>
+                  </div>
+                  <p class="mt-2 leading-relaxed">{{ f.suggestedRevision }}</p>
+                  @if (copyFailed() === f.id) {
+                    <p class="mt-2 text-sm text-fail">Copying is blocked in this browser. Select the text to copy it.</p>
+                  }
+                </div>
+              }
+            </li>
+          }
+        </ol>
+      } @else if (a.findings.length) {
+        <p class="mt-4 border-t border-rule-strong pt-4 text-ink-2">No findings at this level.</p>
+      } @else {
+        <p class="mt-4 border-t border-rule-strong pt-4 text-ink-2">No clauses outside tolerance were found.</p>
+      }
+    </section>
+
+    @if (a.favorable.length) {
+      <section class="mt-12" aria-labelledby="favor-title">
+        <h3 id="favor-title" class="border-b border-rule-strong pb-3 font-semibold">What's in your favor</h3>
+        <ul>
+          @for (f of a.favorable; track f.id) {
+            <li class="finding">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                <span class="stamp text-pass bg-pass-wash">Favorable</span>
+                <span class="measure text-ink-2">{{ categoryLabel(f.category) }}</span>
+                @if (f.sectionRef) {
+                  <span class="measure text-ink-3">{{ f.sectionRef }}</span>
+                }
+              </div>
+              <h4 class="mt-2.5 text-[1.0625rem] font-semibold leading-snug">{{ f.title }}</h4>
+              <blockquote class="clause mt-3">{{ f.originalText }}</blockquote>
+              <p class="mt-3 leading-relaxed text-ink-2">{{ f.explanation }}</p>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  </div>
+</div>
+
+<!-- Live region for the Copy confirmation, so screen readers hear it. -->
+<p class="sr-only" aria-live="polite">{{ copied() !== null ? 'Revision copied to the clipboard.' : '' }}</p>
+
+<p class="mt-12 max-w-[44rem] border-t border-rule pt-4 text-sm leading-relaxed text-ink-3">
+  Clausify provides information, not legal advice. Review important contracts with a qualified lawyer.
+</p>
