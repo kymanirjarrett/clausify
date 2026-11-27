@@ -11,6 +11,18 @@ export interface AuthResponse {
   user: User;
 }
 
+/** GET/PATCH /api/users/me (FR-12). */
+export interface AccountDetails extends User {
+  phoneNumber: string | null;
+}
+
+/** GET /api/users/me/stats (FR-12). averageRiskScore is null before the first analysis. */
+export interface AccountStats {
+  contractsUploaded: number;
+  contractsAnalyzed: number;
+  averageRiskScore: number | null;
+}
+
 export type ContractStatus = 'UPLOADED' | 'ANALYZING' | 'ANALYZED' | 'FAILED';
 
 export interface ContractSummary {
