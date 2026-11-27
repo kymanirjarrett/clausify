@@ -72,7 +72,8 @@
 
     @if (inProgress()) {
       <p class="mt-5 max-w-[46rem] text-sm leading-relaxed text-ink-3">
-        Automated analysis is not active in this release, so uploaded contracts remain at Uploaded. Their extracted text is stored.
+        Analysis runs in the background: contracts move from Uploaded to Analyzing to Analyzed on their own, and a long
+        contract can take several minutes. This list updates automatically.
       </p>
     }
 
