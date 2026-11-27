@@ -44,6 +44,7 @@ public class User {
     private String name;
 
     @Column(nullable = false)
+    @ToString.Exclude // personal data; keep it out of logs and exception messages
     private String email;
 
     @Column(nullable = false)
