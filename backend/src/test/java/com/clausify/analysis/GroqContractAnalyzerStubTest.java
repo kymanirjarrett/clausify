@@ -56,6 +56,9 @@ class GroqContractAnalyzerStubTest {
     private final List<Recorded> requests = new ArrayList<>();
     private final List<Duration> sleeps = new ArrayList<>();
 
+    /** A StubResponse status that closes the connection without answering. */
+    private static final int DROP_CONNECTION = -1;
+
     record StubResponse(int status, Map<String, String> headers, String body) {
     }
 
@@ -80,6 +83,10 @@ class GroqContractAnalyzerStubTest {
             StubResponse next;
             synchronized (responses) {
                 next = responses.isEmpty() ? new StubResponse(500, Map.of(), "{}") : responses.removeFirst();
+            }
+            if (next.status() == DROP_CONNECTION) {
+                exchange.close(); // no response at all: the client sees a network failure
+                return;
             }
             byte[] out = next.body().getBytes(StandardCharsets.UTF_8);
             exchange.getResponseHeaders().add("Content-Type", "application/json");
@@ -206,6 +213,31 @@ class GroqContractAnalyzerStubTest {
     @Test
     void retriesServerErrorsWithBackoff() {
         responses.add(new StubResponse(503, Map.of(), error("server_error")));
+        reply(VALID);
+
+        run(analyzer -> assertThat(analyzer.analyze("Some clause.").findings()).hasSize(1));
+
+        assertThat(requests).hasSize(2);
+        assertThat(sleeps).containsExactly(Duration.ofSeconds(2));
+    }
+
+    @Test
+    void givesUpAfterMaxAttemptsOfServerErrors() {
+        for (int i = 0; i < 4; i++) {
+            responses.add(new StubResponse(503, Map.of(), error("server_error")));
+        }
+
+        run(analyzer -> assertThatThrownBy(() -> analyzer.analyze("Some clause."))
+                .isInstanceOf(ContractAnalysisException.class)
+                .hasMessage(GroqContractAnalyzer.UNAVAILABLE));
+
+        assertThat(requests).hasSize(4);
+        assertThat(sleeps).hasSize(3);
+    }
+
+    @Test
+    void retriesNetworkFailuresWithBackoff() {
+        responses.add(new StubResponse(DROP_CONNECTION, Map.of(), ""));
         reply(VALID);
 
         run(analyzer -> assertThat(analyzer.analyze("Some clause.").findings()).hasSize(1));

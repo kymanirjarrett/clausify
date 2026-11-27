@@ -68,7 +68,7 @@ public class ContractService {
     @Transactional(readOnly = true)
     public PageResponse<ContractSummaryResponse> list(Long userId, Pageable pageable) {
         Pageable newestFirst = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), NEWEST_FIRST);
-        return PageResponse.of(contractRepository.findAllByUserId(userId, newestFirst), ContractSummaryResponse::from);
+        return PageResponse.of(contractRepository.findSummariesByUserId(userId, newestFirst));
     }
 
     @Transactional(readOnly = true)
