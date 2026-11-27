@@ -42,7 +42,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConflictException.class)
     ProblemDetail handleConflict(ConflictException ex) {
-        return problem(HttpStatus.CONFLICT, ex.getMessage());
+        ProblemDetail body = problem(HttpStatus.CONFLICT, ex.getMessage());
+        ex.getProperties().forEach(body::setProperty);
+        return body;
     }
 
     @ExceptionHandler(UnsupportedFileTypeException.class)
