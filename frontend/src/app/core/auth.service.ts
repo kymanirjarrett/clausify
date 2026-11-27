@@ -39,6 +39,11 @@ export class AuthService {
     this.scheduleExpiry(this.tokenSignal());
   }
 
+  /** After the account page saves a new name, so the header shows it without a reload. */
+  updateUser(user: User): void {
+    this.userSignal.set(user);
+  }
+
   register(request: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>('/api/auth/register', request).pipe(tap((r) => this.signIn(r)));
   }

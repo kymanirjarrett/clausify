@@ -113,7 +113,7 @@ Full table with request/response details: [DESIGN.md section 7.4](../DESIGN.md#7
 | `GET /api/standard-clauses`, `GET /api/clauses/{findingId}/similar` | FR-9 | Venkat | Not started (#50) |
 | `POST /api/contracts/{id}/compare/{otherId}` | FR-10 | Venkat | Not started (#51) |
 | `GET /api/contracts/{id}/report` | FR-11 | Ashton | Not started (#52) |
-| `GET /api/users/me/stats`, `PATCH /api/users/me` | FR-12 | Kymani | Not started (#57) |
+| `GET /api/users/me`, `PATCH /api/users/me`, `GET /api/users/me/stats` | FR-12 | Kymani | ✅ Built |
 
 Errors are always RFC 9457 `ProblemDetail` JSON: 400 validation, 401 no/bad token, 404 missing **or not yours**, 409 conflict, 413 too large, 415 not a PDF, 422 unreadable PDF, 429 rate limited (with `Retry-After`).
 

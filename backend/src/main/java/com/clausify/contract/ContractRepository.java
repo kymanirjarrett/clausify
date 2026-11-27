@@ -17,6 +17,10 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 
     Optional<Contract> findByIdAndUserId(Long id, Long userId);
 
+    long countByUserId(Long userId);
+
+    long countByUserIdAndStatus(Long userId, ContractStatus status);
+
     /**
      * One page of the user's contracts as summaries. Selecting only the summary columns keeps Hibernate from
      * loading each contract's extracted text, which the list never shows.
