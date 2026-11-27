@@ -141,6 +141,14 @@ class AuthControllerTest {
         verifyNoInteractions(authService);
     }
 
+    @Test
+    void loginWithEmailOver255CharsIs400() throws Exception {
+        login("a".repeat(244) + "@example.com", "Str0ng!Passw0rd")
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.email").value("Email must be 255 characters or fewer"));
+        verifyNoInteractions(authService);
+    }
+
     private ResultActions login(String email, String password) throws Exception {
         String body = """
                 {"email": "%s", "password": "%s"}""".formatted(email, password);

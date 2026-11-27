@@ -11,9 +11,10 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Generated;
 
@@ -21,12 +22,18 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * No Lombok equals/hashCode: entities compare by identity, which stays correct while the generated id changes.
+ * The {@code @EqualsAndHashCode.Exclude} markers stay so the relationships are safe if equality is ever added.
+ */
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class User {
 
     @Id
