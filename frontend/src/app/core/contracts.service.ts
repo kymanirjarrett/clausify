@@ -1,7 +1,7 @@
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ContractDetail, ContractSummary, Page } from './api.models';
+import { AnalysisResult, ContractDetail, ContractSummary, Page } from './api.models';
 
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
@@ -22,6 +22,11 @@ export class ContractsService {
 
   get(id: number): Observable<ContractDetail> {
     return this.http.get<ContractDetail>(`/api/contracts/${id}`);
+  }
+
+  /** 409 while the contract is not ANALYZED yet; call it once the status says ANALYZED. */
+  analysis(id: number): Observable<AnalysisResult> {
+    return this.http.get<AnalysisResult>(`/api/contracts/${id}/analysis`);
   }
 }
 
