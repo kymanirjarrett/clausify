@@ -168,6 +168,17 @@ class GroqContractAnalyzerStubTest {
     }
 
     @Test
+    void zeroRetryAfterRetriesWithoutBackoff() {
+        responses.add(new StubResponse(429, Map.of("retry-after", "0"), error("rate_limit_exceeded")));
+        reply(VALID);
+
+        run(analyzer -> assertThat(analyzer.analyze("Some clause.").findings()).hasSize(1));
+
+        assertThat(requests).hasSize(2);
+        assertThat(sleeps).containsExactly(Duration.ZERO);
+    }
+
+    @Test
     void retryAfterLongerThanTheCapFailsFastAsTheDailyLimit() {
         responses.add(new StubResponse(429, Map.of("retry-after", "3600"), error("rate_limit_exceeded")));
 
