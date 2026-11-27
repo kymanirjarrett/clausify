@@ -35,6 +35,8 @@ export class ContractDetailPage {
   protected readonly error = signal<ApiError | null>(null);
   protected readonly analysis = signal<AnalysisResult | null>(null);
   protected readonly analysisError = signal<ApiError | null>(null);
+  protected readonly retrying = signal(false);
+  protected readonly retryError = signal<string | null>(null);
   private timer: ReturnType<typeof setTimeout> | undefined;
 
   protected readonly contractNumber = contractNumber;
@@ -80,6 +82,22 @@ export class ContractDetailPage {
         }
       },
       error: (error) => this.error.set(toApiError(error)),
+    });
+  }
+
+  /** FR-7: analyze the stored text again. The status moves to Uploaded, and polling follows it from there. */
+  protected retry(id: number): void {
+    this.retrying.set(true);
+    this.retryError.set(null);
+    this.contracts.retry(id).subscribe({
+      next: () => {
+        this.retrying.set(false);
+        this.load();
+      },
+      error: (error) => {
+        this.retrying.set(false);
+        this.retryError.set(toApiError(error).message);
+      },
     });
   }
 
