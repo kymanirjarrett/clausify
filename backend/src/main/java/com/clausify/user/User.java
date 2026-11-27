@@ -44,6 +44,7 @@ public class User {
     private String name;
 
     @Column(nullable = false)
+    @ToString.Exclude // personal data; keep it out of logs and exception messages
     private String email;
 
     @Column(nullable = false)
@@ -66,8 +67,22 @@ public class User {
     @EqualsAndHashCode.Exclude
     private Profile profile;
 
+    /** Links an address to this user. Adding the same instance twice keeps one copy. */
     public void addAddress(Address address) {
-        addresses.add(address);
-        address.setUser(this);
+        if (address == null) {
+            throw new IllegalArgumentException("Address cannot be null.");
+        }
+        // By instance, not equals(): Address is @Data, so two different addresses with the same text are equal.
+        if (addresses.stream().noneMatch(a -> a == address)) {
+            addresses.add(address);
+            address.setUser(this);
+        }
+    }
+
+    /** Unlinks exactly this address instance; orphanRemoval deletes its row on flush. */
+    public void removeAddress(Address address) {
+        if (address != null && addresses.removeIf(a -> a == address)) {
+            address.setUser(null);
+        }
     }
 }
