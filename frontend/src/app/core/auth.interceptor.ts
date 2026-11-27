@@ -19,7 +19,8 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
 
   return next(authorized).pipe(
     catchError((error: unknown) => {
-      if (error instanceof HttpErrorResponse && error.status === 401 && isApi && !isPublic && token) {
+      // Only if this request's token is still the session's: a late 401 for an old session must not sign out a new one.
+      if (error instanceof HttpErrorResponse && error.status === 401 && isApi && !isPublic && token && auth.token() === token) {
         auth.signOut('expired');
       }
       return throwError(() => error);
