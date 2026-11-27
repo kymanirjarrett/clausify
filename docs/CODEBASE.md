@@ -46,7 +46,7 @@ Code is **packaged by feature**: each folder under `backend/src/main/java/com/cl
 |---|---|---|---|
 | `user/` | Kymani | Built | `User`, `Address`, `Profile` (+ repositories, from the Flyway lab), `AuthController`, `AuthService`, `JwtService`, DTOs `RegisterRequest`, `LoginRequest`, `AuthResponse`, `UserResponse` |
 | `contract/` | Ashton | Partly built | `Contract`, `ContractStatus`, `ContractRepository`, `ContractService`, `ContractController`, `PdfTextExtractor`, `ExtractedDocument`, `ContractUploadedEvent`, DTOs `ContractSummaryResponse`, `ContractDetailResponse`. Delete is built. Still to add: retry, `ReportService`, and Venkat's `ComparisonService` |
-| `analysis/` | Rival | Partly built | Built: `Analysis`, `ClauseFinding`, `RiskCategory`, `RiskLevel`, repositories, `ContractAnalyzer` with `FakeContractAnalyzer` (local and tests) and `GroqContractAnalyzer` (prod only; chunking, strict JSON schema, rate-limit handling), `ModelOutputParser`, `RiskScorer`, `AnalysisService` (runs after upload on a bounded background executor; claims, analyzes with a timeout, saves; fails interrupted work on startup). Still to add: the analysis results endpoint (FR-6) and retry (FR-7) |
+| `analysis/` | Rival | Partly built | Built: `Analysis`, `ClauseFinding`, `RiskCategory`, `RiskLevel`, repositories, `ContractAnalyzer` with `FakeContractAnalyzer` (local and tests) and `GroqContractAnalyzer` (prod only; chunking, strict JSON schema, rate-limit handling), `ModelOutputParser`, `RiskScorer`, `AnalysisService` (runs after upload on a bounded background executor; claims, analyzes with a timeout, saves; fails interrupted work on startup), and the results endpoint (`AnalysisController`, `AnalysisResultService`, `AnalysisResponse`; FR-6) |
 | `clause/` | Venkat | **Not started** | Planned: `StandardClause`, `StandardClauseRepository`, `ClauseController`, `ClauseSimilarityService`, `EmbeddingService`, `StandardClauseLoader`, seed data |
 | `config/` | Shared | Built | `AsyncConfig` (the bounded analysis thread pool), `SecurityConfig` (which URLs are public, including `/actuator/health`), `JwtConfig`, `JwtProperties`, `CorsProperties`, `OpenApiConfig` (Swagger), `ProblemDetailAuthenticationEntryPoint`, `RateLimitProperties`, `RateLimitInterceptor` + `WebConfig` (429 limits on login, register, upload, retry) |
 | `common/` | Shared | Built | `GlobalExceptionHandler` (turns exceptions into RFC 9457 error JSON), `NotFoundException`, `ConflictException`, `UnreadablePdfException`, `UnsupportedFileTypeException`, `TooManyRequestsException`, `RateLimiter` (token buckets, ADR 0009), `PageResponse`, `CurrentUser` |
@@ -108,8 +108,8 @@ Full table with request/response details: [DESIGN.md section 7.4](../DESIGN.md#7
 | `POST /api/contracts` (upload) | FR-3 | Ashton | ✅ Built |
 | `GET /api/contracts`, `GET /api/contracts/{id}` | FR-4 | Ashton | ✅ Built |
 | `DELETE /api/contracts/{id}` | FR-8 | Ashton | ✅ Built |
-| `POST /api/contracts/{id}/retry` | FR-7 | Ashton | Not started (#45) |
-| `GET /api/contracts/{id}/analysis` | FR-5, FR-6 | Rival | Not started (#42) |
+| `POST /api/contracts/{id}/retry` | FR-7 | Ashton | ✅ Built |
+| `GET /api/contracts/{id}/analysis` | FR-5, FR-6 | Kymani | ✅ Built (409 with `contractStatus` until ANALYZED) |
 | `GET /api/standard-clauses`, `GET /api/clauses/{findingId}/similar` | FR-9 | Venkat | Not started (#50) |
 | `POST /api/contracts/{id}/compare/{otherId}` | FR-10 | Venkat | Not started (#51) |
 | `GET /api/contracts/{id}/report` | FR-11 | Ashton | Not started (#52) |
