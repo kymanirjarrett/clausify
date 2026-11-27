@@ -52,13 +52,34 @@ class RateLimiterTest {
 
     @Test
     void requireAvailableChecksWithoutTakingATokenAndRecordNeverThrows() {
-        limiter.requireAvailable("k", THREE_PER_MINUTE);
-        limiter.requireAvailable("k", THREE_PER_MINUTE);
+        limiter.requireAvailable("k");
+        limiter.requireAvailable("k");
         exhaust("k");
 
         assertThatCode(() -> limiter.record("k", THREE_PER_MINUTE)).doesNotThrowAnyException();
-        assertThatThrownBy(() -> limiter.requireAvailable("k", THREE_PER_MINUTE))
+        assertThatThrownBy(() -> limiter.requireAvailable("k"))
                 .isInstanceOf(TooManyRequestsException.class);
+    }
+
+    @Test
+    void requireAvailablePassesAgainOnceATokenRefills() {
+        exhaust("k");
+        assertThatThrownBy(() -> limiter.requireAvailable("k")).isInstanceOf(TooManyRequestsException.class);
+
+        clock.advance(Duration.ofSeconds(20));
+
+        assertThatCode(() -> limiter.requireAvailable("k")).doesNotThrowAnyException();
+    }
+
+    @Test
+    void callsOnAnEmptyBucketDoNotExtendTheWait() {
+        exhaust("k");
+        limiter.record("k", THREE_PER_MINUTE);
+        assertThatThrownBy(() -> limiter.acquire("k", THREE_PER_MINUTE)).isInstanceOf(TooManyRequestsException.class);
+
+        clock.advance(Duration.ofSeconds(20));
+
+        assertThatCode(() -> limiter.acquire("k", THREE_PER_MINUTE)).doesNotThrowAnyException();
     }
 
     @Test

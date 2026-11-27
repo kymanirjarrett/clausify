@@ -18,6 +18,8 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.ai.model.openai.autoconfigure.OpenAiAutoConfigurationUtil;
 import org.springframework.ai.model.openai.autoconfigure.OpenAiChatAutoConfiguration;
 import org.springframework.ai.model.openai.autoconfigure.OpenAiChatProperties;
@@ -54,6 +56,9 @@ class GroqContractAnalyzerStubTest {
     private final List<Recorded> requests = new ArrayList<>();
     private final List<Duration> sleeps = new ArrayList<>();
 
+    /** A StubResponse status that closes the connection without answering. */
+    private static final int DROP_CONNECTION = -1;
+
     record StubResponse(int status, Map<String, String> headers, String body) {
     }
 
@@ -78,6 +83,10 @@ class GroqContractAnalyzerStubTest {
             StubResponse next;
             synchronized (responses) {
                 next = responses.isEmpty() ? new StubResponse(500, Map.of(), "{}") : responses.removeFirst();
+            }
+            if (next.status() == DROP_CONNECTION) {
+                exchange.close(); // no response at all: the client sees a network failure
+                return;
             }
             byte[] out = next.body().getBytes(StandardCharsets.UTF_8);
             exchange.getResponseHeaders().add("Content-Type", "application/json");
@@ -153,6 +162,29 @@ class GroqContractAnalyzerStubTest {
         assertThat(sleeps).containsExactly(Duration.ofSeconds(7));
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"-1", "NaN", "-Infinity", "Infinity", "invalid"})
+    void invalidRetryAfterUsesBackoff(String retryAfter) {
+        responses.add(new StubResponse(429, Map.of("retry-after", retryAfter), error("rate_limit_exceeded")));
+        reply(VALID);
+
+        run(analyzer -> assertThat(analyzer.analyze("Some clause.").findings()).hasSize(1));
+
+        assertThat(requests).hasSize(2);
+        assertThat(sleeps).containsExactly(Duration.ofSeconds(2));
+    }
+
+    @Test
+    void zeroRetryAfterRetriesWithoutBackoff() {
+        responses.add(new StubResponse(429, Map.of("retry-after", "0"), error("rate_limit_exceeded")));
+        reply(VALID);
+
+        run(analyzer -> assertThat(analyzer.analyze("Some clause.").findings()).hasSize(1));
+
+        assertThat(requests).hasSize(2);
+        assertThat(sleeps).containsExactly(Duration.ZERO);
+    }
+
     @Test
     void retryAfterLongerThanTheCapFailsFastAsTheDailyLimit() {
         responses.add(new StubResponse(429, Map.of("retry-after", "3600"), error("rate_limit_exceeded")));
@@ -181,6 +213,31 @@ class GroqContractAnalyzerStubTest {
     @Test
     void retriesServerErrorsWithBackoff() {
         responses.add(new StubResponse(503, Map.of(), error("server_error")));
+        reply(VALID);
+
+        run(analyzer -> assertThat(analyzer.analyze("Some clause.").findings()).hasSize(1));
+
+        assertThat(requests).hasSize(2);
+        assertThat(sleeps).containsExactly(Duration.ofSeconds(2));
+    }
+
+    @Test
+    void givesUpAfterMaxAttemptsOfServerErrors() {
+        for (int i = 0; i < 4; i++) {
+            responses.add(new StubResponse(503, Map.of(), error("server_error")));
+        }
+
+        run(analyzer -> assertThatThrownBy(() -> analyzer.analyze("Some clause."))
+                .isInstanceOf(ContractAnalysisException.class)
+                .hasMessage(GroqContractAnalyzer.UNAVAILABLE));
+
+        assertThat(requests).hasSize(4);
+        assertThat(sleeps).hasSize(3);
+    }
+
+    @Test
+    void retriesNetworkFailuresWithBackoff() {
+        responses.add(new StubResponse(DROP_CONNECTION, Map.of(), ""));
         reply(VALID);
 
         run(analyzer -> assertThat(analyzer.analyze("Some clause.").findings()).hasSize(1));

@@ -67,7 +67,7 @@ class ContractRepositoryTest {
     }
 
     @Test
-    void findAllByUserIdPagesNewestFirstAndOnlyOwnContracts() {
+    void findSummariesByUserIdPagesNewestFirstAndOnlyOwnContracts() {
         User maria = user("maria@example.com");
         User bob = user("bob@example.com");
         for (int i = 0; i < 3; i++) {
@@ -75,11 +75,12 @@ class ContractRepositoryTest {
         }
         contracts.save(Contract.uploaded(bob, "bob.pdf", 1, 1, "text", T0));
 
-        Page<Contract> page = contracts.findAllByUserId(maria.getId(),
+        Page<ContractSummaryResponse> page = contracts.findSummariesByUserId(maria.getId(),
                 PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "uploadedAt")));
 
         assertThat(page.getTotalElements()).isEqualTo(3);
-        assertThat(page.getContent()).extracting(Contract::getOriginalFilename).containsExactly("maria-2.pdf", "maria-1.pdf");
+        assertThat(page.getContent()).extracting(ContractSummaryResponse::filename)
+                .containsExactly("maria-2.pdf", "maria-1.pdf");
     }
 
     @Test

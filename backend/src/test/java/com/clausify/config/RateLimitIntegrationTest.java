@@ -83,6 +83,15 @@ class RateLimitIntegrationTest {
     }
 
     @Test
+    void failedLoginLimitIgnoresEmailCaseAndWhitespace() throws Exception {
+        String email = newUser().getEmail();
+        login(uniqueIp(), email.toUpperCase(), "wrong-1").andExpect(status().isUnauthorized());
+        login(uniqueIp(), " " + email + " ", "wrong-2").andExpect(status().isUnauthorized());
+
+        login(uniqueIp(), email, PASSWORD).andExpect(status().isTooManyRequests());
+    }
+
+    @Test
     void successfulLoginsDoNotUseTheFailureBudget() throws Exception {
         String email = newUser().getEmail();
         for (int i = 0; i < 3; i++) {

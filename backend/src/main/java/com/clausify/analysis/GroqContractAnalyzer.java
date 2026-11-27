@@ -56,6 +56,8 @@ public class GroqContractAnalyzer implements ContractAnalyzer {
     private static final Duration MAX_BACKOFF = Duration.ofSeconds(30);
     /** A typical page of contract text, used only to state the length limit in words people understand. */
     private static final int CHARS_PER_PAGE = 3000;
+    /** A reply that fails validation is asked for once more; a second invalid reply fails the analysis. */
+    private static final int MAX_REPLY_ATTEMPTS = 2;
 
     static final String INVALID_REPLY = "The AI returned a response we couldn't use. Please retry the analysis.";
     static final String USAGE_LIMIT = "The AI service's usage limit has been reached. Please retry later.";
@@ -141,7 +143,7 @@ public class GroqContractAnalyzer implements ContractAnalyzer {
                 .replace("{{CONTRACT_TEXT}}", DELIMITER.matcher(chunk).replaceAll(""));
         Prompt prompt = new Prompt(List.of(new SystemMessage(systemPrompt), new UserMessage(user)), options);
 
-        for (int attempt = 1; attempt <= 2; attempt++) {
+        for (int attempt = 1; attempt <= MAX_REPLY_ATTEMPTS; attempt++) {
             try {
                 return ModelOutputParser.parse(call(prompt, part, total), properties.maxFindingsPerChunk());
             } catch (InvalidModelOutputException e) {
@@ -179,26 +181,45 @@ public class GroqContractAnalyzer implements ContractAnalyzer {
         OpenAIServiceException service = cause(e, OpenAIServiceException.class);
         Duration wait;
         if (service != null && service.statusCode() == 429) {
-            wait = retryAfter(service).orElse(backoff(attempt));
-            if (wait.compareTo(properties.maxRateLimitWait()) > 0) {
-                log.warn("Groq asked to wait {}s, longer than allowed; treating it as the daily limit",
-                        wait.toSeconds());
-                throw new ContractAnalysisException(USAGE_LIMIT, e);
-            }
-            if (attempt >= properties.maxAttempts()) {
-                throw new ContractAnalysisException(BUSY, e);
-            }
-        } else if ((service != null && service.statusCode() >= 500) || cause(e, OpenAIIoException.class) != null) {
-            if (attempt >= properties.maxAttempts()) {
-                throw new ContractAnalysisException(UNAVAILABLE, e);
-            }
-            wait = backoff(attempt);
+            wait = rateLimitWait(service, e, attempt);
+        } else if (isServerOrNetworkFailure(service, e)) {
+            wait = serverFailureWait(e, attempt);
         } else {
             // 400, 401, 403, 404 and anything unexpected: retrying cannot help.
             log.error("Groq request failed with status {}", service == null ? "none" : service.statusCode());
             throw new ContractAnalysisException("The AI analysis failed. Please retry later.", e);
         }
         log.info("Groq attempt {} failed; retrying in {} ms", attempt, wait.toMillis());
+        sleep(wait);
+    }
+
+    /** After a 429: Groq's Retry-After if it sent one. Throws if that wait is too long or attempts have run out. */
+    private Duration rateLimitWait(OpenAIServiceException service, RuntimeException e, int attempt) {
+        Duration wait = retryAfter(service).orElse(backoff(attempt));
+        if (wait.compareTo(properties.maxRateLimitWait()) > 0) {
+            log.warn("Groq asked to wait {}s, longer than allowed; treating it as the daily limit",
+                    wait.toSeconds());
+            throw new ContractAnalysisException(USAGE_LIMIT, e);
+        }
+        if (attempt >= properties.maxAttempts()) {
+            throw new ContractAnalysisException(BUSY, e);
+        }
+        return wait;
+    }
+
+    /** After a 5xx or a network failure: exponential backoff, until attempts run out. */
+    private Duration serverFailureWait(RuntimeException e, int attempt) {
+        if (attempt >= properties.maxAttempts()) {
+            throw new ContractAnalysisException(UNAVAILABLE, e);
+        }
+        return backoff(attempt);
+    }
+
+    private static boolean isServerOrNetworkFailure(OpenAIServiceException service, RuntimeException e) {
+        return (service != null && service.statusCode() >= 500) || cause(e, OpenAIIoException.class) != null;
+    }
+
+    private void sleep(Duration wait) {
         try {
             sleeper.sleep(wait);
         } catch (InterruptedException interrupted) {
@@ -210,7 +231,11 @@ public class GroqContractAnalyzer implements ContractAnalyzer {
     private static Optional<Duration> retryAfter(OpenAIServiceException e) {
         return e.headers().values("retry-after").stream().findFirst().flatMap(value -> {
             try {
-                return Optional.of(Duration.ofMillis(Math.round(Double.parseDouble(value.strip()) * 1000)));
+                double seconds = Double.parseDouble(value.strip());
+                if (!Double.isFinite(seconds) || seconds < 0) {
+                    return Optional.empty();
+                }
+                return Optional.of(Duration.ofMillis(Math.round(seconds * 1000)));
             } catch (NumberFormatException notSeconds) {
                 return Optional.empty(); // an HTTP date; fall back to our own backoff
             }

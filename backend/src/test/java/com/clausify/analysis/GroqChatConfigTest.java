@@ -56,6 +56,9 @@ class GroqChatConfigTest {
                             ctx.getBean(OpenAiCommonProperties.class), ctx.getBean(OpenAiChatProperties.class));
                     assertThat(connection.getBaseUrl()).isEqualTo("https://api.groq.com/openai/v1");
                     assertThat(connection.getApiKey()).isEqualTo("test-key-not-real");
+                    // GroqContractAnalyzer does its own retries; SDK retries would multiply them.
+                    assertThat(connection.getMaxRetries()).isZero();
+                    assertThat(connection.getTimeout()).isEqualTo(java.time.Duration.ofSeconds(60));
 
                     // Request options travel with every chat call.
                     OpenAiChatModel model = ctx.getBean(OpenAiChatModel.class);
