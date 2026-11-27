@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,4 +29,19 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
             """,
             countQuery = "select count(c) from Contract c where c.user.id = :userId")
     Page<ContractSummaryResponse> findSummariesByUserId(@Param("userId") Long userId, Pageable pageable);
+
+    /**
+     * For background analysis only, never for a user request (it is not scoped by owner). Locks the row
+     * ({@code SELECT ... FOR UPDATE}) until the transaction ends, so two workers cannot both move the same
+     * contract from UPLOADED to ANALYZING, and a status change cannot interleave with a delete.
+     * <p>
+     * Native SQL on purpose: {@code @Lock(PESSIMISTIC_WRITE)} makes Hibernate's MySQL dialect emit
+     * {@code FOR UPDATE OF <alias>}, which TiDB rejects (ADR 0011). Plain {@code FOR UPDATE} works on both.
+     */
+    @Query(value = "SELECT * FROM contracts WHERE id = :id FOR UPDATE", nativeQuery = true)
+    Optional<Contract> findLockedById(@Param("id") Long id);
+
+    /** Ids only, so recovery on startup does not load every contract's full text into memory. */
+    @Query("select c.id from Contract c where c.status = :status")
+    List<Long> findIdsByStatus(@Param("status") ContractStatus status);
 }

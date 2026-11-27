@@ -231,7 +231,11 @@ public class GroqContractAnalyzer implements ContractAnalyzer {
     private static Optional<Duration> retryAfter(OpenAIServiceException e) {
         return e.headers().values("retry-after").stream().findFirst().flatMap(value -> {
             try {
-                return Optional.of(Duration.ofMillis(Math.round(Double.parseDouble(value.strip()) * 1000)));
+                double seconds = Double.parseDouble(value.strip());
+                if (!Double.isFinite(seconds) || seconds < 0) {
+                    return Optional.empty();
+                }
+                return Optional.of(Duration.ofMillis(Math.round(seconds * 1000)));
             } catch (NumberFormatException notSeconds) {
                 return Optional.empty(); // an HTTP date; fall back to our own backoff
             }

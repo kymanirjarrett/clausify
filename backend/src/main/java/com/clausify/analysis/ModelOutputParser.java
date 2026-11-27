@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import tools.jackson.core.JacksonException;
+import tools.jackson.core.StreamReadFeature;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -26,7 +27,9 @@ final class ModelOutputParser {
     private static final Set<String> TOP_LEVEL = Set.of("contractType", "summary", "findings");
     private static final Set<String> FINDING_FIELDS = Set.of("category", "riskScore", "favorable", "title",
             "sectionRef", "originalText", "explanation", "suggestedRevision");
-    private static final JsonMapper JSON = JsonMapper.builder().build();
+    private static final JsonMapper JSON = JsonMapper.builder()
+            .enable(StreamReadFeature.STRICT_DUPLICATE_DETECTION)
+            .build();
 
     private ModelOutputParser() {
     }
