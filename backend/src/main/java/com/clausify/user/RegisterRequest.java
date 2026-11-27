@@ -21,7 +21,7 @@ public record RegisterRequest(
 
         @NotBlank(message = "Password is required")
         @BcryptPasswordLength
-        @Size(min = 8, max = 72, message = "Password must be at least 8 characters and include a letter and a number")
+        @Size(min = 8, message = "Password must be at least 8 characters and include a letter and a number")
         @Pattern(regexp = "^(?=.*\\p{L})(?=.*\\d).+$",
                 message = "Password must be at least 8 characters and include a letter and a number")
         String password) {
