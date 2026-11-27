@@ -65,7 +65,17 @@ class AuthControllerTest {
     void passwordLongerThanBcryptLimitIs400() throws Exception {
         register("Maria Lopez", "maria@example.com", "a1".repeat(37))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.password").exists());
+                .andExpect(jsonPath("$.errors.password").value("Password must be 72 UTF-8 bytes or fewer"));
+    }
+
+    @Test
+    void missingPasswordIs400WithRequiredMessage() throws Exception {
+        mockMvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"name": "Maria Lopez", "email": "maria@example.com"}"""))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.password").value("Password is required"));
+        verifyNoInteractions(authService);
     }
 
     @Test
