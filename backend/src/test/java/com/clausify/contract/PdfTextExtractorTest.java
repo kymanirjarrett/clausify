@@ -66,6 +66,19 @@ class PdfTextExtractorTest {
         assertUnreadable("%PDF-1.4 this is not really a PDF".getBytes(), PdfTextExtractor.CORRUPT);
     }
 
+    @Test
+    void pdfOverThePageCapIsRejected() throws IOException {
+        assertUnreadable(HostilePdfs.manyPages(PdfTextExtractor.MAX_PAGES + 1), PdfTextExtractor.TOO_MANY_PAGES);
+    }
+
+    /** About 1 MB of drawn text from a small file: over the character cap, but safe to run in this JVM. */
+    @Test
+    void pdfOverTheTextCapIsRejectedAndTheNextOneStillWorks() throws IOException {
+        assertUnreadable(HostilePdfs.textBomb(1024 * 1024), PdfTextExtractor.TOO_MUCH_TEXT);
+
+        assertThat(extractor.extract(fixture("fair-nda.pdf")).pageCount()).isEqualTo(2);
+    }
+
     private void assertUnreadable(byte[] pdf, String message) {
         assertThatThrownBy(() -> extractor.extract(pdf))
                 .isInstanceOf(UnreadablePdfException.class)
