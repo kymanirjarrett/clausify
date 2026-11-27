@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URI;
 
 @Tag(name = "Contracts", description = "Upload and manage contracts (FR-3, FR-4, FR-7, FR-8)")
-@Validated
 @RestController
 @RequestMapping("/api/contracts")
 public class ContractController {
@@ -83,7 +81,7 @@ public class ContractController {
     @Operation(summary = "Retry a failed analysis",
             description = "Only a contract with status FAILED can be retried. Its stored text is analyzed again, so no re-upload is needed.")
     @PostMapping("/{id}/retry")
-    public ResponseEntity<ContractSummaryResponse> retry(@Parameter(description = "Contract id") @PathVariable Long id,
+    public ResponseEntity<ContractSummaryResponse> retry(@Parameter(description = "Contract id") @PathVariable @Positive Long id,
                                                          @AuthenticationPrincipal Jwt jwt) {
         ContractSummaryResponse contract = contractService.retry(id, CurrentUser.id(jwt));
         return ResponseEntity.accepted().location(URI.create("/api/contracts/" + contract.id())).body(contract);
