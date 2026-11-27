@@ -12,8 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * In-memory token buckets, one per key (for example {@code "login-ip:203.0.113.7"}). A bucket holds up to
  * {@code capacity} tokens and refills continuously at {@code capacity / period}; each request takes one.
- *
- * <p>Buckets live in this instance's memory, which is correct while the API runs as a single Render instance.
+ * <p>
+ * Buckets live in this instance's memory, which is correct while the API runs as a single Render instance.
  * Running several instances would need a shared store such as Redis (ADR 0009).
  */
 @Component
@@ -21,7 +21,6 @@ public class RateLimiter {
 
     /** Sweep refilled buckets every this many calls, so memory stays bounded by recent activity. */
     private static final int SWEEP_EVERY = 1024;
-    private static final int MAX_BUCKETS = 10_000;
 
     private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
     private final AtomicInteger calls = new AtomicInteger();
@@ -43,7 +42,6 @@ public class RateLimiter {
         if (!enabled) {
             return;
         }
-        sweepOccasionally();
         long now = clock.millis();
         Bucket bucket = buckets.get(key);
         if (bucket != null) {
@@ -79,7 +77,7 @@ public class RateLimiter {
     }
 
     private void sweepOccasionally() {
-        if (calls.incrementAndGet() % SWEEP_EVERY != 0 && buckets.size() <= MAX_BUCKETS) {
+        if (calls.incrementAndGet() % SWEEP_EVERY != 0) {
             return;
         }
         long now = clock.millis();
@@ -111,7 +109,7 @@ public class RateLimiter {
         }
 
         private long secondsUntilToken() {
-            return Math.max(1, (long) Math.ceil((1.0 - tokens) / tokensPerMilli / 1000.0));
+            return Math.max(1, (long) Math.ceil((1 - tokens) / tokensPerMilli / 1000));
         }
     }
 }
