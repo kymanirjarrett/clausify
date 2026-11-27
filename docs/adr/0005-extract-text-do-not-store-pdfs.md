@@ -18,7 +18,7 @@ Users upload contract PDFs up to 10 MB. Everything after the upload (analysis, r
 
 **Never persist the PDF.** `POST /api/contracts` reads the upload in memory, extracts text with Apache PDFBox in the same request, and discards the bytes.
 
-1. PDF only, max 10 MB.
+1. PDF only, max 10 MB. The request limit is 11 MB so a 10 MB file plus its multipart headers fits, and `spring.servlet.multipart.file-size-threshold` (12 MB) sits above it so the servlet container keeps uploads in memory instead of spooling them to a temp file.
 2. If no usable text comes out (scanned or corrupt file), return `422 Unprocessable Entity` with a clear message. OCR is a possible future enhancement.
 3. Otherwise save a `contracts` row with the extracted text and status `UPLOADED`, return `202 Accepted`, and start `@Async` analysis: `UPLOADED → ANALYZING → ANALYZED / FAILED`.
 4. Retry, comparison, and report generation all work from the stored text.
