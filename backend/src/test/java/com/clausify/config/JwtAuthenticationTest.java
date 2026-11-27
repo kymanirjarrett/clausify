@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Sends real bearer tokens through the security filter chain to GET /api/auth/me. The tokens are for
- * user 42, who does not exist: an accepted token reaches the controller and gets 404 "User not found",
+ * a user id far above any the test database hands out, so it never exists: an accepted token reaches the controller and gets 404 "User not found",
  * while a rejected token stops at the filter with 401.
  */
 @SpringBootTest
@@ -48,7 +48,10 @@ class JwtAuthenticationTest {
     @Autowired
     private JwtEncoder jwtEncoder;
 
-    private final User user = User.builder().id(42L).name("Maria").email("maria@example.com").password("hash").build();
+    /** Other tests insert users into the shared database, so a small id like 42 can exist. */
+    private static final long MISSING_USER_ID = 999_999_999L;
+
+    private final User user = User.builder().id(MISSING_USER_ID).name("Maria").email("maria@example.com").password("hash").build();
 
     @Test
     void validTokenIsAccepted() throws Exception {
@@ -106,7 +109,7 @@ class JwtAuthenticationTest {
     }
 
     private static JwtClaimsSet claims(String issuer, Instant issuedAt, Instant expiresAt) {
-        return JwtClaimsSet.builder().issuer(issuer).subject("42").claim("email", "maria@example.com")
+        return JwtClaimsSet.builder().issuer(issuer).subject(String.valueOf(MISSING_USER_ID)).claim("email", "maria@example.com")
                 .issuedAt(issuedAt).expiresAt(expiresAt).build();
     }
 }
