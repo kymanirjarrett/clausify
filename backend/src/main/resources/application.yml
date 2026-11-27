@@ -26,7 +26,10 @@ spring:
   servlet:
     multipart:
       max-file-size: 10MB
-      max-request-size: 10MB
+      # Room for the multipart boundary and part headers, so a file of exactly 10 MB still fits (#111).
+      max-request-size: 11MB
+      # Above max-request-size, so Tomcat keeps every part in memory and never writes the PDF to disk (ADR 0005).
+      file-size-threshold: 12MB
   ai:
     # The OpenAI starter would auto-create chat, embedding, image, audio, and moderation clients and fail
     # without an API key. Everything is off here; application-prod.yml turns on chat only (ADR 0006).
