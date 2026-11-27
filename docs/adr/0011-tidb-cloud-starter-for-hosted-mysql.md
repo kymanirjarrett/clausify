@@ -34,6 +34,7 @@ Alternatives rejected:
 
 - **Default collation is `utf8mb4_bin`** (case-sensitive), confirmed with `SELECT @@collation_server`. Creating the database with `utf8mb4_0900_ai_ci` handles it; a recreated database must use the same statement. `AuthService.normalizeEmail` lowercases emails anyway.
 - **`AUTO_INCREMENT` IDs are unique but not guaranteed consecutive**: TiDB hands out ID ranges, so gaps can appear ([AUTO_INCREMENT](https://docs.pingcap.com/tidb/stable/auto-increment/)). Nothing in Clausify relies on consecutive IDs.
+- **No `SELECT ... FOR UPDATE OF <alias>`.** Hibernate's MySQL dialect emits that form for `@Lock(PESSIMISTIC_WRITE)`, and TiDB fails with `Table 'clausify.c1_0' doesn't exist`. CI's MySQL accepts it, so tests could not catch this; the first real upload on TiDB did (#128). Row locks use a native `... FOR UPDATE` query instead (`ContractRepository.findLockedById`).
 - **No stored procedures, triggers, or events** ([MySQL compatibility](https://docs.pingcap.com/tidbcloud/mysql-compatibility/)). Clausify uses none.
 - **Primary keys are not enforced** (`sql_require_primary_key=0`, unlike Aiven). Every table still gets one by project rule.
 - **Monthly quota:** after 50M request units, TiDB refuses new connections until the next month. Existing connections are throttled. Check usage before demos.
