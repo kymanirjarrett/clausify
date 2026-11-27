@@ -50,7 +50,7 @@ next-env.d.ts
 CLAUDE.local.md
 .claude/
 
-# node / angular (anywhere, incl. legacy/ and frontend/)
+# node / angular (anywhere, incl. frontend/)
 node_modules/
 .next/
 .angular/

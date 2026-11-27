@@ -10,10 +10,10 @@ Clausify is an AI contract-analysis web app for freelancers: upload a contract P
 
 ## Hard constraints
 
-1. **Never edit an applied migration.** V1 to V3 (`users`, `addresses`, `profiles`) were submitted for a graded lab. Every schema change is a new `V<n>__description.sql`. `spring.jpa.hibernate.ddl-auto` stays `validate`; if validation fails, report the exact error instead of changing it. Render deploys `main` automatically, so **a merged migration is applied to the production database at once**; get it right in the PR. Aiven requires a primary key on every table (`sql_require_primary_key`).
+1. **Never edit an applied migration.** V1 to V3 (`users`, `addresses`, `profiles`) were submitted for a graded lab. Every schema change is a new `V<n>__description.sql`. `spring.jpa.hibernate.ddl-auto` stays `validate`; if validation fails, report the exact error instead of changing it. Render deploys `main` automatically, so **a merged migration is applied to the production database at once**; get it right in the PR. Every table needs a primary key. TiDB does not enforce this (`sql_require_primary_key` is off), so check it in review.
 2. **Never move, delete, or re-point a tag** listed in the README's "Course submissions" table. Never rewrite history on `main` or force-push it.
 3. **No secrets in git.** Credentials and keys come from environment variables only; `.env.example` lists them with placeholders.
-4. **Ask before** destructive git operations, deleting files outside the task, adding dependencies, or creating cloud resources (Aiven, Render, and Vercel are set up by a human).
+4. **Ask before** destructive git operations, deleting files outside the task, adding dependencies, or creating cloud resources (TiDB Cloud, Render, and Vercel are set up by a human).
 
 ## Architecture (decided; reasons in `docs/adr/`)
 
@@ -21,7 +21,7 @@ Clausify is an AI contract-analysis web app for freelancers: upload a contract P
 |---|---|
 | Frontend | Angular 22 (standalone, zoneless, signals) + Tailwind CSS v4, npm, in `frontend/` |
 | Backend | Spring Boot 4.1.x, Java 21 target, Maven |
-| Database | MySQL. Local: Docker 8.4 (`docker-compose.yml`). Deployed: Aiven for MySQL free tier (powers off when idle; wake it before demos). |
+| Database | MySQL. Local: Docker 8.4 (`docker-compose.yml`). Deployed: TiDB Cloud Starter, MySQL compatible, free (ADR 0011; database created with `utf8mb4_0900_ai_ci`, 50M request units a month). |
 | Migrations | Flyway (`spring-boot-starter-flyway` + `flyway-mysql`; `flyway-core` alone is not auto-configured in Boot 4) |
 | Persistence | Spring Data JPA (Hibernate 7), Lombok. IDs are `BIGINT AUTO_INCREMENT`. |
 | File storage | None. PDFs are never persisted; only extracted text is stored. |
@@ -30,7 +30,7 @@ Clausify is an AI contract-analysis web app for freelancers: upload a contract P
 | Embeddings | Spring AI ONNX Transformers, `all-MiniLM-L6-v2`, 384 dims, in the JVM |
 | Vector search | Cosine similarity in Java (MySQL Community's `DISTANCE()` is HeatWave-only). Embeddings stored as JSON (`VECTOR` needs MySQL 9.0+; see ADR 0003). |
 | Auth | Spring Security, BCrypt, stateless JWT |
-| Hosting | Live at https://clausifysolutions.vercel.app. Angular on Vercel, proxying `/api` and Swagger to Render (ADR 0008). API on Render free tier (`render.yaml`, Docker, Oregon; sleeps when idle, ~2 min to wake, disk not persistent; deploys `main` only after CI passes). Aiven MySQL 8.4.11 (sfo). |
+| Hosting | Live at https://clausifysolutions.vercel.app. Angular on Vercel, proxying `/api` and Swagger to Render (ADR 0008). API on Render free tier (`render.yaml`, Docker, Oregon; sleeps when idle, ~2 min to wake, disk not persistent; deploys `main` only after CI passes). TiDB Cloud Starter in AWS us-west-2. |
 
 ### Upload flow
 
@@ -61,7 +61,6 @@ backend/src/main/resources/
   application.yml, application-local.yml, application-prod.yml
   db/migration/V<n>__description.sql                           one change per file
 frontend/                                                      Angular app (core/, shared/, features/)
-legacy/nextjs-prototype/                                       delete once Angular exists
 docs/adr/                                                      architecture decisions
 ```
 
@@ -86,8 +85,6 @@ cd frontend && npx ng test --watch=false   # frontend unit tests
 The `local` profile needs no environment variables. The deployed API runs with `SPRING_PROFILES_ACTIVE=prod` and every value from `.env.example` set in Render.
 
 ## Workflow
-
-Full details in `CONTRIBUTING.md`.
 
 - Create a GitHub issue, then a branch `type/<issue>-short-desc` (e.g. `feat/12-jwt-auth`).
 - Commits and PR titles use Conventional Commits: `type(optional-scope): imperative summary`. Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `ci`, `build`, `perf`, `style`.
