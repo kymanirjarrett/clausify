@@ -23,7 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Two users are equal when they have the same id; only {@code id} is included in equals/hashCode.
+ * No Lombok equals/hashCode: entities compare by identity, which stays correct while the generated id changes.
+ * The {@code @EqualsAndHashCode.Exclude} markers stay so the relationships are safe if equality is ever added.
  */
 @Entity
 @Table(name = "users")
@@ -33,12 +34,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false)
@@ -67,19 +66,22 @@ public class User {
     @EqualsAndHashCode.Exclude
     private Profile profile;
 
+    /** Links an address to this user. Adding the same instance twice keeps one copy. */
     public void addAddress(Address address) {
-    if (address == null) {
-        throw new IllegalArgumentException("Address cannot be null.");
-    }
-
-    if (!addresses.contains(address)) {
+        if (address == null) {
+            throw new IllegalArgumentException("Address cannot be null.");
+        }
+        // By instance, not equals(): Address is @Data, so two different addresses with the same text are equal.
+        if (addresses.stream().noneMatch(a -> a == address)) {
             addresses.add(address);
             address.setUser(this);
         }
-}
-    public void removeAddress(Address address) {
-    if (address != null && addresses.remove(address)) {
-        address.setUser(null);
     }
-}
+
+    /** Unlinks exactly this address instance; orphanRemoval deletes its row on flush. */
+    public void removeAddress(Address address) {
+        if (address != null && addresses.removeIf(a -> a == address)) {
+            address.setUser(null);
+        }
+    }
 }
