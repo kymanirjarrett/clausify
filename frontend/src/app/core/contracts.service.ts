@@ -24,6 +24,11 @@ export class ContractsService {
     return this.http.get<ContractDetail>(`/api/contracts/${id}`);
   }
 
+  /** FR-7: queues a FAILED contract for analysis again (202). 409 if it did not fail; 429 shares the upload budget. */
+  retry(id: number): Observable<ContractSummary> {
+    return this.http.post<ContractSummary>(`/api/contracts/${id}/retry`, null);
+  }
+
   /** 409 while the contract is not ANALYZED yet; call it once the status says ANALYZED. */
   analysis(id: number): Observable<AnalysisResult> {
     return this.http.get<AnalysisResult>(`/api/contracts/${id}/analysis`);
