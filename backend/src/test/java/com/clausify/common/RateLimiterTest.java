@@ -62,6 +62,27 @@ class RateLimiterTest {
     }
 
     @Test
+    void requireAvailablePassesAgainOnceATokenRefills() {
+        exhaust("k");
+        assertThatThrownBy(() -> limiter.requireAvailable("k")).isInstanceOf(TooManyRequestsException.class);
+
+        clock.advance(Duration.ofSeconds(20));
+
+        assertThatCode(() -> limiter.requireAvailable("k")).doesNotThrowAnyException();
+    }
+
+    @Test
+    void callsOnAnEmptyBucketDoNotExtendTheWait() {
+        exhaust("k");
+        limiter.record("k", THREE_PER_MINUTE);
+        assertThatThrownBy(() -> limiter.acquire("k", THREE_PER_MINUTE)).isInstanceOf(TooManyRequestsException.class);
+
+        clock.advance(Duration.ofSeconds(20));
+
+        assertThatCode(() -> limiter.acquire("k", THREE_PER_MINUTE)).doesNotThrowAnyException();
+    }
+
+    @Test
     void doesNothingWhenDisabled() {
         RateLimiter disabled = new RateLimiter(clock, properties(false));
 
