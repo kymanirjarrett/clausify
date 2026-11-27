@@ -9,13 +9,13 @@ public enum RiskLevel {
     private static final int MEDIUM_THRESHOLD = 40;
     private static final int HIGH_THRESHOLD = 70;
 
+    /** Scores are already checked by ModelOutputParser and RiskScorer; this guards any other caller. */
     public static RiskLevel fromScore(int score) {
-    if (score < 0 || score > 100) {
-        throw new IllegalArgumentException("Risk score must be between 0 and 100.");
+        if (score < 0 || score > 100) {
+            throw new IllegalArgumentException("Risk score must be between 0 and 100.");
+        }
+        if (score < MEDIUM_THRESHOLD) return LOW;
+        if (score < HIGH_THRESHOLD) return MEDIUM;
+        return HIGH;
     }
-
-    if (score < MEDIUM_THRESHOLD) return LOW;
-    if (score < HIGH_THRESHOLD) return MEDIUM;
-    return HIGH;
-}
 }
