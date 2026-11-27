@@ -72,4 +72,17 @@ public class ContractController {
         contractService.delete(id, CurrentUser.id(jwt));
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * FR-7: 202 Accepted once a failed analysis is queued again; poll the Location URL for status.
+     * 404 if missing or not yours, 409 if its analysis did not fail.
+     */
+    @Operation(summary = "Retry a failed analysis",
+            description = "Only a contract with status FAILED can be retried. Its stored text is analyzed again, so no re-upload is needed.")
+    @PostMapping("/{id}/retry")
+    public ResponseEntity<ContractSummaryResponse> retry(@Parameter(description = "Contract id") @PathVariable Long id,
+                                                         @AuthenticationPrincipal Jwt jwt) {
+        ContractSummaryResponse contract = contractService.retry(id, CurrentUser.id(jwt));
+        return ResponseEntity.accepted().location(URI.create("/api/contracts/" + contract.id())).body(contract);
+    }
 }
