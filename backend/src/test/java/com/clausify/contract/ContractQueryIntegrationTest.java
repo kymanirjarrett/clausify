@@ -76,6 +76,21 @@ class ContractQueryIntegrationTest {
                 .andExpect(jsonPath("$.content[0].filename").value("contract-1.pdf"));
     }
 
+    /** Same upload time: the id tie-break keeps the order stable, so paging never repeats or skips a contract. */
+    @Test
+    void equalUploadTimesListHigherIdFirstAcrossPages() throws Exception {
+        Long first = contracts.save(Contract.uploaded(maria, "a.pdf", 1000L, 1, "text", T0)).getId();
+        Long second = contracts.save(Contract.uploaded(maria, "b.pdf", 1000L, 1, "text", T0)).getId();
+        Long third = contracts.save(Contract.uploaded(maria, "c.pdf", 1000L, 1, "text", T0)).getId();
+
+        as(maria, "/api/contracts?page=0&size=2")
+                .andExpect(jsonPath("$.content[0].id").value(third))
+                .andExpect(jsonPath("$.content[1].id").value(second));
+        as(maria, "/api/contracts?page=1&size=2")
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].id").value(first));
+    }
+
     @Test
     void clientCannotChangeTheSortOrder() throws Exception {
         contracts.save(Contract.uploaded(maria, "older.pdf", 1, 1, "text", T0));
