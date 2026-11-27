@@ -11,6 +11,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -95,6 +96,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ex.getBindingResult().getFieldErrors()
                 .forEach(error -> errors.putIfAbsent(error.getField(), error.getDefaultMessage()));
         ProblemDetail body = problem(HttpStatus.BAD_REQUEST, "One or more fields are invalid.");
+        body.setProperty("errors", errors);
+        return handleExceptionInternal(ex, body, headers, status, request);
+    }
+
+    /**
+     * 400 when a constraint on a controller parameter fails, e.g. {@code @Positive} on a path id.
+     * Spring MVC's built-in method validation raises this; same {@code errors} shape as invalid bodies.
+     */
+    @Override
+    protected ResponseEntity<Object> handleHandlerMethodValidationException(
+            HandlerMethodValidationException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        Map<String, String> errors = new LinkedHashMap<>();
+        ex.getParameterValidationResults().forEach(result -> result.getResolvableErrors().forEach(error ->
+                errors.putIfAbsent(result.getMethodParameter().getParameterName(), error.getDefaultMessage())));
+        ProblemDetail body = problem(HttpStatus.BAD_REQUEST, "One or more parameters are invalid.");
         body.setProperty("errors", errors);
         return handleExceptionInternal(ex, body, headers, status, request);
     }

@@ -14,7 +14,7 @@ import org.testcontainers.utility.DockerImageName;
 @TestConfiguration(proxyBeanMethods = false)
 public class TestcontainersConfiguration {
 
-    // Keep in sync with docker-compose.yml (and the Aiven version once pinned, ADR 0004).
+    // Keep in sync with docker-compose.yml (production is TiDB Cloud Starter, MySQL 8.0 compatible, ADR 0011).
     static final DockerImageName MYSQL_IMAGE = DockerImageName.parse("mysql:8.4");
 
     @Bean

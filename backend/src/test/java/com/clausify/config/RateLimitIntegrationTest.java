@@ -83,6 +83,25 @@ class RateLimitIntegrationTest {
     }
 
     @Test
+    void failedLoginLimitIgnoresEmailCaseAndWhitespace() throws Exception {
+        String email = newUser().getEmail();
+        login(uniqueIp(), email.toUpperCase(), "wrong-1").andExpect(status().isUnauthorized());
+        login(uniqueIp(), " " + email + " ", "wrong-2").andExpect(status().isUnauthorized());
+
+        login(uniqueIp(), email, PASSWORD).andExpect(status().isTooManyRequests());
+    }
+
+    /** Login has no password length rule, so even an over-long wrong password is a counted 401, never a 400. */
+    @Test
+    void longWrongPasswordsAre401AndCountTowardTheEmailLimit() throws Exception {
+        String email = newUser().getEmail();
+        login(uniqueIp(), email, "a".repeat(73)).andExpect(status().isUnauthorized());
+        login(uniqueIp(), email, "b".repeat(100)).andExpect(status().isUnauthorized());
+
+        login(uniqueIp(), email, PASSWORD).andExpect(status().isTooManyRequests());
+    }
+
+    @Test
     void successfulLoginsDoNotUseTheFailureBudget() throws Exception {
         String email = newUser().getEmail();
         for (int i = 0; i < 3; i++) {

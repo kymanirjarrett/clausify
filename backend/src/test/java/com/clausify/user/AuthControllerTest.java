@@ -65,7 +65,17 @@ class AuthControllerTest {
     void passwordLongerThanBcryptLimitIs400() throws Exception {
         register("Maria Lopez", "maria@example.com", "a1".repeat(37))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.password").exists());
+                .andExpect(jsonPath("$.errors.password").value("Password must be 72 UTF-8 bytes or fewer"));
+    }
+
+    @Test
+    void missingPasswordIs400WithRequiredMessage() throws Exception {
+        mockMvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"name": "Maria Lopez", "email": "maria@example.com"}"""))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.password").value("Password is required"));
+        verifyNoInteractions(authService);
     }
 
     @Test
@@ -75,6 +85,23 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.errors.name").value("Name is required"))
                 .andExpect(jsonPath("$.errors.email").value("Email must be a valid address"));
         verifyNoInteractions(authService);
+    }
+
+    @Test
+    void multibytePasswordOver72BytesIs400BeforeCallingService() throws Exception {
+        register("Maria Lopez", "maria@example.com", "é".repeat(36) + "1")
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.password").value("Password must be 72 UTF-8 bytes or fewer"));
+        verifyNoInteractions(authService);
+    }
+
+    @Test
+    void multibytePasswordAt72BytesIsAccepted() throws Exception {
+        when(authService.register(any())).thenReturn(
+                new AuthResponse("jwt-token", new UserResponse(1L, "Maria Lopez", "maria@example.com")));
+
+        register("Maria Lopez", "maria@example.com", "é".repeat(35) + "a1")
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -111,6 +138,14 @@ class AuthControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors.email").value("Email is required"))
                 .andExpect(jsonPath("$.errors.password").value("Password is required"));
+        verifyNoInteractions(authService);
+    }
+
+    @Test
+    void loginWithEmailOver255CharsIs400() throws Exception {
+        login("a".repeat(244) + "@example.com", "Str0ng!Passw0rd")
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.email").value("Email must be 255 characters or fewer"));
         verifyNoInteractions(authService);
     }
 

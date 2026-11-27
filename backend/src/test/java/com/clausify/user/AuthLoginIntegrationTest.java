@@ -17,10 +17,12 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.time.Duration;
 import java.time.Instant;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -96,6 +98,41 @@ class AuthLoginIntegrationTest {
 
         mockMvc.perform(get("/api/auth/me").header(HttpHeaders.AUTHORIZATION, "Bearer " + expired))
                 .andExpect(status().isUnauthorized());
+    }
+
+    /** BCrypt's limit is 72 bytes: 35 two-byte letters plus "a1" is exactly 72, and must survive JSON decoding and hashing. */
+    @Test
+    void multibytePasswordAt72BytesRegistersAndLogsIn() throws Exception {
+        String email = "bytes72." + java.util.UUID.randomUUID() + "@example.com";
+        String password = "é".repeat(35) + "a1";
+
+        fromOwnIp(post("/api/auth/register"), """
+                {"name": "Byte Limit", "email": "%s", "password": "%s"}""".formatted(email, password))
+                .andExpect(status().isCreated());
+        fromOwnIp(post("/api/auth/login"), """
+                {"email": "%s", "password": "%s"}""".formatted(email, password))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").isNotEmpty());
+
+        assertThat(passwordEncoder.matches(password, userRepository.findByEmail(email).orElseThrow().getPassword()))
+                .isTrue();
+    }
+
+    /** The real encoder rejects input over 72 bytes; login must still answer with the generic 401, not 500. */
+    @Test
+    void loginWithMultibytePasswordOver72BytesIs401() throws Exception {
+        fromOwnIp(post("/api/auth/login"), """
+                {"email": "%s", "password": "%s"}""".formatted(EMAIL, "é".repeat(37)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.detail").value("Invalid email or password."))
+                .andExpect(jsonPath("$.user").doesNotExist());
+    }
+
+    /** A fresh client IP per call, so these requests never share the per-IP login bucket with other tests. */
+    private ResultActions fromOwnIp(MockHttpServletRequestBuilder request, String body) throws Exception {
+        String ip = "10.120." + (int) (Math.random() * 250) + "." + (int) (Math.random() * 250);
+        return mockMvc.perform(request.contentType(MediaType.APPLICATION_JSON).content(body)
+                .with(r -> { r.setRemoteAddr(ip); return r; }));
     }
 
     private ResultActions login(String email, String password) throws Exception {
