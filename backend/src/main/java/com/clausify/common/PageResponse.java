@@ -11,6 +11,11 @@ import java.util.function.Function;
  */
 public record PageResponse<T>(List<T> content, int page, int size, long totalElements, int totalPages) {
 
+    /** For a page whose items are already the response type, such as a DTO projection. */
+    public static <T> PageResponse<T> of(Page<T> page) {
+        return of(page, Function.identity());
+    }
+
     public static <E, T> PageResponse<T> of(Page<E> page, Function<E, T> mapper) {
         return new PageResponse<>(page.getContent().stream().map(mapper).toList(),
                 page.getNumber(), page.getSize(), page.getTotalElements(), page.getTotalPages());

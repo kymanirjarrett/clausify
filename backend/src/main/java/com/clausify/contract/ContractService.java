@@ -20,7 +20,6 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.util.Arrays;
-import java.util.function.Function;
 
 @Service
 public class ContractService {
@@ -69,7 +68,7 @@ public class ContractService {
     @Transactional(readOnly = true)
     public PageResponse<ContractSummaryResponse> list(Long userId, Pageable pageable) {
         Pageable newestFirst = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), NEWEST_FIRST);
-        return PageResponse.of(contractRepository.findSummariesByUserId(userId, newestFirst), Function.identity());
+        return PageResponse.of(contractRepository.findSummariesByUserId(userId, newestFirst));
     }
 
     @Transactional(readOnly = true)
