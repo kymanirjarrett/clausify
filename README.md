@@ -27,7 +27,7 @@ Clausify is being rebuilt from a Next.js prototype into a Spring Boot + Angular 
 |---|---|
 | Frontend | Angular 22 (standalone, zoneless, signals), TypeScript, Tailwind CSS v4 |
 | Backend | Java 21, Spring Boot 4.1, Spring Web, Spring Data JPA (Hibernate 7), Spring Security, Lombok, Maven |
-| Database | MySQL: Docker locally, Aiven free tier when deployed |
+| Database | MySQL: Docker locally, TiDB Cloud Starter (MySQL compatible, free) when deployed |
 | Migrations | Flyway |
 | AI | Groq `openai/gpt-oss-120b` through Spring AI's OpenAI starter |
 | Embeddings | `all-MiniLM-L6-v2` via Spring AI ONNX Transformers, running inside the API |
@@ -48,7 +48,7 @@ flowchart LR
         S --> R["Repositories<br/>Spring Data JPA"]
         S --> E["Embedding model<br/>all-MiniLM-L6-v2, in-process"]
     end
-    R --> DB[("MySQL<br/>Aiven")]
+    R --> DB[("MySQL-compatible<br/>TiDB Cloud")]
     S -- "OpenAI-compatible API" --> G["Groq<br/>gpt-oss-120b"]
 ```
 
@@ -117,14 +117,14 @@ With the API running, open **http://localhost:8080/swagger-ui.html** to browse a
 flowchart LR
     B["Browser"] --> V["Vercel<br/>Angular static files"]
     V -- "/api/*, Swagger<br/>(rewrite proxy)" --> R["Render free web service<br/>Spring Boot, Docker, prod profile"]
-    R -- "JDBC over TLS" --> A[("Aiven for MySQL 8.4<br/>free tier")]
+    R -- "JDBC over TLS" --> A[("TiDB Cloud Starter<br/>MySQL compatible, free")]
 ```
 
 | Piece | Where | Deploys |
 |---|---|---|
 | Frontend | Vercel project `clausify`, root `frontend/` ([`vercel.json`](frontend/vercel.json)) | Every push; production on `main`. Backend-only changes skip the build. |
 | API | Render web service `clausify-api`, Oregon ([`render.yaml`](render.yaml), [`Dockerfile`](backend/Dockerfile)) | On `main`, **only after CI passes**; backend changes only |
-| Database | Aiven `clausify-db`, MySQL 8.4.11, DigitalOcean sfo | Flyway applies new migrations when the API starts |
+| Database | TiDB Cloud Starter, database `clausify`, AWS us-west-2 (Oregon) ([ADR 0011](docs/adr/0011-tidb-cloud-starter-for-hosted-mysql.md)) | Flyway applies new migrations when the API starts |
 
 The browser only ever talks to Vercel, which proxies API calls to Render, so there's no CORS ([ADR 0008](docs/adr/0008-vercel-rewrite-proxy-to-render.md)). **Merging a migration to `main` applies it to the production database**, permanently.
 
@@ -135,12 +135,12 @@ The browser only ever talks to Vercel, which proxies API calls to Render, so the
 | Service | Limits |
 |---|---|
 | Render | 512 MB RAM, 0.1 CPU. Sleeps after 15 idle minutes and takes about 2 minutes to wake (Spring starts in ~120 s). 750 instance hours a month; no persistent disk. |
-| Aiven | 1 GB storage, 20 connections. Powers off after inactivity, with an email warning first. |
+| TiDB Cloud Starter | 5 GiB row storage, 50M request units a month. At the quota it refuses new connections until the next month. Drops connections idle for 340 s (the API's pool retires them at 5 minutes). |
 | Vercel | Hobby plan, personal and non-commercial use. Proxied requests time out after 120 s. |
 
 **Before a demo:**
-1. In the Aiven console, check that `clausify-db` is running (power it on if needed).
-2. Open the live site, or `https://clausifysolutions.vercel.app/api/health`, and wait until it shows `"status":"UP"`. The app also pings this on load and shows "Waking up the server" on login and signup while it starts.
+1. In the TiDB Cloud console, check that this month's request-unit usage is under the quota.
+2. Open the live site, or `https://clausifysolutions.vercel.app/api/health` (Vercel forwards it to the API's `/actuator/health`), and wait until it shows `"status":"UP"`. The app also pings this on load and shows "Waking up the server" on login and signup while it starts.
 
 ## 🤝 Contributing
 
@@ -155,7 +155,7 @@ Clausify is closed source and does not accept outside contributions. The team wo
 - [ ] AI analysis with Groq, risk scoring, flagged clauses
 - [ ] Standard-clause similarity search
 - [x] Angular frontend: landing, sign-up and login, dashboard with upload, contract detail, account
-- [ ] Deployment (Render, Vercel, Aiven)
+- [x] Deployment (Render, Vercel, TiDB Cloud)
 
 ## 👥 Team
 
