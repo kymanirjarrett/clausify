@@ -51,7 +51,13 @@
       <div class="mt-8 max-w-[44rem] rounded-[3px] border border-fail bg-fail-wash px-4 py-3.5">
         <p class="font-medium text-fail">Analysis failed</p>
         <p class="mt-1 leading-relaxed text-ink-2">{{ c.failureReason || 'No reason was recorded.' }}</p>
-        <p class="mt-2 text-sm text-ink-3">Retrying a failed analysis will be available in a later release.</p>
+        <p class="mt-2 text-sm text-ink-2">Retrying analyzes the text already stored, so there is no need to upload again.</p>
+        <button type="button" class="btn btn-primary mt-4" [disabled]="retrying()" (click)="retry(c.id)">
+          <cl-icon name="refresh" [size]="18" /> {{ retrying() ? 'Retrying…' : 'Retry analysis' }}
+        </button>
+        @if (retryError(); as message) {
+          <p class="mt-3 text-sm text-fail" role="alert">{{ message }}</p>
+        }
       </div>
     }
   </section>
