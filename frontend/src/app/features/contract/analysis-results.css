@@ -1,0 +1,38 @@
+:host { display: block; }
+
+/* Gauge: a dimension line with extension ticks at the band edges (40, 70) and a mark at the score. */
+.gauge { position: relative; height: 1.25rem; }
+.gauge-line, .gauge-fill { position: absolute; top: 50%; left: 0; height: 2px; transform: translateY(-50%); }
+.gauge-line { right: 0; background: var(--color-rule-strong); }
+.gauge-fill { background: var(--color-blue); }
+.gauge-fill-out { background: var(--color-amber); }
+.gauge-tick { position: absolute; top: 15%; bottom: 15%; width: 1px; background: var(--color-ink-3); }
+.gauge-mark { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--color-ink); }
+.gauge + div { position: relative; }
+.gauge-label { position: absolute; transform: translateX(-50%); }
+
+/* Schedule: a quiet table for the category rollup. */
+.schedule th { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 400; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--color-ink-3); padding: 0.5rem 0; }
+.schedule td { padding: 0.55rem 0; border-top: 1px solid var(--color-rule); }
+.schedule th + th, .schedule td + td { padding-left: 0.75rem; }
+
+.title-block { border: 1px solid var(--color-rule-strong); background: var(--color-sheet); overflow: hidden; }
+.title-block > div { padding: 0.7rem 0.9rem; margin: -1px 0 0 -1px; border-left: 1px solid var(--color-rule); border-top: 1px solid var(--color-rule); }
+.title-block dt { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-3); }
+.title-block dd { margin-top: 0.3rem; font-weight: 500; }
+
+/* Filter chips: quiet toggles; the pressed one is drawn in ink. */
+.chip { display: inline-flex; align-items: center; gap: 0.25rem; height: 2rem; padding: 0 0.7rem; border: 1px solid var(--color-rule-strong);
+  border-radius: 3px; font-size: 0.875rem; font-weight: 500; color: var(--color-ink-2); background: transparent;
+  transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms cubic-bezier(0.16, 1, 0.3, 1); }
+.chip:hover { background: var(--color-ghost); color: var(--color-ink); }
+.chip[aria-pressed='true'] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-sheet); }
+
+/* Findings: hairline-ruled entries, not cards. Out-of-tolerance clauses get the amber callout rule. */
+.finding { padding: 1.5rem 0; border-bottom: 1px solid var(--color-rule); }
+.clause { padding: 0.75rem 1rem; border-left: 2px solid var(--color-rule-strong); background: var(--color-sheet);
+  font-size: 0.9375rem; line-height: 1.6; color: var(--color-ink); white-space: pre-line; }
+.finding-out .clause { border-left-color: var(--color-amber);
+  background: linear-gradient(to right, var(--color-amber-wash), var(--color-sheet) 14rem); }
+.revision { padding: 0.75rem 1rem; border: 1px solid var(--color-rule); border-radius: 3px; background: var(--color-sheet); }

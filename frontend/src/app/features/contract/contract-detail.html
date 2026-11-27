@@ -56,37 +56,47 @@
     }
   </section>
 
-  <!-- Analysis: drawn as ghost cells until results exist. -->
+  <!-- Analysis: results once ANALYZED, otherwise ghost cells sized like the results to come. -->
   <section class="mt-14" aria-labelledby="analysis-title">
     <div class="flex items-baseline justify-between border-b border-ink pb-3">
       <h2 id="analysis-title" class="text-lg font-semibold">Analysis</h2>
-      <p class="measure text-ink-3">Not yet available</p>
+      <p class="measure text-ink-3">{{ analysis() ? 'Analyzed ' + formatDateTime(c.analyzedAt) : 'Not yet available' }}</p>
     </div>
-    <div class="mt-6 grid grid-cols-[6.5rem_minmax(0,1fr)] gap-4 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-6">
-      <div class="ghost grid size-[6.5rem] place-items-center rounded-[3px] text-center sm:size-40">
-        <span class="measure text-ink-3">Risk score</span>
+    @if (analysis(); as a) {
+      <cl-analysis-results [analysis]="a" />
+    } @else if (analysisError(); as e) {
+      <div class="mt-6 max-w-[44rem]" role="alert">
+        <p class="font-medium">The results could not be loaded.</p>
+        <p class="mt-1 leading-relaxed text-ink-2">{{ e.message }}</p>
+        <button type="button" class="btn btn-secondary mt-4" (click)="loadAnalysis(c.id)"><cl-icon name="refresh" [size]="18" /> Try again</button>
       </div>
-      <div class="space-y-3" aria-hidden="true">
-        @for (w of ['82%', '64%', '74%', '50%']; track $index) {
-          <div class="ghost h-14 rounded-[3px]" [style.width]="w"></div>
-        }
+    } @else {
+      <div class="mt-6 grid grid-cols-[6.5rem_minmax(0,1fr)] gap-4 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-6"
+           [attr.aria-busy]="c.status === 'ANALYZED' ? 'true' : null">
+        <div class="ghost grid size-[6.5rem] place-items-center rounded-[3px] text-center sm:size-40">
+          <span class="measure text-ink-3">Risk score</span>
+        </div>
+        <div class="space-y-3" aria-hidden="true">
+          @for (w of ['82%', '64%', '74%', '50%']; track $index) {
+            <div class="ghost h-14 rounded-[3px]" [style.width]="w"></div>
+          }
+        </div>
       </div>
-    </div>
-    <p class="mt-6 max-w-[44rem] leading-relaxed text-ink-2">
-      @switch (c.status) {
-        @case ('ANALYZED') {
-          Analysis is complete. Viewing the findings here arrives in a later release; this section will then list
-          each clause outside tolerance with its category, risk score, explanation, and suggested revision.
+      <p class="mt-6 max-w-[44rem] leading-relaxed text-ink-2">
+        @switch (c.status) {
+          @case ('ANALYZED') {
+            Loading the results.
+          }
+          @case ('FAILED') {
+            No results, because the analysis failed.
+          }
+          @default {
+            Analysis runs in the background and can take several minutes for a long contract. This page updates on
+            its own.
+          }
         }
-        @case ('FAILED') {
-          No results, because the analysis failed.
-        }
-        @default {
-          Analysis runs in the background and can take several minutes for a long contract. This page updates on
-          its own.
-        }
-      }
-    </p>
+      </p>
+    }
   </section>
 } @else {
   <div class="mt-8 space-y-4" aria-busy="true" aria-label="Loading contract">

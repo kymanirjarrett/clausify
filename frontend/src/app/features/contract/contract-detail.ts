@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ContractDetail } from '../../core/api.models';
+import { AnalysisResult, ContractDetail } from '../../core/api.models';
 import { ContractsService, formatBytes } from '../../core/contracts.service';
 import { ApiError, toApiError } from '../../core/problem';
 import { contractNumber, formatDateTime } from '../../shared/format';
 import { Icon } from '../../shared/icon';
 import { StatusStamp } from '../../shared/status-stamp';
 import { Breakable } from '../../shared/breakable';
+import { AnalysisResults } from './analysis-results';
 
 const POLL_MS = 4000;
 
@@ -17,11 +18,11 @@ interface Revision {
   note: string;
 }
 
-/** FR-4: one contract's status and details. Analysis results (FR-6) render here once the API provides them. */
+/** FR-4: one contract's status and details; FR-6: its analysis results once the status is ANALYZED. */
 @Component({
   selector: 'cl-contract-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, Icon, StatusStamp, Breakable],
+  imports: [RouterLink, Icon, StatusStamp, Breakable, AnalysisResults],
   templateUrl: './contract-detail.html',
   styleUrl: './contract-detail.css',
 })
@@ -32,6 +33,8 @@ export class ContractDetailPage {
   private readonly contracts = inject(ContractsService);
   protected readonly contract = signal<ContractDetail | null>(null);
   protected readonly error = signal<ApiError | null>(null);
+  protected readonly analysis = signal<AnalysisResult | null>(null);
+  protected readonly analysisError = signal<ApiError | null>(null);
   private timer: ReturnType<typeof setTimeout> | undefined;
 
   protected readonly contractNumber = contractNumber;
@@ -72,9 +75,19 @@ export class ContractDetailPage {
         clearTimeout(this.timer);
         if (contract.status === 'UPLOADED' || contract.status === 'ANALYZING') {
           this.timer = setTimeout(() => this.load(), POLL_MS);
+        } else if (contract.status === 'ANALYZED' && !this.analysis()) {
+          this.loadAnalysis(contract.id);
         }
       },
       error: (error) => this.error.set(toApiError(error)),
+    });
+  }
+
+  protected loadAnalysis(id: number): void {
+    this.analysisError.set(null);
+    this.contracts.analysis(id).subscribe({
+      next: (analysis) => this.analysis.set(analysis),
+      error: (error) => this.analysisError.set(toApiError(error)),
     });
   }
 }
