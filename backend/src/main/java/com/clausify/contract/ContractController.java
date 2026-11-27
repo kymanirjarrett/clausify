@@ -36,13 +36,12 @@ public class ContractController {
     }
 
     /**
-     * Uploads a contract PDF for analysis from the active user
+     * Uploads a contract PDF for the signed-in user and queues it for analysis.
+     * <p>
      * FR-3: 202 Accepted, because analysis continues in the background; poll the Location URL for status.
      * 413 over 10 MB, 415 if not a PDF, 422 if no text can be read.
      *
-     * @param file multipart file in a PDF format (10MB file limit)
-     * @param jwt security token for the current active user
-     * @return a response entity with accepted status and a URI for the uploaded contract
+     * @param file the PDF, up to 10 MB
      */
     @Operation(summary = "Upload a contract PDF",
             description = "PDF only, up to 10 MB. Text is extracted immediately and the file is discarded; analysis runs in the background.")
@@ -54,12 +53,12 @@ public class ContractController {
     }
 
     /**
-     * Lists out the active users uploaded contracts.
+     * Lists the signed-in user's contracts.
+     * <p>
      * FR-4: the caller's contracts, newest first. {@code page} is zero-based; {@code size} is at most 100.
      *
-     * @param pageable an object from the request parameters that defines how the list of contracts is displayed
-     * @param jwt security token for the active user
-     * @return a list of the current users contracts filtered by the pageable object
+     * @param pageable page and size from the query string; any sort the client sends is ignored
+     * @return one page of contract summaries
      */
     @Operation(summary = "List my contracts", description = "Newest first. Query parameters: page (0-based), size (default 20, max 100).")
     @GetMapping
@@ -69,12 +68,9 @@ public class ContractController {
     }
 
     /**
-     * Gets a specific user contract by the id
+     * Gets one of the signed-in user's contracts.
+     * <p>
      * FR-4: status and details; poll while UPLOADED or ANALYZING. 404 if missing or not yours.
-     *
-     * @param id the id of the requested contract
-     * @param jwt security token for the current user
-     * @return a ContractDetailResponse dto for the request contract
      */
     @Operation(summary = "Get one of my contracts")
     @GetMapping("/{id}")
@@ -84,12 +80,9 @@ public class ContractController {
     }
 
     /**
-     * Deletes a user's contract by the contact id
+     * Deletes one of the signed-in user's contracts.
+     * <p>
      * FR-8: 204 once deleted. 404 if missing or not yours.
-     *
-     * @param id the id of the contract to be deleted
-     * @param jwt security token for the current user
-     * @return a 204 status if success or 404 status if there is an error
      */
     @Operation(summary = "Delete one of my contracts",
             description = "Permanently removes the contract, its extracted text, and its analysis.")
