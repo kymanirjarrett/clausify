@@ -33,7 +33,7 @@
 		<springdoc.version>3.1.1</springdoc.version>
 		<pdfbox.version>3.0.8</pdfbox.version>
 		<java-diff-utils.version>4.18</java-diff-utils.version>
-		<!-- Tests that call the real Groq API never run in a normal build: "eval" (course/DESIGN.md 7.9) and any live
+		<!-- Tests that call the real Groq API never run in a normal build: "eval" (docs/spec.md, Evaluation) and any live
 		     "groq" test. Opt in with -Dsurefire.excludedGroups= -Dgroups=eval (or groq). -->
 		<surefire.excludedGroups>eval,groq</surefire.excludedGroups>
 		<!-- Spring AI 2.0.x is built against Spring Boot 4.1 (2.1 targets Boot 4.2). -->
@@ -89,7 +89,7 @@
 			<artifactId>pdfbox</artifactId>
 			<version>${pdfbox.version}</version>
 		</dependency>
-		<!-- FR-10 version comparison: Myers diff over sentences and words (course/DESIGN.md 7.3). -->
+		<!-- Version comparison: Myers diff over sentences and words. -->
 		<dependency>
 			<groupId>io.github.java-diff-utils</groupId>
 			<artifactId>java-diff-utils</artifactId>
@@ -198,7 +198,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
-					<!-- The AI evaluation calls Groq and spends quota, so it never runs in a normal build (course/DESIGN.md 7.9).
+					<!-- The AI evaluation calls Groq and spends quota, so it never runs in a normal build (docs/spec.md, Evaluation).
 					     Run it with -Dsurefire.excludedGroups= -Dgroups=eval; see docs/evaluation/README.md. -->
 					<excludedGroups>${surefire.excludedGroups}</excludedGroups>
 				</configuration>
@@ -225,7 +225,7 @@
 					</execution>
 					<execution>
 						<!-- Baseline on 2026-11-27: 95.2% of lines, 82.1% of branches. The floors sit a few points
-						     below it, so coverage can't quietly slide; raise them as it grows (course/DESIGN.md: 80%+). -->
+						     below it, so coverage can't quietly slide; raise them as it grows. -->
 						<id>check</id>
 						<phase>verify</phase>
 						<goals>

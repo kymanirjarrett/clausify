@@ -90,6 +90,6 @@ The `local` profile needs no environment variables. The deployed API runs with `
 
 ## Specification
 
-[`course/DESIGN.md`](course/DESIGN.md) holds the requirements FR-1 to FR-12 with acceptance criteria, the REST API table (7.4), migrations (7.5), risk scoring formula (7.6), AI JSON contract (7.7), and AI evaluation method (7.9). Work from an issue (`gh issue view <n>`).
+[`docs/spec.md`](docs/spec.md) holds the risk scoring formula, the AI JSON contract, and the evaluation method that the code cites. The original requirements (FR-1 to FR-12) and API table are in [`course/DESIGN.md`](course/DESIGN.md). Work from an issue (`gh issue view <n>`).
 
 Analysis uses **8** risk categories stored in `analyses` and `clause_findings`. Check `backend/src/main/resources/db/migration/` for the next free version number.

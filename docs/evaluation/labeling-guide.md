@@ -1,6 +1,6 @@
 # AI evaluation: labeling guide
 
-This guide is for the two people who label the evaluation contracts (course/DESIGN.md 7.9, #64). Label each contract **on your own first**, without looking at the other labeler's work or at the model's output. Agreement before discussion is reported as Cohen's kappa, so independent first passes matter.
+This guide is for the two people who label the evaluation contracts (docs/spec.md, Evaluation, #64). Label each contract **on your own first**, without looking at the other labeler's work or at the model's output. Agreement before discussion is reported as Cohen's kappa, so independent first passes matter.
 
 The categories and levels below are the same definitions the analysis prompt gives the model (`backend/src/main/resources/prompts/contract-analysis-system.md`). If the prompt changes, update this guide in the same pull request.
 
