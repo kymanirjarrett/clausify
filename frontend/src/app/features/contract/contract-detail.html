@@ -66,8 +66,18 @@
   <section class="mt-14" aria-labelledby="analysis-title">
     <div class="flex items-baseline justify-between border-b border-ink pb-3">
       <h2 id="analysis-title" class="text-lg font-semibold">Analysis</h2>
-      <p class="measure text-ink-3">{{ analysis() ? 'Analyzed ' + formatDateTime(c.analyzedAt) : 'Not yet available' }}</p>
+      <div class="flex items-center gap-3">
+        <p class="measure hidden text-ink-3 sm:block">{{ analysis() ? 'Analyzed ' + formatDateTime(c.analyzedAt) : 'Not yet available' }}</p>
+        <!-- FR-11: disabled until the analysis exists (example 2). -->
+        <button type="button" class="btn btn-secondary !h-9 text-sm" [disabled]="!analysis() || downloading()"
+                (click)="downloadReport(c)" [attr.title]="analysis() ? null : 'Available once the analysis is complete'">
+          <cl-icon name="file" [size]="16" /> {{ downloading() ? 'Preparing…' : 'Download report' }}
+        </button>
+      </div>
     </div>
+    @if (downloadError(); as message) {
+      <p class="mt-2 text-sm text-fail" role="alert">{{ message }}</p>
+    }
     @if (analysis(); as a) {
       @if (compareOptions().length) {
         <!-- FR-10: pick a revised version of this contract to compare with. -->
