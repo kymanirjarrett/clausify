@@ -36,3 +36,7 @@
 .finding-out .clause { border-left-color: var(--color-amber);
   background: linear-gradient(to right, var(--color-amber-wash), var(--color-sheet) 14rem); }
 .revision { padding: 0.75rem 1rem; border: 1px solid var(--color-rule); border-radius: 3px; background: var(--color-sheet); }
+
+/* FR-9: the standard clauses a finding is compared with. */
+.standard { padding-left: 0.9rem; border-left: 1px solid var(--color-rule-strong); }
+.standard-item { padding: 0.65rem 0.8rem; border: 1px solid var(--color-rule); border-radius: 3px; background: var(--color-sheet); }

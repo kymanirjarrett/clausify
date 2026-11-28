@@ -122,6 +122,22 @@ export interface Comparison {
   rows: DiffRow[];
 }
 
+/** A clause from the standard library (FR-9). */
+export interface StandardClause {
+  id: number;
+  category: RiskCategory;
+  title: string;
+  text: string;
+  favorable: boolean;
+  notes: string | null;
+}
+
+/** GET /api/clauses/{findingId}/similar: the 3 closest standard clauses, most similar first. */
+export interface SimilarClauses {
+  finding: { id: number; category: RiskCategory; title: string; originalText: string; suggestedRevision: string | null };
+  matches: { clause: StandardClause; similarity: number }[];
+}
+
 export interface Page<T> {
   content: T[];
   page: number;
