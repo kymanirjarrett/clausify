@@ -51,7 +51,12 @@ export class Landing {
     afterNextRender(() => {
       // The word stays still for people who ask for reduced motion.
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const timer = setInterval(() => this.wordIndex.update(i => (i + 1) % this.words.length), 2600);
+        // One pass through the words, then rest on the first: no endless motion beside the copy.
+        let ticks = 0;
+        const timer = setInterval(() => {
+          this.wordIndex.update(i => (i + 1) % this.words.length);
+          if (++ticks === this.words.length) clearInterval(timer);
+        }, 2600);
         destroyRef.onDestroy(() => clearInterval(timer));
       }
       const measure = () => this.measureLeader();

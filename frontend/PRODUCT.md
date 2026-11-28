@@ -16,7 +16,7 @@ web
 
 ## Product Purpose
 
-Upload a contract PDF and, in under a minute, receive an overall risk score (0 to 100, Low / Medium / High), clause-by-clause findings across eight categories with plain-language explanations and suggested revisions to negotiate with, a list of favorable clauses, comparison against standard clause language, version comparison, and a downloadable report. Success: the user signs knowing exactly what they agreed to, or negotiates better terms with concrete wording.
+Upload a contract PDF and, in about two to three minutes for a 10-page contract, receive an overall risk score (0 to 100, Low / Medium / High), clause-by-clause findings across eight categories with plain-language explanations and suggested revisions to negotiate with, a list of favorable clauses, comparison against standard clause language, version comparison, and a downloadable report. Success: the user signs knowing exactly what they agreed to, or negotiates better terms with concrete wording.
 
 ## Positioning
 
@@ -37,7 +37,7 @@ Upload a contract PDF and, in under a minute, receive an overall risk score (0 t
 - Uploads: PDF only, 10 MB maximum, text-based PDFs only (scanned documents return 422 until OCR exists).
 - Analysis is asynchronous; the client polls contract status.
 - Eight risk categories: Payment Terms, Liability, Indemnification, IP Rights, Termination, Non-Compete, Confidentiality, Jurisdiction. Levels: Low under 40, Medium 40 to 69, High 70 and above.
-- Available today (Sprint 1): register, login, current user, upload, list, contract detail and status. Analysis results, retry, delete, clause comparison, version comparison, reports, and account statistics arrive in later sprints; the UI must not present them as working before the API supports them.
+- All of these are built: register, login, upload, list, detail, analysis results, retry, delete, clause comparison, version comparison, PDF reports, and account statistics. Password reset is not built (#147); the UI must not present a capability the API does not support.
 - Sign in with Google is out of scope for the MVP.
 
 ## Brand Commitments

@@ -9,6 +9,8 @@
 }
 .nav-link { border-radius: 4px; transition: color 160ms var(--ease-out-expo); }
 .nav-link:hover { color: #fff; }
+/* Focus rings stay visible on the dark glass. */
+.nav a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
 /* Pill buttons for the landing page only; the app keeps its square .btn. */
 .pill {
@@ -97,7 +99,7 @@
 /* Rows and cards rise into place as they scroll into view, where the browser supports it. */
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    .row, .step, .cat {
+    .row > .mock {
       animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 35%;
     }
   }
