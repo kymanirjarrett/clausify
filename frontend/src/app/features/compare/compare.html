@@ -1,0 +1,134 @@
+<a [routerLink]="['/app/contracts', id()]" class="inline-flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink">
+  <cl-icon name="arrowLeft" [size]="16" /> Back to the original contract
+</a>
+
+@if (error(); as e) {
+  <section class="mt-8 max-w-[36rem]" role="alert">
+    <h1 class="text-2xl font-semibold tracking-[-0.02em]">
+      {{ e.status === 404 ? 'Contract not found' : 'These versions could not be compared' }}
+    </h1>
+    <p class="mt-3 leading-relaxed text-ink-2">
+      {{ e.status === 404 ? 'One of these contracts does not exist, or it belongs to another account.' : e.message }}
+    </p>
+    @if (e.status !== 404 && e.status !== 409 && e.status !== 400) {
+      <button type="button" class="btn btn-secondary mt-5" (click)="load()"><cl-icon name="refresh" [size]="18" /> Try again</button>
+    }
+  </section>
+} @else if (comparison(); as c) {
+  <h1 class="mt-6 text-[1.875rem] font-semibold leading-tight tracking-[-0.03em]">Compare versions</h1>
+
+  <!-- Title block: the two versions and their scores. -->
+  <dl class="title-block mt-8 grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_12rem]">
+    <div>
+      <dt>Original · {{ contractNumber(c.original.id) }}</dt>
+      <dd class="font-medium"><cl-breakable [text]="c.original.filename" /></dd>
+      <dd class="mt-1 text-sm text-ink-2 tabular">Risk {{ c.original.overallScore }} · {{ levelLabel(c.original.riskLevel) }}</dd>
+    </div>
+    <div>
+      <dt>Revised · {{ contractNumber(c.revised.id) }}</dt>
+      <dd class="font-medium"><cl-breakable [text]="c.revised.filename" /></dd>
+      <dd class="mt-1 text-sm text-ink-2 tabular">Risk {{ c.revised.overallScore }} · {{ levelLabel(c.revised.riskLevel) }}</dd>
+    </div>
+    <div>
+      <dt>Change</dt>
+      <dd class="tabular text-2xl font-semibold">{{ c.original.overallScore }} → {{ c.revised.overallScore }}</dd>
+      <dd class="mt-1">
+        <span class="stamp" [class]="c.scoreChange > 0 ? 'text-amber-ink bg-amber-wash' : 'text-ink-2 bg-sheet'">{{ scoreChangeLabel(c.scoreChange) }}</span>
+      </dd>
+    </div>
+  </dl>
+
+  @if (c.unrelated && !showAnyway()) {
+    <!-- FR-10 example 2: warn before showing results for documents that share almost no wording. -->
+    <section class="mt-10 max-w-[44rem] rounded-[3px] border border-rule-strong bg-sheet px-5 py-4" role="alert">
+      <p class="font-semibold">These documents look unrelated</p>
+      <p class="mt-1.5 leading-relaxed text-ink-2">
+        They share almost no wording, so a comparison would mark nearly everything as removed and added. Check that you
+        picked two versions of the same contract.
+      </p>
+      <button type="button" class="btn btn-secondary mt-4" (click)="showAnyway.set(true)">Show the comparison anyway</button>
+    </section>
+  } @else {
+    <section class="mt-10" aria-labelledby="risk-title">
+      <h2 id="risk-title" class="border-b border-ink pb-3 text-lg font-semibold">What changed in risk</h2>
+      @if (c.categoryChanges.length) {
+        <table class="schedule mt-1 w-full max-w-[44rem] text-left">
+          <caption class="sr-only">Highest risk score per category, original to revised</caption>
+          <thead><tr><th scope="col">Category</th><th scope="col" class="text-right">Original → revised</th></tr></thead>
+          <tbody>
+            @for (ch of c.categoryChanges; track ch.category) {
+              <tr>
+                <td>{{ categoryLabel(ch.category) }}</td>
+                <td class="text-right">
+                  <span class="stamp" [class]="worsened(ch.before, ch.after) ? 'text-amber-ink bg-amber-wash' : 'text-ink-2 bg-sheet'">
+                    {{ categoryChangeLabel(ch.before, ch.after) }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <p class="mt-4 text-ink-2">No category's risk changed between the two versions.</p>
+      }
+      <p class="measure mt-4 text-ink-3">
+        {{ c.counts.changed }} edited · {{ c.counts.added }} added · {{ c.counts.removed }} removed · {{ (c.similarity * 100).toFixed(0) }}% shared wording
+      </p>
+    </section>
+
+    <section class="mt-12" aria-labelledby="text-title">
+      <h2 id="text-title" class="border-b border-ink pb-3 text-lg font-semibold">What changed in the text</h2>
+      <div class="diff-head mt-4" aria-hidden="true"><span>Original</span><span>Revised</span></div>
+      <ol class="diff">
+        @for (row of c.rows; track $index; let i = $index) {
+          @if (row.type === 'EQUAL') {
+            @let folded = expanded().has(i) ? null : fold(row.original[0].text);
+            <li class="diff-equal">
+              @if (folded) {
+                <p>{{ folded.head }} …</p>
+                <button type="button" class="btn btn-quiet !h-8 text-sm" (click)="expand(i)">Show {{ folded.hiddenWords }} unchanged words</button>
+                <p>… {{ folded.tail }}</p>
+              } @else {
+                <p>{{ row.original[0].text }}</p>
+              }
+            </li>
+          } @else {
+            <li class="diff-row" [attr.data-type]="row.type">
+              <div class="side">
+                <span class="side-label">Original</span>
+                @if (row.original.length) {
+                  @for (s of row.original; track $index) {
+                    @if (s.changed) { <del>{{ s.text }}</del> } @else { <span>{{ s.text }}</span> }
+                    {{ ' ' }}
+                  }
+                } @else {
+                  <span class="empty">Not in the original</span>
+                }
+              </div>
+              <div class="side">
+                <span class="side-label">Revised</span>
+                @if (row.revised.length) {
+                  @for (s of row.revised; track $index) {
+                    @if (s.changed) { <ins>{{ s.text }}</ins> } @else { <span>{{ s.text }}</span> }
+                    {{ ' ' }}
+                  }
+                } @else {
+                  <span class="empty">Removed in the revision</span>
+                }
+              </div>
+            </li>
+          }
+        }
+      </ol>
+    </section>
+  }
+
+  <p class="mt-12 max-w-[44rem] border-t border-rule pt-4 text-sm leading-relaxed text-ink-3">
+    Clausify provides information, not legal advice. Review important contracts with a qualified lawyer.
+  </p>
+} @else {
+  <div class="mt-8 space-y-4" aria-busy="true" aria-label="Comparing versions">
+    <div class="ghost h-9 w-80 max-w-full"></div>
+    <div class="ghost h-24 w-full"></div>
+  </div>
+}

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { AnalysisResult, ContractDetail } from '../../core/api.models';
+import { Router, RouterLink } from '@angular/router';
+import { AnalysisResult, ContractDetail, ContractSummary } from '../../core/api.models';
 import { ContractsService, formatBytes } from '../../core/contracts.service';
 import { ApiError, toApiError } from '../../core/problem';
 import { contractNumber, formatDateTime } from '../../shared/format';
@@ -35,6 +35,10 @@ export class ContractDetailPage {
   protected readonly error = signal<ApiError | null>(null);
   protected readonly analysis = signal<AnalysisResult | null>(null);
   protected readonly analysisError = signal<ApiError | null>(null);
+  /** FR-10: the user's other analyzed contracts, offered under "Compare with…". */
+  protected readonly compareOptions = signal<ContractSummary[]>([]);
+  protected readonly compareWith = signal<number | null>(null);
+  private readonly router = inject(Router);
   protected readonly retrying = signal(false);
   protected readonly retryError = signal<string | null>(null);
   private timer: ReturnType<typeof setTimeout> | undefined;
@@ -101,10 +105,27 @@ export class ContractDetailPage {
     });
   }
 
+  private loadCompareOptions(id: number): void {
+    this.contracts.list(0, 100).subscribe({
+      next: (page) => this.compareOptions.set(page.content.filter((c) => c.id !== id && c.status === 'ANALYZED')),
+      error: () => this.compareOptions.set([]),
+    });
+  }
+
+  protected compare(id: number): void {
+    const otherId = this.compareWith();
+    if (otherId !== null) {
+      void this.router.navigate(['/app/contracts', id, 'compare', otherId]);
+    }
+  }
+
   protected loadAnalysis(id: number): void {
     this.analysisError.set(null);
     this.contracts.analysis(id).subscribe({
-      next: (analysis) => this.analysis.set(analysis),
+      next: (analysis) => {
+        this.analysis.set(analysis);
+        this.loadCompareOptions(id);
+      },
       error: (error) => this.analysisError.set(toApiError(error)),
     });
   }
