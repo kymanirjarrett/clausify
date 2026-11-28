@@ -8,7 +8,7 @@ Files that exist only for the semester's group project and team workflow. None o
 | `design/` | Wireframes and mockups referenced by the design document |
 | `DEMO.md` | Five-minute presentation script |
 | `CODEBASE.md` | Onboarding guide for teammates |
-| `github/` | The team's PR template and CODEOWNERS (inactive here; GitHub only reads them from `.github/`) |
+| `github/` | The team's PR template (inactive here; GitHub only reads it from `.github/`) |
 | `adr/0004-*.md` | Superseded decision (Aiven MySQL, replaced by ADR 0011) |
 
 Before deleting this folder, move anything still referenced elsewhere: code comments cite `course/DESIGN.md` sections 7.6 (risk scoring), 7.7 (AI JSON contract), and 7.9 (evaluation).

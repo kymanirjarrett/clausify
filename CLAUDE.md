@@ -9,7 +9,7 @@ Clausify is an AI contract-analysis web app for freelancers: upload a contract P
 ## Hard constraints
 
 1. **Never edit an applied migration.** Every schema change is a new `V<n>__description.sql`. `spring.jpa.hibernate.ddl-auto` stays `validate`; if validation fails, report the exact error instead of changing it. Render deploys `main` automatically, so **a merged migration is applied to the production database at once**; get it right in the PR. Every table needs a primary key. TiDB does not enforce this (`sql_require_primary_key` is off), so check it in review.
-2. **Never move, delete, or re-point a release tag.** Never rewrite history on `main` or force-push it.
+2. **Never move, delete, or re-point a release tag** (`v*`). Never rewrite history on `main` or force-push it.
 3. **No secrets in git.** Credentials and keys come from environment variables only; `.env.example` lists them with placeholders.
 4. **Ask before** destructive git operations, deleting files outside the task, adding dependencies, or creating cloud resources (TiDB Cloud, Render, and Vercel are set up by a human).
 
@@ -47,7 +47,7 @@ The project uses exactly one LLM: Groq `openai/gpt-oss-120b`, through Spring AI'
 - **One integration point.** Only `analysis/GroqContractAnalyzer`, which implements the `ContractAnalyzer` interface, calls an LLM. Do not add other AI SDKs or providers (OpenAI, Anthropic, Gemini, LangChain4j, Ollama, and so on), call an LLM from any other class, or add a second chat model bean.
 - **No personal API keys.** Do not create or use your own Groq or other AI keys for this project, and never commit one. The only key belongs to Kymani and lives in Render's environment.
 - **Local and tests never call the AI.** The `local` profile and every test use a fake `ContractAnalyzer` that returns fixed findings, so the app starts and the tests pass without `GROQ_API_KEY`. The real analyzer is active only in the `prod` profile. If you need to see real model output, ask Kymani.
-- **Changing the model, prompt contract, or AI dependencies** needs an issue first and Kymani's review.
+- **Changing the model, prompt contract, or AI dependencies** needs an issue first and Kymani's review (`.github/CODEOWNERS` requests it).
 - Embeddings (FR-9) are word-based and in-process (ADR 0012); they use no model and no key.
 
 ## Code layout and rules
@@ -86,10 +86,10 @@ The `local` profile needs no environment variables. The deployed API runs with `
 
 - Create a GitHub issue, then a branch `type/<issue>-short-desc` (e.g. `feat/12-jwt-auth`).
 - Commits and PR titles use Conventional Commits: `type(optional-scope): imperative summary`. Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `ci`, `build`, `perf`, `style`.
-- Open a PR into `main` (`Closes #<issue>`); CI and the PR-title check must pass. PRs are merged with a merge commit.
+- Open a PR into `main` (`Closes #<issue>`); CI and the PR-title check must pass and one approval is required. PRs are merged with a merge commit.
 
 ## Specification
 
 [`course/DESIGN.md`](course/DESIGN.md) holds the requirements FR-1 to FR-12 with acceptance criteria, the REST API table (7.4), migrations (7.5), risk scoring formula (7.6), AI JSON contract (7.7), and AI evaluation method (7.9). Work from an issue (`gh issue view <n>`).
 
-Analysis uses **8** risk categories stored in `analyses` and `clause_findings`. Migrations V1 to V7 are applied; the next is V8.
+Analysis uses **8** risk categories stored in `analyses` and `clause_findings`. Check `backend/src/main/resources/db/migration/` for the next free version number.
