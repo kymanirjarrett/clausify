@@ -9,7 +9,7 @@ import { ServerStatus } from './core/server-status';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withComponentInputBinding(), withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
+    provideRouter(routes, withComponentInputBinding(), withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' })),
     // Not withFetch(): upload progress events need the XHR backend.
     provideHttpClient(withInterceptors([authInterceptor])),
     // Neither blocks startup: the API may be asleep for up to two minutes on Render's free plan.

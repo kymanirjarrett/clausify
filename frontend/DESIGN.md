@@ -310,3 +310,14 @@ The drop zone is a sheet with a dashed strong-hairline border that turns blue on
 - **Don't** stack per-element entrance animations or animate content in from invisible.
 - **Don't** wrap content in rounded, shadowed cards; corners stay at 2 to 3px and only sheets lift.
 - **Don't** present a capability the API does not support as working; draw it as a ghost.
+
+## Landing page (marketing surface)
+
+The landing page (`features/landing`) is a deliberate exception to the Specification Sheet world, chosen in #148 after a review of sprintax.com's layout. The signed-in app keeps every rule above.
+
+- **Hero:** a full-bleed photo (`public/images/hero-freelancer-*.webp`, credited in the footer) under a dark ink overlay, with a floating dark-glass nav. On desktop the hero stays pinned while a vellum sheet with rounded top corners slides up over it.
+- **Headline:** white, with one amber word that cycles once through risk categories, then rests. Screen readers get a fixed sentence; reduced motion keeps the word still.
+- **Actions:** pill buttons. The primary is amber with an ink label (5.72:1); the secondary is a white outline.
+- **Proof:** only real facts (8 categories, 104 standard clauses, no PDFs stored, free). No ratings, testimonials, or customer logos until they exist.
+- **Sections:** a blue label pill and centered heading, then alternating rows that pair copy with a white sample card of the real feature. Sample cards are labeled "Sample".
+- **Motion:** the sheet sliding over the hero is the authored moment; the sample cards rise in once as they enter view, where `animation-timeline` is supported.
