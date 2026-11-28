@@ -5,7 +5,7 @@
 Enterprise Application Development (IT4045C), University of Cincinnati, Fall 2026
 Version 1.1, October 1, 2026 (revised after instructor feedback: AI evaluation methodology, course code)
 
-> This document describes the planned high-level and low-level design. The final product may differ; changes will be recorded as Architecture Decision Records in [`docs/adr/`](docs/adr/).
+> This document describes the planned high-level and low-level design. The final product may differ; changes will be recorded as Architecture Decision Records in [`docs/adr/`](../docs/adr/).
 
 ## Contents
 
@@ -348,28 +348,28 @@ The storyboard went through two rounds: hand-drawn low-fidelity wireframes to ag
 
 ### Screen 1: Landing page
 
-<img src="docs/design/wireframes/03-title-page-and-header.jpg" alt="Wireframe of the title page and page header" width="360">
+<img src="design/wireframes/03-title-page-and-header.jpg" alt="Wireframe of the title page and page header" width="360">
 
 A centered title and "about" section explain what Clausify does, with a call to action to sign up. The header places **Home** on the left and **File Read** (Dashboard) and **Account** on the right. The legal disclaimer appears in the footer. *(FR-1, FR-2)*
 
 ### Screen 2: Login
 
-<img src="docs/design/mockups/01-login.png" alt="Login mockup" width="640">
+<img src="design/mockups/01-login.png" alt="Login mockup" width="640">
 
 Email and password fields with inline validation, a link to Sign Up, and a Forgot password link. The **Continue with Google** button in the mockup is a future enhancement and will be hidden in the MVP. The **Sign Up** screen uses the same card with a Name field added. *(FR-1, FR-2)*
 
 ### Screen 3: Dashboard (upload and documents)
 
 <p>
-<img src="docs/design/wireframes/01-upload-screen.jpg" alt="Upload screen wireframe" width="300">
-<img src="docs/design/mockups/02-dashboard.png" alt="Dashboard mockup" width="560">
+<img src="design/wireframes/01-upload-screen.jpg" alt="Upload screen wireframe" width="300">
+<img src="design/mockups/02-dashboard.png" alt="Dashboard mockup" width="560">
 </p>
 
 The home screen after sign-in. The upload zone accepts drag and drop or **Browse Files** (PDF only, up to 10 MB). "Your Documents" lists every contract with its status badge and risk level. Rows update automatically while analysis runs; Analyzed rows link to results and Failed rows offer **Retry**. *(FR-3, FR-4, FR-7, FR-8)*
 
 ### Screen 4: Analysis Results
 
-<img src="docs/design/mockups/03-analysis-results.png" alt="Analysis results mockup" width="640">
+<img src="design/mockups/03-analysis-results.png" alt="Analysis results mockup" width="640">
 
 The main value screen. The right column shows the overall risk gauge, risk by category, and document info. The main column lists findings with filter chips (All, High, Medium, Low); each card shows the category, risk badge, section reference, the original clause, "Why this matters," and a suggested revision with **Copy**. Each card will also get a **Compare to Standard** link, and the header gets **Compare with...** next to **Download Report**. A "What's in your favor" section lists favorable clauses below the risky ones. *(FR-5, FR-6, FR-9, FR-10, FR-11)*
 
@@ -383,7 +383,7 @@ A two-column diff of the original and revised text with additions and removals h
 
 ### Screen 7: Account
 
-<img src="docs/design/wireframes/02-account-screen.jpg" alt="Account screen wireframe" width="300">
+<img src="design/wireframes/02-account-screen.jpg" alt="Account screen wireframe" width="300">
 
 General account information with a settings control to edit the profile, statistics (contracts analyzed, average risk score), and previous uploads displayed as cards that link to their results. *(FR-12)*
 

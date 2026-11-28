@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
- * DESIGN.md 7.9: runs the real GroqContractAnalyzer over a labeled split and writes a report to docs/evaluation/.
+ * course/DESIGN.md 7.9: runs the real GroqContractAnalyzer over a labeled split and writes a report to docs/evaluation/.
  * Tagged "eval" and excluded from the normal build, because it calls Groq and uses the free-tier quota.
  *
  * <pre>

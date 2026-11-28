@@ -10,7 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 /**
- * Expected values are worked out by hand from DESIGN.md 7.6, never computed with the scorer itself, so a wrong
+ * Expected values are worked out by hand from course/DESIGN.md 7.6, never computed with the scorer itself, so a wrong
  * formula cannot also produce a matching expectation.
  */
 class RiskScorerTest {

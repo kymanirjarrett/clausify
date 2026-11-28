@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-/** The band edges from DESIGN.md 7.6 (#35). */
+/** The band edges from course/DESIGN.md 7.6 (#35). */
 class RiskLevelTest {
 
     @ParameterizedTest

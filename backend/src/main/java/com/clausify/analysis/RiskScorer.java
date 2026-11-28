@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 /**
- * Computes a contract's overall risk from its findings (DESIGN.md 7.6). The model scores each clause; the
+ * Computes a contract's overall risk from its findings (course/DESIGN.md 7.6). The model scores each clause; the
  * overall score is computed here, in Java, so it is consistent and testable.
  *
  * <p>Only non-favorable findings count: {@code overall = round(0.6 × highest + 0.4 × average)}. Weighting the

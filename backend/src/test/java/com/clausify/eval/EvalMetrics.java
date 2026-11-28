@@ -15,7 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-/** The DESIGN.md 7.9 metrics. Pure functions, so they are unit-tested without the model. */
+/** The course/DESIGN.md 7.9 metrics. Pure functions, so they are unit-tested without the model. */
 public final class EvalMetrics {
 
     /** A finding matches a gold clause when its quote covers at least this share of the clause's words. */

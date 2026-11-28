@@ -29,7 +29,7 @@ public class Analysis {
     @EqualsAndHashCode.Exclude
     private Contract contract;
 
-    /** 0 to 100, computed in Java from the findings (DESIGN.md 7.6), not taken from the model. */
+    /** 0 to 100, computed in Java from the findings (course/DESIGN.md 7.6), not taken from the model. */
     @Column(name = "overall_score", nullable = false)
     private Integer overallScore;
 

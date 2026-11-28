@@ -1,6 +1,6 @@
 # AI evaluation
 
-How accurate Clausify's findings are (goal G2), measured as described in DESIGN.md 7.9 and tracked in #64.
+How accurate Clausify's findings are (goal G2), measured as described in course/DESIGN.md 7.9 and tracked in #64.
 
 | File | What it is |
 |---|---|
@@ -20,7 +20,7 @@ How accurate Clausify's findings are (goal G2), measured as described in DESIGN.
 - **Precision** (target at least 75%): the model's risky findings that are real gold clauses. This stops a model from reaching recall by flagging everything.
 - **Recall by category:** so one weak category can't hide in the average.
 - **Level agreement:** for found clauses, whether the model's level equals the gold level, and whether it's within one level.
-- **Overall level agreement:** contracts where the model's overall level (DESIGN.md 7.6) equals the level computed from the gold labels. Gold levels are scored as Low 20, Medium 55, High 85.
+- **Overall level agreement:** contracts where the model's overall level (course/DESIGN.md 7.6) equals the level computed from the gold labels. Gold levels are scored as Low 20, Medium 55, High 85.
 - **Cohen's kappa:** how much the two labelers agreed before discussing. Low kappa means the gold labels themselves are shaky.
 
 A finding **matches** a gold clause when the categories and the favorable flag are equal, and either its quote covers at least half of the gold clause's distinct words or the section references match (`Section 7.2`, `§ 7.2` and `7.2.` are the same). Each finding and each gold clause is used at most once, best match first. Every metric is shown per run, as a mean, and with a Wilson 95% interval over all runs pooled. A run where an analysis fails counts that contract's clauses as missed, so failures can't make the score look better.
