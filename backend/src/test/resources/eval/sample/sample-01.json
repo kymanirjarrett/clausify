@@ -1,0 +1,27 @@
+{
+  "id": "sample-01",
+  "source": "SYNTHETIC",
+  "sourceRef": null,
+  "labelerA": [
+    { "key": "3.2", "category": "PAYMENT_TERMS", "favorable": false, "level": "MEDIUM" },
+    { "key": "5.1", "category": "IP_RIGHTS", "favorable": false, "level": "HIGH" },
+    { "key": "6.1", "category": "NON_COMPETE", "favorable": false, "level": "HIGH" },
+    { "key": "7.2", "category": "LIABILITY", "favorable": false, "level": "HIGH" },
+    { "key": "9.3", "category": "TERMINATION", "favorable": true, "level": "LOW" }
+  ],
+  "labelerB": [
+    { "key": "3.2", "category": "PAYMENT_TERMS", "favorable": false, "level": "MEDIUM" },
+    { "key": "5.1", "category": "IP_RIGHTS", "favorable": false, "level": "MEDIUM" },
+    { "key": "6.1", "category": "NON_COMPETE", "favorable": false, "level": "HIGH" },
+    { "key": "7.2", "category": "LIABILITY", "favorable": false, "level": "HIGH" },
+    { "key": "9.3", "category": "TERMINATION", "favorable": true, "level": "LOW" }
+  ],
+  "gold": [
+    { "sectionRef": "3.2", "category": "PAYMENT_TERMS", "favorable": false, "level": "MEDIUM", "text": "Client shall pay invoices within sixty (60) days of receipt." },
+    { "sectionRef": "5.1", "category": "IP_RIGHTS", "favorable": false, "level": "HIGH", "text": "All work product is the sole property of Client upon creation." },
+    { "sectionRef": "6.1", "category": "NON_COMPETE", "favorable": false, "level": "HIGH", "text": "Contractor shall not provide services to any competitor of Client anywhere in the world for three (3) years." },
+    { "sectionRef": "7.2", "category": "LIABILITY", "favorable": false, "level": "HIGH", "text": "Contractor shall be liable for any and all damages arising from the Services." },
+    { "sectionRef": "9.3", "category": "TERMINATION", "favorable": true, "level": "LOW", "text": "Upon termination, Client shall pay for all Services performed through the termination date." }
+  ],
+  "notes": "Pipeline sample only. 5.1: labeler B said MEDIUM; agreed HIGH because ownership passes before payment."
+}

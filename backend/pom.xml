@@ -33,6 +33,7 @@
 		<springdoc.version>3.1.1</springdoc.version>
 		<pdfbox.version>3.0.8</pdfbox.version>
 		<java-diff-utils.version>4.18</java-diff-utils.version>
+		<surefire.excludedGroups>eval</surefire.excludedGroups>
 		<!-- Spring AI 2.0.x is built against Spring Boot 4.1 (2.1 targets Boot 4.2). -->
 		<spring-ai.version>2.0.2</spring-ai.version>
 		<!-- The version springdoc 3.1.1 is built with. Keep in step when upgrading springdoc. -->
@@ -195,6 +196,9 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
+					<!-- The AI evaluation calls Groq and spends quota, so it never runs in a normal build (DESIGN.md 7.9).
+					     Run it with -Dsurefire.excludedGroups= -Dgroups=eval; see docs/evaluation/README.md. -->
+					<excludedGroups>${surefire.excludedGroups}</excludedGroups>
 				</configuration>
 			</plugin>
 			<plugin>
