@@ -33,7 +33,9 @@
 		<springdoc.version>3.1.1</springdoc.version>
 		<pdfbox.version>3.0.8</pdfbox.version>
 		<java-diff-utils.version>4.18</java-diff-utils.version>
-		<surefire.excludedGroups>eval</surefire.excludedGroups>
+		<!-- Tests that call the real Groq API never run in a normal build: "eval" (DESIGN.md 7.9) and any live
+		     "groq" test. Opt in with -Dsurefire.excludedGroups= -Dgroups=eval (or groq). -->
+		<surefire.excludedGroups>eval,groq</surefire.excludedGroups>
 		<!-- Spring AI 2.0.x is built against Spring Boot 4.1 (2.1 targets Boot 4.2). -->
 		<spring-ai.version>2.0.2</spring-ai.version>
 		<!-- The version springdoc 3.1.1 is built with. Keep in step when upgrading springdoc. -->
@@ -202,8 +204,8 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<!-- Test coverage: instruments tests, writes target/site/jacoco/index.html on verify.
-				     No minimum is enforced until Sprint 3 (E-3). -->
+				<!-- Test coverage: instruments tests, writes target/site/jacoco/index.html on verify, and fails the build
+				     below the floors in the "check" execution (#114). -->
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>${jacoco.version}</version>
@@ -220,6 +222,34 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+					</execution>
+					<execution>
+						<!-- Baseline on 2026-11-27: 95.2% of lines, 82.1% of branches. The floors sit a few points
+						     below it, so coverage can't quietly slide; raise them as it grows (DESIGN.md: 80%+). -->
+						<id>check</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<rule>
+									<element>BUNDLE</element>
+									<limits>
+										<limit>
+											<counter>LINE</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.90</minimum>
+										</limit>
+										<limit>
+											<counter>BRANCH</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.75</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
