@@ -25,6 +25,7 @@ export class Landing {
   private readonly plate = viewChild.required<ElementRef<HTMLElement>>('plate');
   private readonly marker = viewChild.required<ElementRef<HTMLElement>>('marker');
   private readonly callout = viewChild.required<ElementRef<HTMLElement>>('callout');
+  private readonly quote = viewChild.required<ElementRef<HTMLElement>>('quote');
 
   /** The leader line from the flagged phrase to its revision, measured from the live layout. */
   protected readonly leader = signal<{ d: string; length: number } | null>(null);
@@ -46,8 +47,10 @@ export class Landing {
 
   constructor() {
     const destroyRef = inject(DestroyRef);
-    // Section links land below the fixed nav.
-    inject(ViewportScroller).setOffset([0, 96]);
+    // Section links land below the fixed nav. The scroller is app-wide, so the offset is reset on leaving.
+    const scroller = inject(ViewportScroller);
+    scroller.setOffset([0, 96]);
+    destroyRef.onDestroy(() => scroller.setOffset([0, 0]));
     afterNextRender(() => {
       // The word stays still for people who ask for reduced motion.
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -63,6 +66,7 @@ export class Landing {
       measure();
       const observer = new ResizeObserver(measure);
       observer.observe(this.plate().nativeElement);
+      observer.observe(this.quote().nativeElement);
       destroyRef.onDestroy(() => observer.disconnect());
     });
   }
@@ -71,7 +75,7 @@ export class Landing {
     const plate = this.plate().nativeElement.getBoundingClientRect();
     const from = this.marker().nativeElement.getBoundingClientRect();
     const to = this.callout().nativeElement.getBoundingClientRect();
-    const text = this.marker().nativeElement.closest('blockquote')!.getBoundingClientRect();
+    const text = this.quote().nativeElement.getBoundingClientRect();
     const x1 = from.left + from.width / 2 - plate.left;
     const y1 = from.top + from.height / 2 - plate.top;
     const y2 = to.top - plate.top;
@@ -92,8 +96,8 @@ export class Landing {
   }
 }
 
-/** Length of an M/H/V/L polyline, for the stroke-dash draw-in. */
-function pathLength(d: string): number {
+/** Length of an M/H/V/L polyline. */
+export function pathLength(d: string): number {
   const tokens = d.trim().split(/\s+/);
   let x = 0, y = 0, length = 0;
   for (let i = 0; i < tokens.length;) {

@@ -5,29 +5,31 @@
 .nav {
   padding: 0.6rem 0.6rem 0.6rem 1.1rem; border-radius: 1.25rem;
   background: rgb(20 24 28 / 0.68); border: 1px solid rgb(255 255 255 / 0.12);
-  backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+}
+/* Blur only where there is GPU headroom; phones get the solid tint, which reads the same over the dark photo. */
+@media (min-width: 768px) {
+  .nav { backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); }
 }
 .nav-link { border-radius: 4px; transition: color 160ms var(--ease-out-expo); }
 .nav-link:hover { color: #fff; }
 /* Focus rings stay visible on the dark glass. */
 .nav a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
-/* Pill buttons for the landing page only; the app keeps its square .btn. */
+/* Pill buttons for the landing page only; in the components layer so Tailwind utilities override them. */
+@layer components {
 .pill {
   display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.5rem; padding: 0 1.1rem;
   border-radius: 999px; border: 1px solid transparent; font-size: 0.9375rem; font-weight: 600;
   transition: background-color 160ms var(--ease-out-expo), border-color 160ms var(--ease-out-expo), transform 160ms var(--ease-out-expo);
 }
 .pill:active { transform: scale(0.98); }
-/* The nav keeps only Log in on phones. */
-.nav-cta { display: none; }
-@media (min-width: 640px) { .nav-cta { display: inline-flex; } }
 .pill-lg { min-height: 3.25rem; padding: 0 1.6rem; font-size: 1rem; }
 .pill-accent { background: var(--color-amber); color: var(--color-ink); }
 .pill-accent:hover { background: #e0913c; }
 .pill-outline { color: #fff; border-color: rgb(255 255 255 / 0.55); }
 .pill-outline:hover { background: rgb(255 255 255 / 0.1); border-color: #fff; }
 .pill:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+}
 
 /* Hero: the photo stays put while the sheet scrolls over it (sticky only where it fits one screen). */
 .hero { position: relative; isolation: isolate; min-height: 100svh; overflow: clip; background: var(--color-ink); }

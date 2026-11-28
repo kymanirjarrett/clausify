@@ -11,7 +11,7 @@
         <a routerLink="/app" class="pill pill-accent">My contracts <cl-icon name="arrowRight" [size]="18" /></a>
       } @else {
         <a routerLink="/login" class="pill pill-outline">Log in</a>
-        <a routerLink="/signup" class="pill pill-accent nav-cta">Create an account</a>
+        <a routerLink="/signup" class="pill pill-accent hidden sm:inline-flex">Create an account</a>
       }
     </div>
   </nav>
@@ -86,7 +86,7 @@
             <span class="dimension-line"></span>
             <span class="measure dimension-label bg-white px-2 text-ink-2">§ 7.2 Liability · risk 85 / 100</span>
           </div>
-          <blockquote class="mt-5 font-[450] leading-[1.75] text-[1.0625rem] text-ink">
+          <blockquote #quote class="mt-5 font-[450] leading-[1.75] text-[1.0625rem] text-ink">
             7.2&ensp;Contractor shall be liable to Client
             <mark class="flag" [class.flag-linked]="linked()">without limitation as to amount or type<span #marker class="flag-marker" aria-hidden="true"></span></mark>,
             including for indirect, incidental, consequential, and punitive damages.
