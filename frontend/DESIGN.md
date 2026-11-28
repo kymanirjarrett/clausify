@@ -313,7 +313,7 @@ The drop zone is a sheet with a dashed strong-hairline border that turns blue on
 
 ## Landing page (marketing surface)
 
-The landing page (`features/landing`) is a deliberate exception to the Specification Sheet world, chosen in #148 after a review of sprintax.com's layout. The signed-in app keeps every rule above.
+The landing page (`features/landing`) is a deliberate exception to the Specification Sheet world, chosen in #148. The signed-in app keeps every rule above.
 
 - **Hero:** a full-bleed photo (`public/images/hero-freelancer-*.webp`, credited in the footer) under a dark ink overlay, with a floating dark-glass nav. On desktop the hero stays pinned while a vellum sheet with rounded top corners slides up over it.
 - **Headline:** white, with one amber word that cycles once through risk categories, then rests. Screen readers get a fixed sentence; reduced motion keeps the word still.

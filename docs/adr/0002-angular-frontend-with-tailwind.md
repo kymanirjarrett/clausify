@@ -17,5 +17,5 @@ Build the frontend as an **Angular** single-page app in TypeScript, styled with 
 ## Consequences
 
 - The Next.js code in `legacy/nextjs-prototype/` is reference only and is deleted once the Angular app reaches parity.
-- Teammates need to learn Angular's patterns (components, services, signals or RxJS).
+- Contributors need to learn Angular's patterns (components, services, signals or RxJS).
 - Without a component library, accessible widgets (dialogs, menus) must be built carefully or taken from a headless library such as Angular CDK.
