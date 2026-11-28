@@ -25,12 +25,17 @@ docker network create "$NET" >/dev/null
 docker run -d --name "$DB" --network "$NET" \
   -e MYSQL_ROOT_PASSWORD=smoke-root -e MYSQL_DATABASE=clausify mysql:8.4 >/dev/null
 
+# The image first runs a temporary server (port 0) to initialize, then restarts on 3306. A ping can succeed against
+# the temporary one, so wait for the final server's "ready" line before pinging.
 echo "Waiting for MySQL..."
-for _ in $(seq 1 60); do
-  if docker exec "$DB" mysqladmin ping -uroot -psmoke-root --silent >/dev/null 2>&1; then break; fi
+for _ in $(seq 1 90); do
+  if docker logs "$DB" 2>&1 | grep -q 'ready for connections.*port: 3306' \
+     && docker exec "$DB" mysqladmin ping -uroot -psmoke-root --silent >/dev/null 2>&1; then
+    mysql_ready=1; break
+  fi
   sleep 2
 done
-docker exec "$DB" mysqladmin ping -uroot -psmoke-root --silent >/dev/null
+[ "${mysql_ready:-}" = 1 ] || { echo "MySQL did not become ready"; docker logs "$DB" 2>&1 | tail -30; exit 1; }
 
 docker run -d --name "$API" --network "$NET" -p "$PORT:8080" \
   -e SPRING_PROFILES_ACTIVE=prod \
