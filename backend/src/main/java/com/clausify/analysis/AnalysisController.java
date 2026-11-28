@@ -5,6 +5,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,16 +16,33 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Analysis", description = "Read a contract's AI risk analysis (FR-6) and compare two versions (FR-10)")
+@Tag(name = "Analysis", description = "Read a contract's AI risk analysis (FR-6), compare two versions (FR-10), and download a report (FR-11)")
 @RestController
 public class AnalysisController {
 
     private final AnalysisResultService analysisResultService;
     private final ComparisonService comparisonService;
+    private final ReportService reportService;
 
-    public AnalysisController(AnalysisResultService analysisResultService, ComparisonService comparisonService) {
+    public AnalysisController(AnalysisResultService analysisResultService, ComparisonService comparisonService,
+                              ReportService reportService) {
         this.analysisResultService = analysisResultService;
         this.comparisonService = comparisonService;
+        this.reportService = reportService;
+    }
+
+    /** FR-11: the analysis as a PDF download. 404 if missing or not yours; 409 while it is not ANALYZED. */
+    @Operation(summary = "Download a contract's report",
+            description = "PDF with the overall score, risk by category, every finding with its revision, and the disclaimer.")
+    @GetMapping(value = "/api/contracts/{id}/report", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> report(@Parameter(description = "Contract id") @PathVariable @Positive Long id,
+                                         @AuthenticationPrincipal Jwt jwt) {
+        ReportService.Report report = reportService.render(id, CurrentUser.id(jwt));
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.attachment().filename(report.filename()).build().toString())
+                .body(report.pdf());
     }
 
     /**
