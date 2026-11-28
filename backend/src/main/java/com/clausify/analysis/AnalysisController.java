@@ -9,16 +9,19 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Analysis", description = "Read a contract's AI risk analysis (FR-6)")
+@Tag(name = "Analysis", description = "Read a contract's AI risk analysis (FR-6) and compare two versions (FR-10)")
 @RestController
 public class AnalysisController {
 
     private final AnalysisResultService analysisResultService;
+    private final ComparisonService comparisonService;
 
-    public AnalysisController(AnalysisResultService analysisResultService) {
+    public AnalysisController(AnalysisResultService analysisResultService, ComparisonService comparisonService) {
         this.analysisResultService = analysisResultService;
+        this.comparisonService = comparisonService;
     }
 
     /**
@@ -31,5 +34,19 @@ public class AnalysisController {
     public AnalysisResponse get(@Parameter(description = "Contract id") @PathVariable @Positive Long id,
                                 @AuthenticationPrincipal Jwt jwt) {
         return analysisResultService.get(id, CurrentUser.id(jwt));
+    }
+
+    /**
+     * FR-10: compares the original ({@code id}) with a revised version ({@code otherId}). Both must be yours and
+     * ANALYZED. Makes no AI call. 400 if the ids match, 404 if either is missing or not yours, 409 if either is not
+     * analyzed yet.
+     */
+    @Operation(summary = "Compare two versions of a contract",
+            description = "Text diff by sentence and word, the overall risk change, and per-category risk changes.")
+    @PostMapping("/api/contracts/{id}/compare/{otherId}")
+    public ComparisonResponse compare(@Parameter(description = "Original contract id") @PathVariable @Positive Long id,
+                                      @Parameter(description = "Revised contract id") @PathVariable @Positive Long otherId,
+                                      @AuthenticationPrincipal Jwt jwt) {
+        return comparisonService.compare(id, otherId, CurrentUser.id(jwt));
     }
 }

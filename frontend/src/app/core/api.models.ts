@@ -90,6 +90,38 @@ export interface AnalysisResult {
   favorable: Finding[];
 }
 
+export interface DiffSegment {
+  text: string;
+  changed: boolean;
+}
+
+/** One stretch of text in a version comparison, as each version shows it. */
+export interface DiffRow {
+  type: 'EQUAL' | 'CHANGED' | 'ADDED' | 'REMOVED';
+  original: DiffSegment[];
+  revised: DiffSegment[];
+}
+
+export interface ComparedVersion {
+  id: number;
+  filename: string;
+  uploadedAt: string;
+  overallScore: number;
+  riskLevel: RiskLevel;
+}
+
+/** POST /api/contracts/{id}/compare/{otherId} (FR-10). A null category score means no risky finding there. */
+export interface Comparison {
+  original: ComparedVersion;
+  revised: ComparedVersion;
+  scoreChange: number;
+  similarity: number;
+  unrelated: boolean;
+  categoryChanges: { category: RiskCategory; before: number | null; after: number | null }[];
+  counts: { added: number; removed: number; changed: number };
+  rows: DiffRow[];
+}
+
 export interface Page<T> {
   content: T[];
   page: number;

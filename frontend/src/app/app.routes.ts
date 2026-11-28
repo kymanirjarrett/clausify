@@ -11,6 +11,7 @@ export const routes: Routes = [
     loadComponent: () => import('./features/shell/shell').then((m) => m.Shell),
     children: [
       { path: '', title: 'Contracts · Clausify', loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard) },
+      { path: 'contracts/:id/compare/:otherId', title: 'Compare versions · Clausify', loadComponent: () => import('./features/compare/compare').then((m) => m.ComparePage) },
       { path: 'contracts/:id', title: 'Contract · Clausify', loadComponent: () => import('./features/contract/contract-detail').then((m) => m.ContractDetailPage) },
       { path: 'account', title: 'Account · Clausify', loadComponent: () => import('./features/account/account').then((m) => m.Account) },
     ],

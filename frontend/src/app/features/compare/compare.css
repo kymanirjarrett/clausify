@@ -1,0 +1,33 @@
+:host { display: block; }
+
+.title-block { border: 1px solid var(--color-rule-strong); background: var(--color-sheet); overflow: hidden; }
+.title-block > div { padding: 0.8rem 1rem; margin: -1px 0 0 -1px; border-left: 1px solid var(--color-rule); border-top: 1px solid var(--color-rule); min-width: 0; }
+.title-block dt { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-3); }
+.title-block dd:first-of-type { margin-top: 0.3rem; }
+
+.schedule th { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 400; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--color-ink-3); padding: 0.5rem 0; }
+.schedule td { padding: 0.55rem 0; border-top: 1px solid var(--color-rule); }
+
+/* Diff: unchanged text runs full width; changed rows split into original and revised columns. */
+.diff-head { display: none; font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--color-ink-3); }
+.diff { border-top: 1px solid var(--color-rule-strong); }
+.diff > li { border-bottom: 1px solid var(--color-rule); padding: 0.75rem 0; line-height: 1.6; }
+.diff-equal { color: var(--color-ink-3); font-size: 0.9375rem; }
+.diff-row { display: grid; gap: 0.6rem; }
+.side { padding: 0.6rem 0.8rem; background: var(--color-sheet); border-left: 2px solid var(--color-rule-strong); }
+.diff-row[data-type='CHANGED'] .side:last-child, .diff-row[data-type='ADDED'] .side:last-child { border-left-color: var(--color-blue); }
+.diff-row[data-type='REMOVED'] .side:first-child, .diff-row[data-type='CHANGED'] .side:first-child { border-left-color: var(--color-ink-3); }
+del { color: var(--color-ink-2); text-decoration: line-through; text-decoration-thickness: 1px; background: var(--color-ghost); }
+ins { text-decoration: none; background: var(--color-blue-wash); color: var(--color-blue-ink); box-shadow: 0 1px 0 var(--color-blue); }
+/* Names each side on phones, where the column headings are hidden; screen-reader only on wide screens. */
+.side-label { display: block; margin-bottom: 0.25rem; font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-3); }
+.empty { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-ink-3); }
+
+@media (min-width: 768px) {
+  .diff-head { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding-bottom: 0.4rem; }
+  .diff-row { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .side-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}

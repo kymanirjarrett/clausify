@@ -69,6 +69,22 @@
       <p class="measure text-ink-3">{{ analysis() ? 'Analyzed ' + formatDateTime(c.analyzedAt) : 'Not yet available' }}</p>
     </div>
     @if (analysis(); as a) {
+      @if (compareOptions().length) {
+        <!-- FR-10: pick a revised version of this contract to compare with. -->
+        <form class="mt-5 flex flex-wrap items-end gap-3" (submit)="$event.preventDefault(); compare(c.id)">
+          <div class="min-w-0 grow sm:max-w-[24rem]">
+            <label for="compare-with" class="text-sm font-medium">Compare with…</label>
+            <select id="compare-with" class="field-input mt-1.5" [value]="compareWith() ?? ''"
+                    (change)="compareWith.set($any($event.target).value ? +$any($event.target).value : null)">
+              <option value="">Choose another analyzed contract</option>
+              @for (o of compareOptions(); track o.id) {
+                <option [value]="o.id">{{ o.filename }} · {{ contractNumber(o.id) }}</option>
+              }
+            </select>
+          </div>
+          <button type="submit" class="btn btn-secondary" [disabled]="compareWith() === null">Compare versions</button>
+        </form>
+      }
       <cl-analysis-results [analysis]="a" />
     } @else if (analysisError(); as e) {
       <div class="mt-6 max-w-[44rem]" role="alert">

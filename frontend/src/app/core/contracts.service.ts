@@ -1,7 +1,7 @@
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AnalysisResult, ContractDetail, ContractSummary, Page } from './api.models';
+import { AnalysisResult, Comparison, ContractDetail, ContractSummary, Page } from './api.models';
 
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
@@ -27,6 +27,11 @@ export class ContractsService {
   /** FR-7: queues a FAILED contract for analysis again (202). 409 if it did not fail; 429 shares the upload budget. */
   retry(id: number): Observable<ContractSummary> {
     return this.http.post<ContractSummary>(`/api/contracts/${id}/retry`, null);
+  }
+
+  /** FR-10: both must be analyzed (409 otherwise). Makes no AI call. */
+  compare(id: number, otherId: number): Observable<Comparison> {
+    return this.http.post<Comparison>(`/api/contracts/${id}/compare/${otherId}`, null);
   }
 
   /** 409 while the contract is not ANALYZED yet; call it once the status says ANALYZED. */
