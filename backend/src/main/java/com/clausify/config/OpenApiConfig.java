@@ -25,7 +25,7 @@ public class OpenApiConfig {
                         .title("Clausify API")
                         .version("v1")
                         .description("""
-                                AI contract analysis for freelancers (IT4045C group project).
+                                AI contract analysis for freelancers.
 
                                 To call protected endpoints: register or log in, copy the `token` from the response, \
                                 click **Authorize**, and paste it."""))

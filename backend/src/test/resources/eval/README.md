@@ -1,6 +1,6 @@
 # AI evaluation set
 
-Labeled contracts for the DESIGN.md 7.9 evaluation (#64). How to label and the file format: `docs/evaluation/labeling-guide.md`.
+Labeled contracts for the course/DESIGN.md 7.9 evaluation (#64). How to label and the file format: `docs/evaluation/labeling-guide.md`.
 
 - `dev/`: 10 contracts for prompt tuning.
 - `test/`: 30 held-out contracts for reported results. Frozen once first run.

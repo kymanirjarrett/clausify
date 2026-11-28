@@ -34,7 +34,7 @@ public class ClauseFinding {
     @Column(nullable = false, length = 30)
     private RiskCategory category;
 
-    /** The model's 0 to 100 score for this clause (DESIGN.md 7.7). */
+    /** The model's 0 to 100 score for this clause (course/DESIGN.md 7.7). */
     @Column(name = "risk_score", nullable = false)
     private Integer riskScore;
 

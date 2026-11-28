@@ -5,7 +5,7 @@
 
 ## Context
 
-Clausify is being rebuilt from a Next.js + Supabase prototype into a Spring Boot + Angular app by a four-person team over one semester. Many decisions were made in planning chats that teammates and graders cannot see. Without a written record, the same questions get re-argued, and the reasons behind the design are lost.
+Clausify is being rebuilt from a Next.js + Supabase prototype into a Spring Boot + Angular app by a small team. Many decisions were made in planning chats that other contributors and reviewers cannot see. Without a written record, the same questions get re-argued, and the reasons behind the design are lost.
 
 ## Decision
 

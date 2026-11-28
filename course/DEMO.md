@@ -20,7 +20,7 @@ A five-minute walkthrough of Clausify for the final presentation (#60). It uses 
 | 1:00 | Upload `risky-consulting-agreement.pdf` | The PDF is read in memory and never stored. Analysis runs in the background; the status moves from Analyzing to Analyzed on its own. |
 | 1:30 | Open the prepared analyzed contract | The overall score, gauge, risk by category, and findings, riskiest first. |
 | 2:00 | Filter **High**, open a finding, click **Copy** | Each finding quotes the clause, explains why it matters, and gives replacement wording. Clauses in your favor are listed at the end. |
-| 2:30 | **Compare to standard** on the non-compete | The three closest clauses from the 104-clause library, each marked favorable or unfavorable. Mention [ADR 0012](adr/0012-word-based-embeddings-for-clause-similarity.md): the neural model didn't fit the free server's 512 MB, so similarity is word-based. |
+| 2:30 | **Compare to standard** on the non-compete | The three closest clauses from the 104-clause library, each marked favorable or unfavorable. Mention [ADR 0012](../docs/adr/0012-word-based-embeddings-for-clause-similarity.md): the neural model didn't fit the free server's 512 MB, so similarity is word-based. |
 | 3:00 | **Library**, filter IP rights | Fair and unfair wording side by side. |
 | 3:20 | **Compare with…** the revised version | The word-level diff and the risk change, per category. |
 | 3:50 | **Download report** | The PDF a freelancer could send to an advisor, with the disclaimer on page 1. |

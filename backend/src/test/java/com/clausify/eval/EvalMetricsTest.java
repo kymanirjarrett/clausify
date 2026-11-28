@@ -21,7 +21,7 @@ import static com.clausify.analysis.RiskLevel.MEDIUM;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
-/** The DESIGN.md 7.9 metrics on small hand-worked examples. */
+/** The course/DESIGN.md 7.9 metrics on small hand-worked examples. */
 class EvalMetricsTest {
 
     private static final GoldClause LIABILITY_GOLD = new GoldClause("7.2", LIABILITY, false, HIGH,
@@ -82,7 +82,7 @@ class EvalMetricsTest {
 
     @Test
     void wilsonIntervalMatchesTheDesignDocExample() {
-        // DESIGN.md 7.9: 85% recall over about 120 clauses gives roughly 78% to 90%.
+        // course/DESIGN.md 7.9: 85% recall over about 120 clauses gives roughly 78% to 90%.
         double[] interval = new Ratio(102, 120).wilson95();
         assertThat(interval[0]).isCloseTo(0.776, within(0.005));
         assertThat(interval[1]).isCloseTo(0.903, within(0.005));

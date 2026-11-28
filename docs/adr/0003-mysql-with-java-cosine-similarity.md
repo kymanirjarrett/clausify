@@ -5,7 +5,7 @@
 
 ## Context
 
-The prototype used Supabase Postgres with pgvector to compare contract clauses against standard clauses. The course requires MySQL for its labs, and the graded Flyway lab (`users`, `addresses`, `profiles`) already lives in this repo, so the project must run on MySQL.
+The prototype used Supabase Postgres with pgvector to compare contract clauses against standard clauses. The project targets MySQL, and its existing Flyway migrations (`users`, `addresses`, `profiles`) are written for it.
 
 MySQL has a `VECTOR` type, but only from version 9.0, and the function that compares vectors, `DISTANCE()`, is "available only for users of MySQL HeatWave on OCI and MySQL AI; it is not included in MySQL Commercial or Community distributions" (MySQL reference manual). Our local database is MySQL 8.4, and the hosted one (ADR 0004) is standard MySQL, so the database cannot rank vectors for us.
 

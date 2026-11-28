@@ -11,7 +11,7 @@ Scope: the whole Angular frontend. Landing is Persuade; sign-up, login, dashboar
 
 Audience and job: freelancers and small business owners with a contract PDF and a signing deadline. Landing must make the offer intelligible and get them to sign up. App priorities: status at a glance, fast upload. Avoid: alarmist (red-alert energy), stuffy legal (dusty law-firm look). Reference for hero ambition: unicorn.studio (live, interactive WebGL hero fields).
 
-Sprint 1 truth: analysis results, retry, delete, comparison, reports, and account statistics are not in the API yet. Show honest states for them; never fake findings as real results. The landing's sample clause and callout are labeled as a sample.
+Honest states: never present a capability the API does not support (password reset is not built) and never fake findings as real results. The landing's sample clause and callout are labeled as a sample.
 
 ## Direction contract
 

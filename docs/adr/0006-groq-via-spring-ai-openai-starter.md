@@ -5,7 +5,7 @@
 
 ## Context
 
-Contract analysis needs a capable LLM that returns structured JSON, at no cost during the semester. The prototype used Groq's `llama-3.3-70b-versatile`, which Groq shut down on 2026-08-16 for free and developer tiers, naming `openai/gpt-oss-120b` as a replacement (Groq deprecations page). Groq has no official Java SDK, but its API is OpenAI-compatible.
+Contract analysis needs a capable LLM that returns structured JSON, at no cost. The prototype used Groq's `llama-3.3-70b-versatile`, which Groq shut down on 2026-08-16 for free and developer tiers, naming `openai/gpt-oss-120b` as a replacement (Groq deprecations page). Groq has no official Java SDK, but its API is OpenAI-compatible.
 
 Similarity search (ADR 0003) also needs text embeddings, and Groq's free tier does not provide an embedding model.
 

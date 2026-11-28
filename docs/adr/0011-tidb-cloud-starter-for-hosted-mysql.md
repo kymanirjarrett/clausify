@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-11-26
-- **Supersedes:** [0004](0004-aiven-free-tier-for-hosted-mysql.md)
+- **Supersedes:** [0004](../../course/adr/0004-aiven-free-tier-for-hosted-mysql.md)
 
 ## Context
 
