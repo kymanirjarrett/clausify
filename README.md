@@ -10,16 +10,20 @@
 
 Clausify helps freelancers and small business owners understand legal contracts by using AI to identify risky clauses, suggest negotiation points, and compare terms against industry standards.
 
-## 🚀 Features (planned)
+## 🚀 Features
 
-Clausify is being rebuilt from a Next.js prototype into a Spring Boot + Angular application. Target features:
+Upload a contract PDF and Clausify reads it the way a careful reviewer would, from the freelancer's side:
 
-- **AI risk analysis:** upload a contract PDF and get an overall risk score (High / Medium / Low) plus flagged clauses across eight categories: payment terms, liability, IP rights, termination, non-compete, confidentiality, jurisdiction, and indemnification
-- **Negotiation suggestions:** concrete revisions for unfavourable clauses
-- **Standard-clause comparison:** semantic similarity against a library of standard contract terms
-- **Privacy by design:** the PDF is never stored; only its extracted text is kept. For analysis, that text is sent to Groq, a third-party AI provider.
-- **Honest limits:** on Groq's free tier, a long contract is analyzed in parts at about one part per minute, so a 10-page contract takes roughly 2 to 3 minutes. Contracts over about 26 pages are not analyzed.
-- **Zero cost:** runs entirely on free tiers
+- **AI risk analysis (FR-5, FR-6):** an overall risk score from 0 to 100 (Low, Medium, High) and every flagged clause across eight categories: payment terms, liability, indemnification, IP rights, termination, non-compete, confidentiality, and jurisdiction. Each finding quotes the clause, explains why it matters, and suggests fairer wording you can **Copy**. Clauses in your favor are listed separately. Analysis runs in the background; a failed one can be **retried** without uploading again (FR-7).
+- **Compare to standard (FR-9):** see the three standard clauses most similar to any finding, each marked favorable or unfavorable, and browse a 104-clause **library** by category.
+- **Compare versions (FR-10):** diff a revised contract against the original, sentence by sentence and word by word, with the change in overall and per-category risk. Unrelated documents are flagged first.
+- **PDF report (FR-11):** download the analysis, with the legal disclaimer, as `Clausify_Report_<name>.pdf`.
+- **Account (FR-12):** edit your name and phone; see contracts uploaded, analyzed, and your average risk.
+- **Privacy by design:** the PDF is never stored, only its extracted text, and every contract and analysis is visible only to its owner. For analysis, the text is sent to Groq, a third-party AI provider.
+- **Honest limits:** on Groq's free tier a long contract is analyzed in parts at about one part per minute, so a 10-page contract takes roughly 2 to 3 minutes. Contracts over about 26 pages are not analyzed.
+- **Zero cost:** runs entirely on free tiers.
+
+A five-minute walkthrough for presenting it is in [docs/DEMO.md](docs/DEMO.md).
 
 ## 🛠️ Tech stack
 
@@ -96,7 +100,10 @@ cd backend
 ./mvnw verify                         # compile, run all tests, coverage report (Docker must be running)
 cd ../frontend
 npx ng test --watch=false             # frontend unit tests (Vitest)
+npm run e2e                           # Playwright journeys; needs the API running (see frontend/e2e/README.md)
 ```
+
+The build fails if backend coverage drops below 90% of lines or 75% of branches. The AI accuracy evaluation calls Groq, so it is not part of the build; see [docs/evaluation/](docs/evaluation/README.md).
 
 ### Configuration
 
@@ -144,18 +151,22 @@ The browser only ever talks to Vercel, which proxies API calls to Render, so the
 
 ## 🤝 Contributing
 
-Clausify is closed source and does not accept outside contributions. The team workflow (issues, branch names, Conventional Commits, PR checks, reviews, lab tagging) is in [CLAUDE.md](CLAUDE.md). Every PR runs the backend tests (against MySQL) and the frontend tests and production build in GitHub Actions.
+Clausify is closed source and does not accept outside contributions. The team workflow (issues, branch names, Conventional Commits, PR checks, reviews, lab tagging) is in [CLAUDE.md](CLAUDE.md). Every PR runs, in GitHub Actions: the backend tests against MySQL with a coverage floor, the frontend unit tests and production build, the Playwright journeys against the real API, and, when backend or deploy files change, a build and smoke test of the Render image.
 
 ## 🗺️ Roadmap
 
 - [x] Spring Boot backend with Flyway migrations (course lab)
 - [x] Local and deployed configuration, CI, architecture decision records
-- [x] Authentication: register, login, JWT
-- [x] Contract upload with in-memory text extraction, contract list and detail
-- [ ] AI analysis with Groq, risk scoring, flagged clauses
-- [ ] Standard-clause similarity search
-- [x] Angular frontend: landing, sign-up and login, dashboard with upload, contract detail, account
-- [x] Deployment (Render, Vercel, TiDB Cloud)
+- [x] Authentication: register, login, JWT, rate limiting
+- [x] Contract upload with in-memory text extraction, contract list, detail, and delete
+- [x] AI analysis with Groq in the background, risk scoring, flagged clauses, retry
+- [x] Analysis results screen with filters, Copy, and favorable clauses
+- [x] Standard-clause library and similarity (word-based, [ADR 0012](docs/adr/0012-word-based-embeddings-for-clause-similarity.md))
+- [x] Version comparison and PDF reports
+- [x] Account details and statistics
+- [x] Deployment (Render, Vercel, TiDB Cloud) with an image smoke test
+- [x] Playwright end-to-end tests and coverage floors
+- [ ] AI accuracy evaluation: harness built; the team is labeling the contract set ([#64](https://github.com/kymanirjarrett/clausify/issues/64))
 
 ## 👥 Team
 
