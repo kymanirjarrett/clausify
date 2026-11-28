@@ -1,4 +1,4 @@
-import { HttpClient, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AnalysisResult, Comparison, ContractDetail, ContractSummary, Page } from './api.models';
@@ -29,6 +29,11 @@ export class ContractsService {
     return this.http.post<ContractSummary>(`/api/contracts/${id}/retry`, null);
   }
 
+  /** FR-11: the report PDF with its response headers, so the caller can read the file name. 409 until ANALYZED. */
+  report(id: number): Observable<HttpResponse<Blob>> {
+    return this.http.get(`/api/contracts/${id}/report`, { responseType: 'blob', observe: 'response' });
+  }
+
   /** FR-10: both must be analyzed (409 otherwise). Makes no AI call. */
   compare(id: number, otherId: number): Observable<Comparison> {
     return this.http.post<Comparison>(`/api/contracts/${id}/compare/${otherId}`, null);
@@ -53,6 +58,12 @@ export function validatePdf(file: File): string | null {
     return 'This file is empty.';
   }
   return null;
+}
+
+/** The name from a Content-Disposition header, or a fallback when it is missing or unreadable. */
+export function downloadName(disposition: string | null, fallback: string): string {
+  const match = disposition?.match(/filename="?([^";]+)"?/i);
+  return match ? match[1] : fallback;
 }
 
 export function formatBytes(bytes: number): string {

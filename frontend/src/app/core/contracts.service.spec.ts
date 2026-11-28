@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MAX_UPLOAD_BYTES, formatBytes, validatePdf } from './contracts.service';
+import { MAX_UPLOAD_BYTES, downloadName, formatBytes, validatePdf } from './contracts.service';
 
 const file = (name: string, size: number, type = 'application/pdf') =>
   ({ name, size, type }) as File;
@@ -25,5 +25,17 @@ describe('formatBytes', () => {
     expect(formatBytes(512)).toBe('512 B');
     expect(formatBytes(2048)).toBe('2 KB');
     expect(formatBytes(1_887_437)).toBe('1.8 MB');
+  });
+});
+
+describe('downloadName', () => {
+  it('reads the file name from Content-Disposition', () => {
+    expect(downloadName('attachment; filename="Clausify_Report_NDA_v1.pdf"', 'x.pdf')).toBe('Clausify_Report_NDA_v1.pdf');
+    expect(downloadName('attachment; filename=Clausify_Report_NDA.pdf', 'x.pdf')).toBe('Clausify_Report_NDA.pdf');
+  });
+
+  it('falls back when the header is missing or has no name', () => {
+    expect(downloadName(null, 'Clausify_Report.pdf')).toBe('Clausify_Report.pdf');
+    expect(downloadName('attachment', 'Clausify_Report.pdf')).toBe('Clausify_Report.pdf');
   });
 });

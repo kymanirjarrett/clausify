@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AnalysisResult, ContractDetail, ContractSummary } from '../../core/api.models';
-import { ContractsService, formatBytes } from '../../core/contracts.service';
+import { ContractsService, downloadName, formatBytes } from '../../core/contracts.service';
 import { ApiError, toApiError } from '../../core/problem';
 import { contractNumber, formatDateTime } from '../../shared/format';
 import { Icon } from '../../shared/icon';
@@ -39,6 +39,8 @@ export class ContractDetailPage {
   protected readonly compareOptions = signal<ContractSummary[]>([]);
   protected readonly compareWith = signal<number | null>(null);
   private readonly router = inject(Router);
+  protected readonly downloading = signal(false);
+  protected readonly downloadError = signal<string | null>(null);
   protected readonly retrying = signal(false);
   protected readonly retryError = signal<string | null>(null);
   private timer: ReturnType<typeof setTimeout> | undefined;
@@ -117,6 +119,27 @@ export class ContractDetailPage {
     if (otherId !== null) {
       void this.router.navigate(['/app/contracts', id, 'compare', otherId]);
     }
+  }
+
+  /** FR-11: fetch the PDF with the auth header, then hand it to the browser as a file download. */
+  protected downloadReport(contract: ContractDetail): void {
+    this.downloading.set(true);
+    this.downloadError.set(null);
+    this.contracts.report(contract.id).subscribe({
+      next: (response) => {
+        this.downloading.set(false);
+        const url = URL.createObjectURL(response.body!);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = downloadName(response.headers.get('Content-Disposition'), 'Clausify_Report.pdf');
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      },
+      error: (error) => {
+        this.downloading.set(false);
+        this.downloadError.set(toApiError(error).message);
+      },
+    });
   }
 
   protected loadAnalysis(id: number): void {
