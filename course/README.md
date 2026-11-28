@@ -11,7 +11,7 @@ Files that exist only for the semester's group project and team workflow. None o
 | `github/` | The team's PR template (inactive here; GitHub only reads it from `.github/`) |
 | `adr/0004-*.md` | Superseded decision (Aiven MySQL, replaced by ADR 0011) |
 
-Before deleting this folder, move anything still referenced elsewhere: code comments cite `course/DESIGN.md` sections 7.6 (risk scoring), 7.7 (AI JSON contract), and 7.9 (evaluation).
+The sections the code relies on (risk scoring, the AI JSON contract, the evaluation method) are copied to `docs/spec.md`, so nothing outside this folder depends on it. Before deleting it, update the two pointers in CLAUDE.md.
 
 ## Deleted submission tags
 

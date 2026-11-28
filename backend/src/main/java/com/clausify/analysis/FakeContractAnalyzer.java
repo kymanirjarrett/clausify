@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * network calls, and needs no API key (CLAUDE.md, "AI integration"). It lives in {@code src/main} because local
  * runs use it. It deliberately has no Spring AI types.
  *
- * <p>The scores match the worked example in course/DESIGN.md 7.6: risky findings of 85, 78, and 55 plus one favorable
+ * <p>The scores match the worked example in docs/spec.md, Risk scoring: risky findings of 85, 78, and 55 plus one favorable
  * finding of 20, which gives an overall score of 80 (High).
  */
 @Component

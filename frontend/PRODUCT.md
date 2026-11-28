@@ -2,7 +2,7 @@
 
 <!-- impeccable:product-schema 1 -->
 
-Visual and product context for the Angular frontend. `course/DESIGN.md` is the course design document (requirements, UML, architecture), not a visual design system; this folder's `DESIGN.md` (when written) is the visual one.
+Visual and product context for the Angular frontend. This folder's `DESIGN.md` is the visual system; the rules the code implements are in `docs/spec.md`.
 
 ## Platform
 

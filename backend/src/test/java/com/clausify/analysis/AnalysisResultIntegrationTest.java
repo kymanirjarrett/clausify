@@ -65,7 +65,7 @@ class AnalysisResultIntegrationTest {
         bob = newUser("bob");
     }
 
-    /** course/DESIGN.md 7.6 example: 85, 78, 55 risky and 20 favorable give 80, High. */
+    /** docs/spec.md, Risk scoring example: 85, 78, 55 risky and 20 favorable give 80, High. */
     @Test
     void analyzedContractReturnsScoreCategoriesDocumentAndFindingsRiskiestFirst() throws Exception {
         Contract contract = analyzed(maria,

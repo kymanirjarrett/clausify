@@ -18,7 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-/** Loads a labeled split, runs an analyzer over it several times, and renders the course/DESIGN.md 7.9 report. */
+/** Loads a labeled split, runs an analyzer over it several times, and renders the docs/spec.md, Evaluation report. */
 final class EvaluationRunner {
 
     private static final JsonMapper JSON = JsonMapper.builder().build();
@@ -84,7 +84,7 @@ final class EvaluationRunner {
                 .append("| Labeler agreement (Cohen's kappa) | ")
                 .append(format(EvalMetrics.cohensKappa(cases.stream().map(Case::gold).toList()))).append(" |\n\n");
 
-        md.append("## Metrics\n\nTargets from course/DESIGN.md 7.9: recall at least 85%, precision at least 75%.\n\n")
+        md.append("## Metrics\n\nTargets from docs/spec.md, Evaluation: recall at least 85%, precision at least 75%.\n\n")
                 .append("| Metric | ").append(runHeaders(runs.size())).append(" Mean | Pooled 95% CI |\n")
                 .append("|---|").append("---:|".repeat(runs.size())).append("---:|---|\n");
         row(md, "Recall", runs.stream().map(r -> r.scores().recall()).toList());

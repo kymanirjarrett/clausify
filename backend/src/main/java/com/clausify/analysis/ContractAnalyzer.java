@@ -1,7 +1,7 @@
 package com.clausify.analysis;
 
 /**
- * Reads a contract's text and returns its risky and favorable clauses (course/DESIGN.md 7.7).
+ * Reads a contract's text and returns its risky and favorable clauses (docs/spec.md, AI analysis contract).
  *
  * <p>Two implementations: {@code GroqContractAnalyzer} in the {@code prod} profile (the only class allowed to
  * call an LLM) and {@link FakeContractAnalyzer} everywhere else, so local runs and tests need no API key.
