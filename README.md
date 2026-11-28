@@ -30,7 +30,7 @@ Clausify is being rebuilt from a Next.js prototype into a Spring Boot + Angular 
 | Database | MySQL: Docker locally, TiDB Cloud Starter (MySQL compatible, free) when deployed |
 | Migrations | Flyway |
 | AI | Groq `openai/gpt-oss-120b` through Spring AI's OpenAI starter |
-| Embeddings | `all-MiniLM-L6-v2` via Spring AI ONNX Transformers, running inside the API |
+| Embeddings | Word-based hashing embedder inside the API, no model ([ADR 0012](docs/adr/0012-word-based-embeddings-for-clause-similarity.md)) |
 | PDF | Apache PDFBox |
 | Auth | BCrypt passwords, stateless JWT |
 | Hosting | Vercel (frontend), Render (API, Docker) |

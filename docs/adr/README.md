@@ -19,8 +19,9 @@ We use Michael Nygard's format: **Title, Status, Context, Decision, Consequences
 | [0003](0003-mysql-with-java-cosine-similarity.md) | MySQL with cosine similarity in Java | Accepted |
 | [0004](0004-aiven-free-tier-for-hosted-mysql.md) | Aiven free tier for hosted MySQL | Superseded by 0011 |
 | [0005](0005-extract-text-do-not-store-pdfs.md) | Extract text, do not store PDFs | Accepted |
-| [0006](0006-groq-via-spring-ai-openai-starter.md) | Groq via Spring AI's OpenAI starter | Accepted |
+| [0006](0006-groq-via-spring-ai-openai-starter.md) | Groq via Spring AI's OpenAI starter | Accepted; embedding model superseded by 0012 |
 | [0007](0007-stateless-jwt-authentication.md) | Stateless JWT authentication | Accepted |
 | [0008](0008-vercel-rewrite-proxy-to-render.md) | Vercel rewrite proxy to the Render API | Accepted |
 | [0009](0009-in-memory-rate-limiting.md) | In-memory token-bucket rate limiting | Accepted |
 | [0011](0011-tidb-cloud-starter-for-hosted-mysql.md) | TiDB Cloud Starter for hosted MySQL | Accepted |
+| [0012](0012-word-based-embeddings-for-clause-similarity.md) | Word-based embeddings for clause similarity | Accepted |
