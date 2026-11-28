@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
-import { AnalysisResult, Finding, RiskLevel } from '../../core/api.models';
+import { AnalysisResult, Finding, RiskLevel, SimilarClauses } from '../../core/api.models';
+import { ClausesService } from '../../core/clauses.service';
+import { toApiError } from '../../core/problem';
 import { Icon } from '../../shared/icon';
 import {
   LEVEL_FILTERS,
@@ -32,6 +34,12 @@ export class AnalysisResults {
   protected readonly copyFailed = signal<number | null>(null);
   private copyTimer: ReturnType<typeof setTimeout> | undefined;
 
+  /** FR-9: which finding's standard-clause comparison is open, and what loaded for it. */
+  private readonly clauses = inject(ClausesService);
+  protected readonly comparing = signal<number | null>(null);
+  protected readonly similar = signal<SimilarClauses | null>(null);
+  protected readonly similarError = signal<string | null>(null);
+
   protected readonly categoryLabel = categoryLabel;
   protected readonly levelLabel = levelLabel;
   protected readonly gaugePercent = gaugePercent;
@@ -44,6 +52,24 @@ export class AnalysisResults {
   /** Stamp wording: High and Medium are out of tolerance (amber); Low is within it. */
   protected outOfTolerance(level: RiskLevel): boolean {
     return level !== 'LOW';
+  }
+
+  protected toggleCompare(finding: Finding): void {
+    if (this.comparing() === finding.id) {
+      this.comparing.set(null);
+      return;
+    }
+    this.comparing.set(finding.id);
+    this.similar.set(null);
+    this.similarError.set(null);
+    this.clauses.similar(finding.id).subscribe({
+      next: (result) => this.comparing() === finding.id && this.similar.set(result),
+      error: (error) => this.similarError.set(toApiError(error).message),
+    });
+  }
+
+  protected percent(similarity: number): string {
+    return `${Math.round(similarity * 100)}%`;
   }
 
   protected async copy(finding: Finding): Promise<void> {

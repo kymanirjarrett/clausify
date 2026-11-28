@@ -27,7 +27,7 @@ Clausify is an AI contract-analysis web app for freelancers: upload a contract P
 | File storage | None. PDFs are never persisted; only extracted text is stored. |
 | PDF | Apache PDFBox (text extraction, report generation) |
 | LLM | Groq `openai/gpt-oss-120b` via Spring AI's OpenAI starter, base URL `https://api.groq.com/openai/v1` (per the Spring AI 2.0 Groq docs), model from `GROQ_MODEL` |
-| Embeddings | Spring AI ONNX Transformers, `all-MiniLM-L6-v2`, 384 dims, in the JVM |
+| Embeddings | Word-based hashing embedder (`clause/HashingEmbedder`), 384 dims, no model (ADR 0012: ONNX did not fit Render's 512 MB) |
 | Vector search | Cosine similarity in Java (MySQL Community's `DISTANCE()` is HeatWave-only). Embeddings stored as JSON (`VECTOR` needs MySQL 9.0+; see ADR 0003). |
 | Auth | Spring Security, BCrypt, stateless JWT |
 | Hosting | Live at https://clausifysolutions.vercel.app. Angular on Vercel, proxying `/api` and Swagger to Render (ADR 0008). API on Render free tier (`render.yaml`, Docker, Oregon; sleeps when idle, ~2 min to wake, disk not persistent; deploys `main` only after CI passes). TiDB Cloud Starter in AWS us-west-2. |
@@ -50,7 +50,7 @@ The project uses exactly one LLM: Groq `openai/gpt-oss-120b`, through Spring AI'
 - **No personal API keys.** Do not create or use your own Groq or other AI keys for this project, and never commit one. The only key belongs to Kymani and lives in Render's environment.
 - **Local and tests never call the AI.** The `local` profile and every test use a fake `ContractAnalyzer` that returns fixed findings, so the app starts and the tests pass without `GROQ_API_KEY`. The real analyzer is active only in the `prod` profile. If you need to see real model output, ask Kymani.
 - **Changing the model, prompt contract, or AI dependencies** is a team decision: open an issue first. `CODEOWNERS` requests Kymani's review on those files.
-- Embeddings (FR-9) run in-process with ONNX `all-MiniLM-L6-v2` and need no key.
+- Embeddings (FR-9) are word-based and in-process (ADR 0012); they use no model and no key.
 
 ## Code layout and rules
 

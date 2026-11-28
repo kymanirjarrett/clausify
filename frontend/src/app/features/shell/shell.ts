@@ -21,6 +21,7 @@ import { Wordmark } from '../../shared/wordmark';
         <nav class="flex items-center gap-1" aria-label="App">
           <a routerLink="/app" class="nav-link" [class.nav-active]="onContracts()"
              [attr.aria-current]="onContracts() ? 'page' : null">Contracts</a>
+          <a routerLink="/app/library" routerLinkActive="nav-active" class="nav-link" ariaCurrentWhenActive="page">Library</a>
           <a routerLink="/app/account" routerLinkActive="nav-active" class="nav-link" ariaCurrentWhenActive="page">Account</a>
         </nav>
         <div class="ml-auto flex items-center gap-3">

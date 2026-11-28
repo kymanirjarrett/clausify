@@ -108,6 +108,43 @@
                   }
                 </div>
               }
+              <!-- FR-9: how this clause compares with standard wording in the same category. -->
+              <button type="button" class="btn btn-quiet mt-3 !h-8 !px-0 text-sm" (click)="toggleCompare(f)"
+                      [attr.aria-expanded]="comparing() === f.id" [attr.aria-controls]="'standard-' + f.id">
+                {{ comparing() === f.id ? 'Hide standard clauses' : 'Compare to standard' }}
+              </button>
+              @if (comparing() === f.id) {
+                <div class="standard mt-2" [id]="'standard-' + f.id" aria-live="polite">
+                  @if (similarError(); as message) {
+                    <p class="text-sm text-fail">{{ message }}</p>
+                  } @else if (similar(); as s) {
+                    @if (s.matches.length) {
+                      <p class="measure text-ink-3">Most similar standard clauses in {{ categoryLabel(f.category) }}</p>
+                      <ol class="mt-2 space-y-2">
+                        @for (m of s.matches; track m.clause.id) {
+                          <li class="standard-item">
+                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                              <span class="stamp" [class]="m.clause.favorable ? 'text-pass bg-pass-wash' : 'text-amber-ink bg-amber-wash'">
+                                {{ m.clause.favorable ? 'Favorable' : 'Unfavorable' }}
+                              </span>
+                              <span class="font-medium">{{ m.clause.title }}</span>
+                              <span class="measure ml-auto text-ink-2">{{ percent(m.similarity) }} similar</span>
+                            </div>
+                            <p class="mt-1.5 text-[0.9375rem] leading-relaxed">{{ m.clause.text }}</p>
+                            @if (m.clause.notes) {
+                              <p class="mt-1 text-sm text-ink-2">{{ m.clause.notes }}</p>
+                            }
+                          </li>
+                        }
+                      </ol>
+                    } @else {
+                      <p class="text-sm text-ink-2">No standard clauses in this category yet.</p>
+                    }
+                  } @else {
+                    <div class="ghost h-16 rounded-[3px]" aria-busy="true" aria-label="Loading standard clauses"></div>
+                  }
+                </div>
+              }
             </li>
           }
         </ol>

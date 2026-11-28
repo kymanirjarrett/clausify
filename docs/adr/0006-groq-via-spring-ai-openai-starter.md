@@ -13,7 +13,7 @@ Similarity search (ADR 0003) also needs text embeddings, and Groq's free tier do
 
 - Call Groq through **Spring AI's OpenAI starter** (Spring AI 2.0, which requires Spring Boot 4.0/4.1), pointed at Groq with `spring.ai.openai.base-url=https://api.groq.com/openai/v1` as the Spring AI Groq docs specify.
 - Use model **`openai/gpt-oss-120b`**, read from the `GROQ_MODEL` environment variable so a future retirement is a config change, not a code change. The key comes from `GROQ_API_KEY`.
-- Compute embeddings in-process with **Spring AI ONNX Transformers** and `all-MiniLM-L6-v2` (384 dimensions): free, no API key, no network call.
+- Compute embeddings in-process with **Spring AI ONNX Transformers** and `all-MiniLM-L6-v2` (384 dimensions): free, no API key, no network call. *Superseded by [ADR 0012](0012-word-based-embeddings-for-clause-similarity.md): the model did not fit Render's 512 MB, so clause similarity uses word-based embeddings.*
 
 ## Usage rules (added 2026-10-27)
 
