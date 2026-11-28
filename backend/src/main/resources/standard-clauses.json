@@ -1,0 +1,834 @@
+[
+  {
+    "key": "pay-01",
+    "category": "PAYMENT_TERMS",
+    "title": "Net 15 payment",
+    "text": "Client shall pay each undisputed invoice within fifteen (15) days of receipt.",
+    "favorable": true,
+    "notes": "Short payment window protects the freelancer's cash flow."
+  },
+  {
+    "key": "pay-02",
+    "category": "PAYMENT_TERMS",
+    "title": "Late fee on overdue invoices",
+    "text": "Invoices not paid within thirty (30) days of receipt shall accrue a late fee of 1.5% per month on the unpaid balance.",
+    "favorable": true,
+    "notes": "Gives the client a reason to pay on time."
+  },
+  {
+    "key": "pay-03",
+    "category": "PAYMENT_TERMS",
+    "title": "Deposit before work begins",
+    "text": "Client shall pay a non-refundable deposit of fifty percent (50%) of the project fee before Contractor begins work.",
+    "favorable": true,
+    "notes": "Shares the risk of non-payment up front."
+  },
+  {
+    "key": "pay-04",
+    "category": "PAYMENT_TERMS",
+    "title": "Milestone payments",
+    "text": "Fees are payable in installments upon completion of each milestone listed in Schedule A, within fifteen (15) days of the milestone invoice.",
+    "favorable": true,
+    "notes": "Payment tracks delivered work instead of arriving only at the end."
+  },
+  {
+    "key": "pay-05",
+    "category": "PAYMENT_TERMS",
+    "title": "Kill fee on cancellation",
+    "text": "If Client cancels the project for convenience, Client shall pay for all work performed to date plus a cancellation fee of twenty-five percent (25%) of the remaining fees.",
+    "favorable": true,
+    "notes": "Compensates the freelancer for reserved time."
+  },
+  {
+    "key": "pay-06",
+    "category": "PAYMENT_TERMS",
+    "title": "Reimbursed expenses",
+    "text": "Client shall reimburse Contractor for reasonable pre-approved expenses within fifteen (15) days of receiving receipts.",
+    "favorable": true,
+    "notes": "Contractor is not out of pocket for project costs."
+  },
+  {
+    "key": "pay-07",
+    "category": "PAYMENT_TERMS",
+    "title": "Limited invoice disputes",
+    "text": "Client may dispute an invoice only in writing, within ten (10) days of receipt, stating the specific reason, and shall pay the undisputed portion on time.",
+    "favorable": true,
+    "notes": "Stops open-ended payment holds."
+  },
+  {
+    "key": "pay-08",
+    "category": "PAYMENT_TERMS",
+    "title": "Net 60 payment",
+    "text": "Client shall pay invoices within sixty (60) days of receipt.",
+    "favorable": false,
+    "notes": "A two-month wait strains a freelancer's cash flow."
+  },
+  {
+    "key": "pay-09",
+    "category": "PAYMENT_TERMS",
+    "title": "Pay when paid",
+    "text": "Client shall pay Contractor only after Client has received payment from its own customer for the related project.",
+    "favorable": false,
+    "notes": "Shifts the end customer's credit risk to the freelancer."
+  },
+  {
+    "key": "pay-10",
+    "category": "PAYMENT_TERMS",
+    "title": "Payment at client's discretion",
+    "text": "Client may withhold payment for any deliverable it considers unsatisfactory, in its sole discretion.",
+    "favorable": false,
+    "notes": "Lets the client avoid paying without a stated reason."
+  },
+  {
+    "key": "pay-11",
+    "category": "PAYMENT_TERMS",
+    "title": "Payment within a reasonable time",
+    "text": "Client shall pay undisputed invoices within a reasonable time after receipt.",
+    "favorable": false,
+    "notes": "No deadline means no enforceable due date."
+  },
+  {
+    "key": "pay-12",
+    "category": "PAYMENT_TERMS",
+    "title": "No expense reimbursement",
+    "text": "All expenses incurred in performing the Services are the sole responsibility of Contractor.",
+    "favorable": false,
+    "notes": "Travel, software, and materials come out of the fee."
+  },
+  {
+    "key": "pay-13",
+    "category": "PAYMENT_TERMS",
+    "title": "Fee reduction for delay",
+    "text": "Client may reduce the fee by ten percent (10%) for each week any deliverable is late, regardless of cause.",
+    "favorable": false,
+    "notes": "Penalizes delays the client itself may cause."
+  },
+  {
+    "key": "liab-01",
+    "category": "LIABILITY",
+    "title": "Liability capped at fees paid",
+    "text": "Each party's total liability under this Agreement shall not exceed the fees paid to Contractor in the twelve (12) months before the claim.",
+    "favorable": true,
+    "notes": "Caps the worst-case loss at a known amount."
+  },
+  {
+    "key": "liab-02",
+    "category": "LIABILITY",
+    "title": "No consequential damages",
+    "text": "Neither party shall be liable for any indirect, incidental, consequential, or punitive damages, including lost profits.",
+    "favorable": true,
+    "notes": "Excludes open-ended business losses."
+  },
+  {
+    "key": "liab-03",
+    "category": "LIABILITY",
+    "title": "Mutual limitation",
+    "text": "The limitations of liability in this Section apply equally to both parties.",
+    "favorable": true,
+    "notes": "Both sides carry the same risk."
+  },
+  {
+    "key": "liab-04",
+    "category": "LIABILITY",
+    "title": "Disclaimer of implied warranties",
+    "text": "Except as expressly stated in this Agreement, the deliverables are provided as is, and Contractor disclaims all implied warranties, including merchantability and fitness for a particular purpose.",
+    "favorable": true,
+    "notes": "Limits promises to what was actually agreed."
+  },
+  {
+    "key": "liab-05",
+    "category": "LIABILITY",
+    "title": "Short warranty period",
+    "text": "Contractor warrants that the deliverables will materially conform to the specifications for thirty (30) days after delivery; Client's sole remedy is correction of the nonconformity.",
+    "favorable": true,
+    "notes": "A defined, limited fix-it obligation."
+  },
+  {
+    "key": "liab-06",
+    "category": "LIABILITY",
+    "title": "Liability capped at the project fee",
+    "text": "Contractor's aggregate liability for all claims arising from this Agreement is limited to the total fees payable under the applicable Statement of Work.",
+    "favorable": true,
+    "notes": "Exposure never exceeds the job's value."
+  },
+  {
+    "key": "liab-07",
+    "category": "LIABILITY",
+    "title": "Claims deadline",
+    "text": "Any claim arising under this Agreement must be brought within one (1) year after the cause of action arises.",
+    "favorable": true,
+    "notes": "Old claims can't resurface years later."
+  },
+  {
+    "key": "liab-08",
+    "category": "LIABILITY",
+    "title": "Unlimited contractor liability",
+    "text": "Contractor shall be liable for any and all damages arising from the Services, without limitation as to amount or type.",
+    "favorable": false,
+    "notes": "Exposure can exceed many times the fee."
+  },
+  {
+    "key": "liab-09",
+    "category": "LIABILITY",
+    "title": "One-sided cap",
+    "text": "Client's total liability under this Agreement shall not exceed one hundred dollars ($100). No limit applies to Contractor's liability.",
+    "favorable": false,
+    "notes": "Only the client is protected."
+  },
+  {
+    "key": "liab-10",
+    "category": "LIABILITY",
+    "title": "Liability for consequential damages",
+    "text": "Contractor shall be liable for all direct, indirect, and consequential damages, including Client's lost profits and lost business opportunities.",
+    "favorable": false,
+    "notes": "Lost profits can dwarf the fee."
+  },
+  {
+    "key": "liab-11",
+    "category": "LIABILITY",
+    "title": "Unlimited warranty",
+    "text": "Contractor warrants that the deliverables will be error-free and fit for any purpose Client intends, for the life of the deliverables.",
+    "favorable": false,
+    "notes": "An open-ended promise no software can meet."
+  },
+  {
+    "key": "liab-12",
+    "category": "LIABILITY",
+    "title": "Liability regardless of fault",
+    "text": "Contractor is responsible for any loss relating to the project, whether or not caused by Contractor.",
+    "favorable": false,
+    "notes": "Makes the freelancer an insurer for the client."
+  },
+  {
+    "key": "liab-13",
+    "category": "LIABILITY",
+    "title": "Punitive damages",
+    "text": "Contractor shall be liable for punitive and exemplary damages in addition to actual damages.",
+    "favorable": false,
+    "notes": "Adds penalties beyond actual harm."
+  },
+  {
+    "key": "indem-01",
+    "category": "INDEMNIFICATION",
+    "title": "Mutual indemnification",
+    "text": "Each party shall indemnify the other against third-party claims to the extent caused by its own negligence or willful misconduct.",
+    "favorable": true,
+    "notes": "Each side covers only its own fault."
+  },
+  {
+    "key": "indem-02",
+    "category": "INDEMNIFICATION",
+    "title": "Indemnity limited to IP infringement",
+    "text": "Contractor shall indemnify Client only against third-party claims that original material created by Contractor infringes a copyright.",
+    "favorable": true,
+    "notes": "A narrow, insurable obligation."
+  },
+  {
+    "key": "indem-03",
+    "category": "INDEMNIFICATION",
+    "title": "Client indemnifies for its materials",
+    "text": "Client shall indemnify Contractor against claims arising from materials, data, or instructions supplied by Client.",
+    "favorable": true,
+    "notes": "Freelancer is not liable for the client's content."
+  },
+  {
+    "key": "indem-04",
+    "category": "INDEMNIFICATION",
+    "title": "Indemnity subject to the cap",
+    "text": "Any indemnification obligation of Contractor is subject to the limitation of liability in Section 8.",
+    "favorable": true,
+    "notes": "Indemnity can't bypass the liability cap."
+  },
+  {
+    "key": "indem-05",
+    "category": "INDEMNIFICATION",
+    "title": "Notice and control of defense",
+    "text": "The indemnified party shall give prompt written notice of a claim and allow the indemnifying party to control its defense and settlement.",
+    "favorable": true,
+    "notes": "Prevents surprise bills for claims handled badly."
+  },
+  {
+    "key": "indem-06",
+    "category": "INDEMNIFICATION",
+    "title": "Exclusion for client modifications",
+    "text": "Contractor has no indemnity obligation for claims caused by Client's modification of the deliverables or their combination with other products.",
+    "favorable": true,
+    "notes": "Freelancer isn't liable for what the client changed."
+  },
+  {
+    "key": "indem-07",
+    "category": "INDEMNIFICATION",
+    "title": "One-way indemnification",
+    "text": "Contractor shall indemnify, defend, and hold harmless Client from any and all claims, losses, and expenses arising from or relating to this Agreement.",
+    "favorable": false,
+    "notes": "Covers claims the freelancer didn't cause."
+  },
+  {
+    "key": "indem-08",
+    "category": "INDEMNIFICATION",
+    "title": "Indemnity regardless of fault",
+    "text": "Contractor shall indemnify Client against all claims related to the Services, regardless of fault.",
+    "favorable": false,
+    "notes": "Even the client's own mistakes are on the freelancer."
+  },
+  {
+    "key": "indem-09",
+    "category": "INDEMNIFICATION",
+    "title": "Uncapped indemnity",
+    "text": "Contractor's indemnification obligations are not subject to any limitation of liability.",
+    "favorable": false,
+    "notes": "Unlimited exposure through the back door."
+  },
+  {
+    "key": "indem-10",
+    "category": "INDEMNIFICATION",
+    "title": "Defense costs at client's choice",
+    "text": "Contractor shall pay all attorneys' fees of counsel chosen by Client in defending any claim related to the deliverables.",
+    "favorable": false,
+    "notes": "Client controls the spending, freelancer pays."
+  },
+  {
+    "key": "indem-11",
+    "category": "INDEMNIFICATION",
+    "title": "Indemnity for client's materials",
+    "text": "Contractor shall indemnify Client against claims arising from any content incorporated into the deliverables, including content supplied by Client.",
+    "favorable": false,
+    "notes": "Freelancer is liable for the client's own content."
+  },
+  {
+    "key": "indem-12",
+    "category": "INDEMNIFICATION",
+    "title": "Indemnity survives forever",
+    "text": "Contractor's indemnification obligations survive termination of this Agreement indefinitely.",
+    "favorable": false,
+    "notes": "Exposure never ends."
+  },
+  {
+    "key": "indem-13",
+    "category": "INDEMNIFICATION",
+    "title": "Indemnity includes Client's affiliates",
+    "text": "Contractor shall indemnify Client and all of its affiliates, officers, employees, customers, and agents against any claim relating to the Services.",
+    "favorable": false,
+    "notes": "Extends the obligation to an open-ended group."
+  },
+  {
+    "key": "ip-01",
+    "category": "IP_RIGHTS",
+    "title": "Ownership on full payment",
+    "text": "Ownership of the deliverables transfers to Client upon Contractor's receipt of full payment.",
+    "favorable": true,
+    "notes": "Freelancer keeps leverage until paid."
+  },
+  {
+    "key": "ip-02",
+    "category": "IP_RIGHTS",
+    "title": "Contractor keeps pre-existing IP",
+    "text": "Contractor retains all rights in its pre-existing tools, code, libraries, and know-how, and grants Client a non-exclusive license to use them as part of the deliverables.",
+    "favorable": true,
+    "notes": "Reusable tools stay with the freelancer."
+  },
+  {
+    "key": "ip-03",
+    "category": "IP_RIGHTS",
+    "title": "Portfolio rights",
+    "text": "Contractor may display the deliverables in its portfolio and marketing materials after public release, unless Client objects in writing for confidentiality reasons.",
+    "favorable": true,
+    "notes": "Freelancer can show the work to win more."
+  },
+  {
+    "key": "ip-04",
+    "category": "IP_RIGHTS",
+    "title": "License instead of assignment",
+    "text": "Contractor grants Client a perpetual, non-exclusive license to use the deliverables for Client's internal business purposes; Contractor retains ownership.",
+    "favorable": true,
+    "notes": "Freelancer can reuse and resell the work."
+  },
+  {
+    "key": "ip-05",
+    "category": "IP_RIGHTS",
+    "title": "Assignment limited to final deliverables",
+    "text": "Only the final deliverables accepted by Client are assigned; drafts, concepts, and unused materials remain Contractor's property.",
+    "favorable": true,
+    "notes": "Unused ideas stay with the freelancer."
+  },
+  {
+    "key": "ip-06",
+    "category": "IP_RIGHTS",
+    "title": "Attribution",
+    "text": "Client shall credit Contractor as the creator of the deliverables in any public use, where customary.",
+    "favorable": true,
+    "notes": "Builds the freelancer's reputation."
+  },
+  {
+    "key": "ip-07",
+    "category": "IP_RIGHTS",
+    "title": "Assignment upon creation",
+    "text": "All work product is the sole property of Client upon creation, whether or not Client has paid for it.",
+    "favorable": false,
+    "notes": "The client owns the work even if it never pays."
+  },
+  {
+    "key": "ip-08",
+    "category": "IP_RIGHTS",
+    "title": "Assignment of pre-existing IP",
+    "text": "Contractor assigns to Client all rights in any materials used in the Services, including Contractor's pre-existing tools and code.",
+    "favorable": false,
+    "notes": "Freelancer loses tools it built before this job."
+  },
+  {
+    "key": "ip-09",
+    "category": "IP_RIGHTS",
+    "title": "Work made for hire of everything",
+    "text": "All work performed by Contractor during the term, whether or not related to the project, is a work made for hire owned by Client.",
+    "favorable": false,
+    "notes": "Captures unrelated side work."
+  },
+  {
+    "key": "ip-10",
+    "category": "IP_RIGHTS",
+    "title": "No portfolio use",
+    "text": "Contractor shall not display, reference, or describe the deliverables or the project in any portfolio or marketing material.",
+    "favorable": false,
+    "notes": "Freelancer can't show the work to win clients."
+  },
+  {
+    "key": "ip-11",
+    "category": "IP_RIGHTS",
+    "title": "Waiver of moral rights",
+    "text": "Contractor irrevocably waives all moral rights and rights of attribution in the deliverables.",
+    "favorable": false,
+    "notes": "Removes credit and integrity rights."
+  },
+  {
+    "key": "ip-12",
+    "category": "IP_RIGHTS",
+    "title": "Future ideas assigned",
+    "text": "Contractor assigns to Client all ideas and inventions conceived during the term and for one (1) year afterward that relate to Client's business.",
+    "favorable": false,
+    "notes": "Reaches ideas after the job ends."
+  },
+  {
+    "key": "ip-13",
+    "category": "IP_RIGHTS",
+    "title": "Power of attorney",
+    "text": "Contractor appoints Client as its attorney-in-fact to execute any documents needed to perfect Client's ownership of the deliverables.",
+    "favorable": false,
+    "notes": "Client can sign IP documents in the freelancer's name."
+  },
+  {
+    "key": "term-01",
+    "category": "TERMINATION",
+    "title": "Payment for work done on termination",
+    "text": "Upon termination for any reason, Client shall pay Contractor for all Services performed through the termination date.",
+    "favorable": true,
+    "notes": "Freelancer is paid for completed work."
+  },
+  {
+    "key": "term-02",
+    "category": "TERMINATION",
+    "title": "Mutual notice period",
+    "text": "Either party may terminate this Agreement for convenience with thirty (30) days' written notice.",
+    "favorable": true,
+    "notes": "Both sides get the same exit terms."
+  },
+  {
+    "key": "term-03",
+    "category": "TERMINATION",
+    "title": "Cure period for breach",
+    "text": "A party may terminate for breach only if the breach remains uncured thirty (30) days after written notice describing it.",
+    "favorable": true,
+    "notes": "A chance to fix problems before losing the contract."
+  },
+  {
+    "key": "term-04",
+    "category": "TERMINATION",
+    "title": "Contractor may terminate for non-payment",
+    "text": "Contractor may suspend work or terminate if any invoice remains unpaid fifteen (15) days after its due date.",
+    "favorable": true,
+    "notes": "Freelancer isn't forced to keep working unpaid."
+  },
+  {
+    "key": "term-05",
+    "category": "TERMINATION",
+    "title": "Termination fee",
+    "text": "If Client terminates for convenience, Client shall pay a termination fee of twenty percent (20%) of the remaining contract value.",
+    "favorable": true,
+    "notes": "Compensates for lost reserved time."
+  },
+  {
+    "key": "term-06",
+    "category": "TERMINATION",
+    "title": "Return of materials both ways",
+    "text": "Upon termination, each party shall return or destroy the other's confidential materials within thirty (30) days.",
+    "favorable": true,
+    "notes": "Clean, mutual wrap-up."
+  },
+  {
+    "key": "term-07",
+    "category": "TERMINATION",
+    "title": "Payment for committed costs",
+    "text": "Upon termination, Client shall reimburse non-cancellable expenses Contractor incurred before the termination date.",
+    "favorable": true,
+    "notes": "Covers costs already committed."
+  },
+  {
+    "key": "term-08",
+    "category": "TERMINATION",
+    "title": "Termination at will by client only",
+    "text": "Client may terminate this Agreement at any time, for any reason or no reason, without notice; Contractor may terminate only for Client's material breach.",
+    "favorable": false,
+    "notes": "Only the client can walk away freely."
+  },
+  {
+    "key": "term-09",
+    "category": "TERMINATION",
+    "title": "No payment for work in progress",
+    "text": "Upon termination, Client owes no payment for work in progress or deliverables not yet accepted.",
+    "favorable": false,
+    "notes": "Unfinished work goes unpaid."
+  },
+  {
+    "key": "term-10",
+    "category": "TERMINATION",
+    "title": "Long notice for contractor only",
+    "text": "Contractor must give one hundred twenty (120) days' written notice to terminate; Client may terminate immediately.",
+    "favorable": false,
+    "notes": "Locks the freelancer in, not the client."
+  },
+  {
+    "key": "term-11",
+    "category": "TERMINATION",
+    "title": "Forfeiture of fees on termination",
+    "text": "If this Agreement is terminated for any reason, all unpaid fees are forfeited.",
+    "favorable": false,
+    "notes": "Termination becomes a way to avoid paying."
+  },
+  {
+    "key": "term-12",
+    "category": "TERMINATION",
+    "title": "Refund of fees on termination",
+    "text": "Upon termination, Contractor shall refund all fees paid for deliverables not yet accepted.",
+    "favorable": false,
+    "notes": "Claws back pay for work already done."
+  },
+  {
+    "key": "term-13",
+    "category": "TERMINATION",
+    "title": "Automatic renewal",
+    "text": "This Agreement renews automatically for successive one-year terms unless Contractor gives notice at least ninety (90) days before the renewal date.",
+    "favorable": false,
+    "notes": "Easy to miss the window and get locked in."
+  },
+  {
+    "key": "noncomp-01",
+    "category": "NON_COMPETE",
+    "title": "No non-compete",
+    "text": "Nothing in this Agreement restricts Contractor from providing services to other clients, including clients in Client's industry.",
+    "favorable": true,
+    "notes": "Freelancer can keep working for others."
+  },
+  {
+    "key": "noncomp-02",
+    "category": "NON_COMPETE",
+    "title": "Narrow non-solicitation",
+    "text": "During the term and for six (6) months after, Contractor shall not directly solicit Client's employees whom Contractor worked with on the project.",
+    "favorable": true,
+    "notes": "Short and limited to people the freelancer met."
+  },
+  {
+    "key": "noncomp-03",
+    "category": "NON_COMPETE",
+    "title": "Mutual non-solicitation",
+    "text": "Neither party shall solicit the other's employees for six (6) months after this Agreement ends.",
+    "favorable": true,
+    "notes": "Protects both sides equally."
+  },
+  {
+    "key": "noncomp-04",
+    "category": "NON_COMPETE",
+    "title": "Non-compete limited to named competitors",
+    "text": "For three (3) months after termination, Contractor shall not provide the same services to the two competitors named in Schedule B.",
+    "favorable": true,
+    "notes": "Narrow, specific, and short."
+  },
+  {
+    "key": "noncomp-05",
+    "category": "NON_COMPETE",
+    "title": "Paid exclusivity",
+    "text": "If Client requires exclusivity, Client shall pay an exclusivity fee equal to twenty percent (20%) of the monthly fee for each month of exclusivity.",
+    "favorable": true,
+    "notes": "The freelancer is paid for lost work."
+  },
+  {
+    "key": "noncomp-06",
+    "category": "NON_COMPETE",
+    "title": "Restriction ends with the project",
+    "text": "Any restriction on Contractor's work for competitors ends on completion of the project.",
+    "favorable": true,
+    "notes": "No restriction after the job."
+  },
+  {
+    "key": "noncomp-07",
+    "category": "NON_COMPETE",
+    "title": "Worldwide multi-year non-compete",
+    "text": "For three (3) years after termination, Contractor shall not provide services to any business anywhere in the world that competes with Client.",
+    "favorable": false,
+    "notes": "Could block the freelancer's whole field."
+  },
+  {
+    "key": "noncomp-08",
+    "category": "NON_COMPETE",
+    "title": "Exclusivity without pay",
+    "text": "During the term, Contractor shall work exclusively for Client and shall not accept any other engagement.",
+    "favorable": false,
+    "notes": "Bars other income at no extra pay."
+  },
+  {
+    "key": "noncomp-09",
+    "category": "NON_COMPETE",
+    "title": "Non-solicitation of all customers",
+    "text": "For two (2) years after termination, Contractor shall not accept work from any customer or prospective customer of Client, whether or not Contractor solicited them.",
+    "favorable": false,
+    "notes": "Blocks clients who come to the freelancer."
+  },
+  {
+    "key": "noncomp-10",
+    "category": "NON_COMPETE",
+    "title": "Broad industry restriction",
+    "text": "Contractor shall not perform any services in Client's industry for any person during the term and for one (1) year afterward.",
+    "favorable": false,
+    "notes": "Covers the freelancer's entire market."
+  },
+  {
+    "key": "noncomp-11",
+    "category": "NON_COMPETE",
+    "title": "Liquidated damages for competition",
+    "text": "If Contractor breaches the non-competition covenant, Contractor shall pay Client liquidated damages of fifty thousand dollars ($50,000).",
+    "favorable": false,
+    "notes": "A fixed penalty larger than most projects."
+  },
+  {
+    "key": "noncomp-12",
+    "category": "NON_COMPETE",
+    "title": "Non-compete regardless of termination reason",
+    "text": "The non-competition covenant applies even if Client terminates this Agreement without cause.",
+    "favorable": false,
+    "notes": "Client can end the work and still restrict the freelancer."
+  },
+  {
+    "key": "noncomp-13",
+    "category": "NON_COMPETE",
+    "title": "No-hire of client's contractors",
+    "text": "Contractor shall not work alongside or partner with any other contractor of Client for two (2) years.",
+    "favorable": false,
+    "notes": "Limits future collaborations."
+  },
+  {
+    "key": "conf-01",
+    "category": "CONFIDENTIALITY",
+    "title": "Mutual confidentiality",
+    "text": "Each party shall keep the other's confidential information secret and use it only to perform this Agreement.",
+    "favorable": true,
+    "notes": "Both sides protect each other."
+  },
+  {
+    "key": "conf-02",
+    "category": "CONFIDENTIALITY",
+    "title": "Standard exclusions",
+    "text": "Confidential information does not include information that is public, already known to the recipient, independently developed, or received lawfully from a third party.",
+    "favorable": true,
+    "notes": "Common knowledge can't become a secret."
+  },
+  {
+    "key": "conf-03",
+    "category": "CONFIDENTIALITY",
+    "title": "Limited duration",
+    "text": "Confidentiality obligations last for three (3) years after this Agreement ends, except for trade secrets, which last as long as they remain trade secrets.",
+    "favorable": true,
+    "notes": "A defined end date."
+  },
+  {
+    "key": "conf-04",
+    "category": "CONFIDENTIALITY",
+    "title": "Disclosure required by law",
+    "text": "The recipient may disclose confidential information when required by law or court order, after giving prompt notice where legally allowed.",
+    "favorable": true,
+    "notes": "No breach for obeying a subpoena."
+  },
+  {
+    "key": "conf-05",
+    "category": "CONFIDENTIALITY",
+    "title": "General skills retained",
+    "text": "Contractor may use the general skills, knowledge, and experience gained during the project.",
+    "favorable": true,
+    "notes": "Freelancer keeps what it learned."
+  },
+  {
+    "key": "conf-06",
+    "category": "CONFIDENTIALITY",
+    "title": "Marking requirement",
+    "text": "Information is confidential only if marked confidential or identified as confidential in writing within ten (10) days of disclosure.",
+    "favorable": true,
+    "notes": "Clear what must be protected."
+  },
+  {
+    "key": "conf-07",
+    "category": "CONFIDENTIALITY",
+    "title": "One-way confidentiality",
+    "text": "Contractor shall keep confidential all information about Client; Client has no confidentiality obligation to Contractor.",
+    "favorable": false,
+    "notes": "Freelancer's own information is unprotected."
+  },
+  {
+    "key": "conf-08",
+    "category": "CONFIDENTIALITY",
+    "title": "Perpetual confidentiality",
+    "text": "Contractor's confidentiality obligations continue forever.",
+    "favorable": false,
+    "notes": "An obligation that never ends."
+  },
+  {
+    "key": "conf-09",
+    "category": "CONFIDENTIALITY",
+    "title": "Everything is confidential",
+    "text": "All information Contractor receives or learns in any way during the term, whether or not marked, is confidential.",
+    "favorable": false,
+    "notes": "Even public information becomes a breach risk."
+  },
+  {
+    "key": "conf-10",
+    "category": "CONFIDENTIALITY",
+    "title": "No legal-disclosure exception",
+    "text": "Contractor shall not disclose confidential information for any reason, including under subpoena, without Client's prior written consent.",
+    "favorable": false,
+    "notes": "Forces a choice between court and contract."
+  },
+  {
+    "key": "conf-11",
+    "category": "CONFIDENTIALITY",
+    "title": "Confidentiality of the agreement's existence",
+    "text": "Contractor shall not disclose that it has worked for Client or that this Agreement exists.",
+    "favorable": false,
+    "notes": "Freelancer can't name the client at all."
+  },
+  {
+    "key": "conf-12",
+    "category": "CONFIDENTIALITY",
+    "title": "Return of all work notes",
+    "text": "Upon request, Contractor shall deliver to Client all notes, drafts, and working files, including Contractor's general know-how documents.",
+    "favorable": false,
+    "notes": "Takes the freelancer's own reference material."
+  },
+  {
+    "key": "conf-13",
+    "category": "CONFIDENTIALITY",
+    "title": "Penalty for any disclosure",
+    "text": "Any disclosure of confidential information, however minor, entitles Client to liquidated damages of twenty-five thousand dollars ($25,000).",
+    "favorable": false,
+    "notes": "A fixed penalty unrelated to actual harm."
+  },
+  {
+    "key": "juris-01",
+    "category": "JURISDICTION",
+    "title": "Contractor's home law",
+    "text": "This Agreement is governed by the laws of the state where Contractor resides.",
+    "favorable": true,
+    "notes": "Freelancer knows the rules that apply."
+  },
+  {
+    "key": "juris-02",
+    "category": "JURISDICTION",
+    "title": "Neutral venue",
+    "text": "Disputes shall be resolved in the courts of a mutually agreed county, or by video-conference mediation before any lawsuit.",
+    "favorable": true,
+    "notes": "Neither side gets a travel advantage."
+  },
+  {
+    "key": "juris-03",
+    "category": "JURISDICTION",
+    "title": "Small claims available",
+    "text": "Either party may bring a claim in small claims court for disputes within that court's limit.",
+    "favorable": true,
+    "notes": "A cheap option for unpaid invoices."
+  },
+  {
+    "key": "juris-04",
+    "category": "JURISDICTION",
+    "title": "Mediation first",
+    "text": "Before filing suit, the parties shall try in good faith to resolve any dispute through non-binding mediation, sharing its cost equally.",
+    "favorable": true,
+    "notes": "Cheaper than going straight to court."
+  },
+  {
+    "key": "juris-05",
+    "category": "JURISDICTION",
+    "title": "Prevailing party fees",
+    "text": "The prevailing party in any action to enforce this Agreement may recover reasonable attorneys' fees.",
+    "favorable": true,
+    "notes": "Makes collecting small debts worth it."
+  },
+  {
+    "key": "juris-06",
+    "category": "JURISDICTION",
+    "title": "Remote proceedings",
+    "text": "Any arbitration hearing shall be held by video conference unless both parties agree otherwise.",
+    "favorable": true,
+    "notes": "No costly travel to the client's city."
+  },
+  {
+    "key": "juris-07",
+    "category": "JURISDICTION",
+    "title": "Client's home forum",
+    "text": "Any dispute shall be brought exclusively in the courts of Client's home county, and Contractor submits to that jurisdiction.",
+    "favorable": false,
+    "notes": "Freelancer must travel to sue or defend."
+  },
+  {
+    "key": "juris-08",
+    "category": "JURISDICTION",
+    "title": "Mandatory arbitration paid by contractor",
+    "text": "All disputes shall be resolved by binding arbitration in Client's city, with all arbitration fees paid by Contractor.",
+    "favorable": false,
+    "notes": "Costly enough to deter any claim."
+  },
+  {
+    "key": "juris-09",
+    "category": "JURISDICTION",
+    "title": "Waiver of jury and class actions",
+    "text": "Contractor waives any right to a jury trial and to participate in any class or collective action.",
+    "favorable": false,
+    "notes": "Removes common ways to enforce rights."
+  },
+  {
+    "key": "juris-10",
+    "category": "JURISDICTION",
+    "title": "Foreign governing law",
+    "text": "This Agreement is governed by the laws of a foreign country where Client is incorporated.",
+    "favorable": false,
+    "notes": "Unfamiliar law and expensive advice."
+  },
+  {
+    "key": "juris-11",
+    "category": "JURISDICTION",
+    "title": "Client recovers fees only",
+    "text": "Client may recover its attorneys' fees in any dispute; Contractor may not.",
+    "favorable": false,
+    "notes": "Only one side can recover costs."
+  },
+  {
+    "key": "juris-12",
+    "category": "JURISDICTION",
+    "title": "Shortened time to sue",
+    "text": "Contractor must bring any claim within ninety (90) days after it arises, or the claim is waived.",
+    "favorable": false,
+    "notes": "Unpaid invoices can expire quickly."
+  },
+  {
+    "key": "juris-13",
+    "category": "JURISDICTION",
+    "title": "Client chooses forum later",
+    "text": "Client may choose the forum for any dispute at the time the dispute arises.",
+    "favorable": false,
+    "notes": "Freelancer can't predict where it will be sued."
+  }
+]
