@@ -3,7 +3,7 @@ package com.clausify.analysis;
 import java.util.List;
 
 /**
- * What a {@link ContractAnalyzer} returns: the JSON contract in DESIGN.md 7.7, after validation.
+ * What a {@link ContractAnalyzer} returns: the JSON contract in course/DESIGN.md 7.7, after validation.
  *
  * @param contractType a short label such as "Consulting Agreement", or null if unclear
  * @param summary one or two sentences on where the risk is concentrated, or null

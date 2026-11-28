@@ -2,7 +2,7 @@
 
 <!-- impeccable:product-schema 1 -->
 
-Visual and product context for the Angular frontend. The repository root `DESIGN.md` is the course design document (requirements, UML, architecture), not a visual design system; this folder's `DESIGN.md` (when written) is the visual one.
+Visual and product context for the Angular frontend. `course/DESIGN.md` is the course design document (requirements, UML, architecture), not a visual design system; this folder's `DESIGN.md` (when written) is the visual one.
 
 ## Platform
 
@@ -42,7 +42,7 @@ Upload a contract PDF and, in under a minute, receive an overall risk score (0 t
 
 ## Brand Commitments
 
-- Name: **Clausify**. No logo, palette, or typography is committed; the visual system is decided fresh. Earlier wireframes and mockups in `docs/design/` show which screens exist and what they contain, but are not a visual or interaction spec.
+- Name: **Clausify**. No logo, palette, or typography is committed; the visual system is decided fresh. Earlier wireframes and mockups in `course/design/` show which screens exist and what they contain, but are not a visual or interaction spec.
 - Voice: **formal and precise.** Careful, exact wording; explain what a clause means and what to request in measured terms; no slang, jokes, or alarmism.
 
 ## Evidence on Hand

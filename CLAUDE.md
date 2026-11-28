@@ -4,14 +4,12 @@ Shared instructions for every Claude Code session in this repo. Personal prefere
 
 ## What this project is
 
-Clausify is an AI contract-analysis web app for freelancers: upload a contract PDF, get a risk score, flagged clauses, and suggested revisions. It is also the semester-long group final project for Enterprise Application Development (IT4045C, Fall 2026) at the University of Cincinnati. Team: Kymani Jarrett, Ashton Cashier, Venkat Yuva Raaj Narra, Rival Young. The instructor grades Spring Boot layering (controllers, services, repositories), REST APIs, database integration, security, and testing.
-
-**One GitHub repo is submitted for every course lab and the final project.** Each lab submission is marked with a git tag so the grader can see exactly what was submitted, even after later commits.
+Clausify is an AI contract-analysis web app for freelancers: upload a contract PDF, get a risk score, flagged clauses, and suggested revisions. Course-only material (design document, mockups, demo script, team guide) lives in `course/` and is not needed by the app.
 
 ## Hard constraints
 
-1. **Never edit an applied migration.** V1 to V3 (`users`, `addresses`, `profiles`) were submitted for a graded lab. Every schema change is a new `V<n>__description.sql`. `spring.jpa.hibernate.ddl-auto` stays `validate`; if validation fails, report the exact error instead of changing it. Render deploys `main` automatically, so **a merged migration is applied to the production database at once**; get it right in the PR. Every table needs a primary key. TiDB does not enforce this (`sql_require_primary_key` is off), so check it in review.
-2. **Never move, delete, or re-point a tag** listed in the README's "Course submissions" table. Never rewrite history on `main` or force-push it.
+1. **Never edit an applied migration.** Every schema change is a new `V<n>__description.sql`. `spring.jpa.hibernate.ddl-auto` stays `validate`; if validation fails, report the exact error instead of changing it. Render deploys `main` automatically, so **a merged migration is applied to the production database at once**; get it right in the PR. Every table needs a primary key. TiDB does not enforce this (`sql_require_primary_key` is off), so check it in review.
+2. **Never move, delete, or re-point a release tag.** Never rewrite history on `main` or force-push it.
 3. **No secrets in git.** Credentials and keys come from environment variables only; `.env.example` lists them with placeholders.
 4. **Ask before** destructive git operations, deleting files outside the task, adding dependencies, or creating cloud resources (TiDB Cloud, Render, and Vercel are set up by a human).
 
@@ -49,7 +47,7 @@ The project uses exactly one LLM: Groq `openai/gpt-oss-120b`, through Spring AI'
 - **One integration point.** Only `analysis/GroqContractAnalyzer`, which implements the `ContractAnalyzer` interface, calls an LLM. Do not add other AI SDKs or providers (OpenAI, Anthropic, Gemini, LangChain4j, Ollama, and so on), call an LLM from any other class, or add a second chat model bean.
 - **No personal API keys.** Do not create or use your own Groq or other AI keys for this project, and never commit one. The only key belongs to Kymani and lives in Render's environment.
 - **Local and tests never call the AI.** The `local` profile and every test use a fake `ContractAnalyzer` that returns fixed findings, so the app starts and the tests pass without `GROQ_API_KEY`. The real analyzer is active only in the `prod` profile. If you need to see real model output, ask Kymani.
-- **Changing the model, prompt contract, or AI dependencies** is a team decision: open an issue first. `CODEOWNERS` requests Kymani's review on those files.
+- **Changing the model, prompt contract, or AI dependencies** needs an issue first and Kymani's review.
 - Embeddings (FR-9) are word-based and in-process (ADR 0012); they use no model and no key.
 
 ## Code layout and rules
@@ -69,7 +67,7 @@ docs/adr/                                                      architecture deci
 - **Constructor injection** only, no field `@Autowired`.
 - **Lombok on entities:** relationship fields get `@ToString.Exclude` and `@EqualsAndHashCode.Exclude`; passwords are always `@ToString.Exclude`.
 - **Tests** alongside each feature: JUnit 5, MockMvc, Testcontainers MySQL; Vitest for frontend logic.
-- **Frontend design:** `frontend/PRODUCT.md` (product context) and `frontend/DESIGN.md` (the visual system, "Specification Sheet") govern UI work; the wireframes and mockups in `docs/design/` show which screens exist, not how they look. The UI must never present a feature the API does not support yet as working (use the documented ghost/absent states). The repo-root `DESIGN.md` is the course design document, not a visual system.
+- **Frontend design:** `frontend/PRODUCT.md` (product context) and `frontend/DESIGN.md` (the visual system, "Specification Sheet") govern UI work; the wireframes and mockups in `course/design/` show which screens exist, not how they look. The UI must never present a feature the API does not support yet as working (use the documented ghost/absent states). `course/DESIGN.md` is the course design document, not a visual system.
 
 ## Running locally
 
@@ -88,18 +86,10 @@ The `local` profile needs no environment variables. The deployed API runs with `
 
 - Create a GitHub issue, then a branch `type/<issue>-short-desc` (e.g. `feat/12-jwt-auth`).
 - Commits and PR titles use Conventional Commits: `type(optional-scope): imperative summary`. Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `ci`, `build`, `perf`, `style`.
-- Open a PR into `main` (`Closes #<issue>`); CI and the PR-title check must pass and one teammate approves. PRs are merged with a merge commit.
-- **Tagging a lab submission:** on `main` after the lab's PR merges, `git tag -a lab-<name> -m "Lab: <title> (submitted)"`, `git push origin lab-<name>`, then add a row to the README's "Course submissions" table in a follow-up PR.
+- Open a PR into `main` (`Closes #<issue>`); CI and the PR-title check must pass. PRs are merged with a merge commit.
 
-## Current plan
+## Specification
 
-For a map of where every file lives, what is built, and who owns the outstanding work, read **[`docs/CODEBASE.md`](docs/CODEBASE.md)** first.
+[`course/DESIGN.md`](course/DESIGN.md) holds the requirements FR-1 to FR-12 with acceptance criteria, the REST API table (7.4), migrations (7.5), risk scoring formula (7.6), AI JSON contract (7.7), and AI evaluation method (7.9). Work from an issue (`gh issue view <n>`).
 
-The plan lives in two places; read them instead of guessing:
-
-- **[`DESIGN.md`](DESIGN.md)** (submitted design document): requirements FR-1 to FR-12 with acceptance criteria, class diagrams, REST API table (7.4), migrations V4 to V7 (7.5), risk scoring formula (7.6), AI JSON contract (7.7), AI evaluation methodology (7.9).
-- **[Project board](https://github.com/users/kymanirjarrett/projects/6)**: three sprints as milestones. Each story is an issue; Sprint 1 stories have technical tasks as sub-issues with implementation details. Work from a task issue (`gh issue view <n>`).
-
-Sprint 1 (ends Oct 11) is the backend API: E-1 foundations, auth (FR-1, FR-2), contracts (FR-3, FR-4, FR-8), analysis (FR-5 to FR-7). Analysis uses **8** risk categories (the proposal's 7 plus Indemnification) stored in `analyses` and `clause_findings`.
-
-**Migration numbers are reserved:** V4 `users` email/created_at (FR-1), V5 `contracts` (FR-3), V6 `analyses` and `clause_findings` (FR-5), V7 `standard_clauses` (FR-9). Merge them in number order; Flyway rejects a lower version once a higher one is applied.
+Analysis uses **8** risk categories stored in `analyses` and `clause_findings`. Migrations V1 to V7 are applied; the next is V8.

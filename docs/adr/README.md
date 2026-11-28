@@ -17,7 +17,7 @@ We use Michael Nygard's format: **Title, Status, Context, Decision, Consequences
 | [0001](0001-record-architecture-decisions.md) | Record architecture decisions | Accepted |
 | [0002](0002-angular-frontend-with-tailwind.md) | Angular frontend with Tailwind CSS | Accepted |
 | [0003](0003-mysql-with-java-cosine-similarity.md) | MySQL with cosine similarity in Java | Accepted |
-| [0004](0004-aiven-free-tier-for-hosted-mysql.md) | Aiven free tier for hosted MySQL | Superseded by 0011 |
+| [0004](../../course/adr/0004-aiven-free-tier-for-hosted-mysql.md) | Aiven free tier for hosted MySQL | Superseded by 0011 |
 | [0005](0005-extract-text-do-not-store-pdfs.md) | Extract text, do not store PDFs | Accepted |
 | [0006](0006-groq-via-spring-ai-openai-starter.md) | Groq via Spring AI's OpenAI starter | Accepted; embedding model superseded by 0012 |
 | [0007](0007-stateless-jwt-authentication.md) | Stateless JWT authentication | Accepted |

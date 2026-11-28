@@ -3,7 +3,7 @@
 Start here. This page tells you where everything lives, what is built, what is not, and who is working on what. It is written for teammates and for Claude Code sessions.
 
 - **Rules and conventions:** [`CLAUDE.md`](../CLAUDE.md)
-- **Requirements, API table, schema plan:** [`DESIGN.md`](../DESIGN.md) (FR-1 to FR-12, section 7.4 API, 7.5 database)
+- **Requirements, API table, schema plan:** [`DESIGN.md`](DESIGN.md) (FR-1 to FR-12, section 7.4 API, 7.5 database)
 - **Live task status:** the [project board](https://github.com/users/kymanirjarrett/projects/6). If this page and the board disagree, the board wins.
 
 _Last updated Oct 27, 2026._
@@ -96,11 +96,11 @@ Flyway runs every migration on startup. Migration numbers are **reserved** and m
 | `Analysis` → `ClauseFinding` | one-to-many | Built |
 | `StandardClause` | standalone, compared by embedding | Planned (V7) |
 
-Embeddings are stored as JSON and compared with cosine similarity **in Java**, because MySQL Community can't do vector math ([ADR 0003](adr/0003-mysql-with-java-cosine-similarity.md)). PDFs are never stored, only their extracted text ([ADR 0005](adr/0005-extract-text-do-not-store-pdfs.md)).
+Embeddings are stored as JSON and compared with cosine similarity **in Java**, because MySQL Community can't do vector math ([ADR 0003](../docs/adr/0003-mysql-with-java-cosine-similarity.md)). PDFs are never stored, only their extracted text ([ADR 0005](../docs/adr/0005-extract-text-do-not-store-pdfs.md)).
 
 ## 4. REST API status
 
-Full table with request/response details: [DESIGN.md section 7.4](../DESIGN.md#74-rest-api). Try built endpoints in Swagger UI.
+Full table with request/response details: [DESIGN.md section 7.4](DESIGN.md#74-rest-api). Try built endpoints in Swagger UI.
 
 | Endpoint | FR | Owner | Status |
 |---|---|---|---|
