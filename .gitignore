@@ -64,3 +64,8 @@ target/
 .idea/
 *.iml
 .vscode/
+
+# Playwright (#59)
+frontend/test-results/
+frontend/playwright-report/
+frontend/blob-report/
