@@ -111,7 +111,7 @@ Full table with request/response details: [DESIGN.md section 7.4](../DESIGN.md#7
 | `POST /api/contracts/{id}/retry` | FR-7 | Ashton | ✅ Built |
 | `GET /api/contracts/{id}/analysis` | FR-5, FR-6 | Kymani | ✅ Built (409 with `contractStatus` until ANALYZED) |
 | `GET /api/standard-clauses`, `GET /api/clauses/{findingId}/similar` | FR-9 | Venkat | Not started (#50) |
-| `POST /api/contracts/{id}/compare/{otherId}` | FR-10 | Venkat | Not started (#51) |
+| `POST /api/contracts/{id}/compare/{otherId}` | FR-10 | Kymani | ✅ Built (sentence and word diff, risk change from stored analyses, no AI call) |
 | `GET /api/contracts/{id}/report` | FR-11 | Ashton | Not started (#52) |
 | `GET /api/users/me`, `PATCH /api/users/me`, `GET /api/users/me/stats` | FR-12 | Kymani | ✅ Built |
 
