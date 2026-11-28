@@ -1,12 +1,11 @@
 import {
   ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterNextRender, inject, signal, viewChild,
 } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
+import { ViewportScroller } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { Icon } from '../../shared/icon';
 import { Wordmark } from '../../shared/wordmark';
-import { HeroField } from './hero-field';
 
 interface Category {
   name: string;
@@ -16,7 +15,7 @@ interface Category {
 @Component({
   selector: 'cl-landing',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, NgTemplateOutlet, Icon, Wordmark, HeroField],
+  imports: [RouterLink, Icon, Wordmark],
   templateUrl: './landing.html',
   styleUrl: './landing.css',
 })
@@ -29,7 +28,9 @@ export class Landing {
 
   /** The leader line from the flagged phrase to its revision, measured from the live layout. */
   protected readonly leader = signal<{ d: string; length: number } | null>(null);
-  protected readonly anchorEl = signal<HTMLElement | undefined>(undefined);
+  /** Risk categories the hero headline cycles through ("Spot unfair ___ terms"). */
+  protected readonly words = ['liability', 'payment', 'IP', 'non-compete', 'termination'];
+  protected readonly wordIndex = signal(0);
   protected readonly linked = signal(false);
 
   protected readonly categories: Category[] = [
@@ -45,8 +46,14 @@ export class Landing {
 
   constructor() {
     const destroyRef = inject(DestroyRef);
+    // Section links land below the fixed nav.
+    inject(ViewportScroller).setOffset([0, 96]);
     afterNextRender(() => {
-      this.anchorEl.set(this.marker().nativeElement);
+      // The word stays still for people who ask for reduced motion.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const timer = setInterval(() => this.wordIndex.update(i => (i + 1) % this.words.length), 2600);
+        destroyRef.onDestroy(() => clearInterval(timer));
+      }
       const measure = () => this.measureLeader();
       measure();
       const observer = new ResizeObserver(measure);
